@@ -1,12 +1,33 @@
 # Template Hexagonal Reactive - com.yowyob
 
-Ce projet est le template standard pour les microservices backend chez **com.yowyob**. Il implémente une **Architecture Hexagonale** (Ports & Adapters) sur une stack entièrement **Réactive** (Spring WebFlux, R2DBC, Reactor Kafka).
+Ce projet est le **socle standard** pour le développement de microservices backend chez **com.yowyob**. Il fournit une structure clé en main respectant les principes de l'**Architecture Hexagonale** sur une stack technologique entièrement **Réactive** (Non-bloquante).
+
+## 📘 À propos de ce Template
+
+### Objectif
+L'objectif de ce repository n'est pas d'être un simple "Hello World", mais de fournir un **exemple complet et réaliste** d'un microservice de production. Il a été réalisé pour standardiser nos développements, assurer la cohérence du code entre les équipes et faciliter la maintenance.
+
+### Scénario d'implémentation (Comment il a été réalisé)
+Pour démontrer les capacités du template, nous avons implémenté un cas d'usage fonctionnel complet : **"La création d'un produit"**.
+
+Ce scénario a été choisi car il traverse toutes les couches techniques nécessaires dans un vrai système distribué :
+
+1.  **Entrée API** : Réception d'une requête POST (Layer REST).
+2.  **Validation Métier** : Appel à un service externe (Stock Service) pour vérifier la capacité via HTTP.
+3.  **Persistance** : Sauvegarde des données dans PostgreSQL (R2DBC).
+4.  **Performance** : Mise en cache du résultat dans Redis.
+5.  **Communication Asynchrone** : Publication d'un événement "ProductCreated" dans Kafka.
+6.  **Résilience** : Gestion des pannes du service externe via un Circuit Breaker.
+
+Ce flux permet aux développeurs de voir concrètement comment enchaîner ces opérations de manière réactive (Reactor/Mono/Flux) tout en gardant le cœur du métier pur.
+
+---
 
 ## 📋 Prérequis
 
 - **Java 21**
 - **Maven 3.8+**
-- **Docker & Docker Compose** (pour l'infrastructure locale : Postgres, Redis, Kafka)
+- **Docker** (Optionel)
 
 ## 🏗 Architecture du Projet
 
@@ -32,7 +53,6 @@ Tout ce qui est technique. C'est ici qu'on implémente Spring, les bases de donn
 - **`config/`** : Configuration Spring (Beans, Security, Serializers).
 - **`mappers/`** : Conversion entre les DTOs, les Entités et le Domaine (MapStruct).
 
----
 
 ## ⚙️ Configuration et URLs Externes
 
@@ -40,7 +60,7 @@ La configuration est centralisée dans `src/main/resources/application.yml`.
 
 ### Comment définir l'URL d'un Microservice externe ?
 
-Pour appeler un autre service (ex: Stock Service), nous utilisons `WebClient` configuré via une interface déclarative.
+Pour appeler un autre service (ex: Stock Service), nous utilisons `WebClient` configuré via une interface déclarative (Http Interface Client).
 
 1. **Définir l'URL dans le YAML** :
    Dans `application.yml` (ou `prod.application.yml`), localisez la section `application.external` :
