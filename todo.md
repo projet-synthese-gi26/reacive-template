@@ -14,11 +14,14 @@
 - [ ] **Tâche 2.4 :** **Validation Postman** : Tests de login, génération de token et accès restreint par rôles (RBAC).
 - [ ] **Tâche 2.5 :** Intégration des routes "mot de passe oublié" et autres via l'API d'authentification externe.
 
-#### Jalon 3 : Gestion de la Flotte (CU17, CU18, CU19)
-- [ ] **Tâche 3.1 :** Use-Case : Créer / Modifier / Supprimer une Flotte (Fleets).
-- [ ] **Tâche 3.2 :** Use-Case : Créer / Modifier / Supprimer un Véhicule (Vehicles).
-- [ ] **Tâche 3.3 :** Gestion des paramètres détaillés (Financial & Maintenance parameters).
-- [ ] **Tâche 3.4 :** **Validation Postman** : CRUD complet des véhicules et flottes.
+#### Jalon 3 : Exploitation (Flottes & Véhicules)
+- [x] **Tâche 3.1 :** Infrastructure technique de communication (Adaptateur WebClient).
+- [x] **Tâche 3.2 :** CRUD **Flottes** (Fleets) - Persistance locale & Service.
+- [ ] **Tâche 3.3 :** Persistance locale des **Véhicules** (Tables `vehicles`, `financial_params`, `maintenance_params`).
+- [ ] **Tâche 3.4 :** Service d'**Agrégation** (Fusionner données locales + données externes du collaborateur).
+- [ ] **Tâche 3.5 :** API REST **VehicleController** (Endpoints section 4.2 du contrat).
+- [ ] **Tâche 3.6 :** **Validation Swagger** : Scénario "Ajouter un véhicule existant à une flotte et définir ses frais d'assurance".
+
 
 #### Jalon 4 : Gestion des Chauffeurs & Assignations (CU21, CU24)
 - [ ] **Tâche 4.1 :** Use-Case : Créer / Gérer un profil Driver (lié à l'utilisateur distant).
