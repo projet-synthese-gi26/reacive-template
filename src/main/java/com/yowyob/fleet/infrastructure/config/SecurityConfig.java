@@ -36,7 +36,8 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/api/v1/health/**",
                                 "/api/v1/fleets/**",
-                                "/api/v1/vehicles/**"
+                                "/api/v1/vehicles/**",
+                                "/api/v1/auth/**" 
                         ).permitAll()
                         
                         // All other exchanges require authentication

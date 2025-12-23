@@ -51,6 +51,10 @@ application:
     stock-service-url: http://168.119.122.86:8081
     
     vehicle-service-url: https://vehicule-service.pynfi.com
+    
+  auth:
+    mode: fake # Mettez 'remote' pour tester le vrai service TraMaSys et 'fake' pour la fausse authentification en test
+    url: https://auth-service.pynfi.com # URL de la doc TraMaSys
 
   kafka:
     topics:
@@ -71,6 +75,7 @@ management:
       prometheus:
         enabled: true
 
+ 
 
 # RESILIENCE4J 
 resilience4j:
