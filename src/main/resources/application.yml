@@ -50,6 +50,8 @@ spring:
 application:
   external:
     stock-service-url: http://168.119.122.86:8081
+    
+    vehicle-service-url: http://localhost:8081
 
   kafka:
     topics:
