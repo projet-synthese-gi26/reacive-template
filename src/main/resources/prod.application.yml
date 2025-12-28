@@ -49,6 +49,9 @@ application:
   external:
     stock-service-url: http://${EXTERNAL_HOST:localhost}:8081
     vehicle-service-url: https://fare-calculator-service.pynfi.com
+  auth:
+    mode: remote # Mettez 'remote' pour tester le vrai service TraMaSys et 'fake' pour la fausse authentification en test
+    url: https://auth-service.pynfi.com
 
   kafka:
     topics:
