@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/api/v1/health/**",
                                 "/api/v1/fleets/**",
                                 "/api/v1/vehicles/**",
+                                "/api/v1/drivers/**",
                                 "/api/v1/auth/**" 
                         ).permitAll()
                         

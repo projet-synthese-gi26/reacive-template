@@ -24,9 +24,9 @@
 
 
 #### Jalon 4 : Gestion des Chauffeurs & Assignations (CU21, CU24) `Hassana`
-- [ ] **Tâche 4.1 :** Use-Case : Créer / Gérer un profil Driver (lié à l'utilisateur distant).
-- [ ] **Tâche 4.2 :** Use-Case : Assigner / Libérer un véhicule à un chauffeur.
-- [ ] **Tâche 4.3 :** **Validation Postman** : Scénario complet d'enregistrement et d'affectation d'un chauffeur.
+- [x] **Tâche 4.1 :** Use-Case : Créer / Gérer un profil Driver (lié à l'utilisateur distant).
+- [x] **Tâche 4.2 :** Use-Case : Assigner / Libérer un véhicule à un chauffeur.
+- [x] **Tâche 4.3 :** **Validation Postman** : Scénario complet d'enregistrement et d'affectation d'un chauffeur.
 
 #### Jalon 5 : Gestion des Trajets & Temps Réel (CU4, CU5, CU2, CU14)`Gabriel`
 - [ ] **Tâche 5.1 :** Use-Case : Démarrer un trajet (Start Trip).

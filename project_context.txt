@@ -1,5 +1,5 @@
 ﻿# Contexte du Projet : Fleet & Geofence API
-GÃ©nÃ©rÃ© le : 01/01/2026 18:00:21
+GÃ©nÃ©rÃ© le : 01/01/2026 18:49:51
 Framework : Spring Boot WebFlux (Reactive)
 
 ## 1. Arborescence du Projet
@@ -256,6 +256,7 @@ D:.
 ª   ª   ª               +---application
 ª   ª   ª               ª   +---service
 ª   ª   ª               ª           AuthService.java
+ª   ª   ª               ª           DriverService.java
 ª   ª   ª               ª           FleetService.java
 ª   ª   ª               ª           ProductService.java
 ª   ª   ª               ª           VehicleService.java
@@ -265,6 +266,7 @@ D:.
 ª   ª   ª               ª   ª       StockFullException.java
 ª   ª   ª               ª   ª       
 ª   ª   ª               ª   +---model
+ª   ª   ª               ª   ª       Driver.java
 ª   ª   ª               ª   ª       Fleet.java
 ª   ª   ª               ª   ª       Product.java
 ª   ª   ª               ª   ª       Vehicle.java
@@ -274,11 +276,13 @@ D:.
 ª   ª   ª               ª       +---in
 ª   ª   ª               ª       ª       AuthUseCase.java
 ª   ª   ª               ª       ª       CreateProductUseCase.java
+ª   ª   ª               ª       ª       ManageDriverUseCase.java
 ª   ª   ª               ª       ª       ManageFleetUseCase.java
 ª   ª   ª               ª       ª       ManageVehicleUseCase.java
 ª   ª   ª               ª       ª       
 ª   ª   ª               ª       +---out
 ª   ª   ª               ª               AuthPort.java
+ª   ª   ª               ª               DriverPersistencePort.java
 ª   ª   ª               ª               ExternalVehiclePort.java
 ª   ª   ª               ª               FleetRepositoryPort.java
 ª   ª   ª               ª               ProductCachePort.java
@@ -295,6 +299,7 @@ D:.
 ª   ª   ª                   ª   ª   ª       
 ª   ª   ª                   ª   ª   +---rest
 ª   ª   ª                   ª   ª       ª   AuthController.java
+ª   ª   ª                   ª   ª       ª   DriverController.java
 ª   ª   ª                   ª   ª       ª   FleetController.java
 ª   ª   ª                   ª   ª       ª   GlobalExceptionHandler.java
 ª   ª   ª                   ª   ª       ª   HealthCheckController.java
@@ -332,11 +337,13 @@ D:.
 ª   ª   ª                   ª       ª       KafkaAdapter.java
 ª   ª   ª                   ª       ª       
 ª   ª   ª                   ª       +---persistence
+ª   ª   ª                   ª           ª   DriverPersistenceAdapter.java
 ª   ª   ª                   ª           ª   FleetPersistenceAdapter.java
 ª   ª   ª                   ª           ª   PostgresR2dbcAdapter.java
 ª   ª   ª                   ª           ª   VehiclePersistenceAdapter.java
 ª   ª   ª                   ª           ª   
 ª   ª   ª                   ª           +---entity
+ª   ª   ª                   ª           ª       DriverEntity.java
 ª   ª   ª                   ª           ª       FinancialParameterEntity.java
 ª   ª   ª                   ª           ª       FleetEntity.java
 ª   ª   ª                   ª           ª       MaintenanceParameterEntity.java
@@ -344,6 +351,7 @@ D:.
 ª   ª   ª                   ª           ª       VehicleLocalEntity.java
 ª   ª   ª                   ª           ª       
 ª   ª   ª                   ª           +---repository
+ª   ª   ª                   ª                   DriverR2dbcRepository.java
 ª   ª   ª                   ª                   FinancialParameterR2dbcRepository.java
 ª   ª   ª                   ª                   FleetR2dbcRepository.java
 ª   ª   ª                   ª                   MaintenanceParameterR2dbcRepository.java
@@ -360,6 +368,7 @@ D:.
 ª   ª   ª                   ª       WebClientConfig.java
 ª   ª   ª                   ª       
 ª   ª   ª                   +---mappers
+ª   ª   ª                           DriverMapper.java
 ª   ª   ª                           FleetMapper.java
 ª   ª   ª                           ProductMapper.java
 ª   ª   ª                           VehicleLocalMapper.java
@@ -393,6 +402,7 @@ D:.
     ª   ª           +---application
     ª   ª           ª   +---service
     ª   ª           ª           AuthService.class
+    ª   ª           ª           DriverService.class
     ª   ª           ª           FleetService.class
     ª   ª           ª           ProductService.class
     ª   ª           ª           VehicleService.class
@@ -402,6 +412,7 @@ D:.
     ª   ª           ª   ª       StockFullException.class
     ª   ª           ª   ª       
     ª   ª           ª   +---model
+    ª   ª           ª   ª       Driver.class
     ª   ª           ª   ª       Fleet.class
     ª   ª           ª   ª       Product.class
     ª   ª           ª   ª       Vehicle.class
@@ -415,6 +426,7 @@ D:.
     ª   ª           ª       +---in
     ª   ª           ª       ª       AuthUseCase.class
     ª   ª           ª       ª       CreateProductUseCase.class
+    ª   ª           ª       ª       ManageDriverUseCase.class
     ª   ª           ª       ª       ManageFleetUseCase.class
     ª   ª           ª       ª       ManageVehicleUseCase.class
     ª   ª           ª       ª       
@@ -422,6 +434,7 @@ D:.
     ª   ª           ª               AuthPort$AuthResponse.class
     ª   ª           ª               AuthPort$UserDetail.class
     ª   ª           ª               AuthPort.class
+    ª   ª           ª               DriverPersistencePort.class
     ª   ª           ª               ExternalVehiclePort.class
     ª   ª           ª               FleetRepositoryPort.class
     ª   ª           ª               ProductCachePort.class
@@ -441,6 +454,8 @@ D:.
     ª   ª               ª   ª       ª   AuthController$RegisterDto.class
     ª   ª               ª   ª       ª   AuthController$TokenRefreshRequest.class
     ª   ª               ª   ª       ª   AuthController.class
+    ª   ª               ª   ª       ª   DriverController$VehicleAssignRequest.class
+    ª   ª               ª   ª       ª   DriverController.class
     ª   ª               ª   ª       ª   FleetController.class
     ª   ª               ª   ª       ª   GlobalExceptionHandler.class
     ª   ª               ª   ª       ª   HealthCheckController.class
@@ -484,11 +499,13 @@ D:.
     ª   ª               ª       ª       KafkaAdapter.class
     ª   ª               ª       ª       
     ª   ª               ª       +---persistence
+    ª   ª               ª           ª   DriverPersistenceAdapter.class
     ª   ª               ª           ª   FleetPersistenceAdapter.class
     ª   ª               ª           ª   PostgresR2dbcAdapter.class
     ª   ª               ª           ª   VehiclePersistenceAdapter.class
     ª   ª               ª           ª   
     ª   ª               ª           +---entity
+    ª   ª               ª           ª       DriverEntity.class
     ª   ª               ª           ª       FinancialParameterEntity.class
     ª   ª               ª           ª       FleetEntity.class
     ª   ª               ª           ª       MaintenanceParameterEntity.class
@@ -496,6 +513,7 @@ D:.
     ª   ª               ª           ª       VehicleLocalEntity.class
     ª   ª               ª           ª       
     ª   ª               ª           +---repository
+    ª   ª               ª                   DriverR2dbcRepository.class
     ª   ª               ª                   FinancialParameterR2dbcRepository.class
     ª   ª               ª                   FleetR2dbcRepository.class
     ª   ª               ª                   MaintenanceParameterR2dbcRepository.class
@@ -512,6 +530,8 @@ D:.
     ª   ª               ª       WebClientConfig.class
     ª   ª               ª       
     ª   ª               +---mappers
+    ª   ª                       DriverMapper.class
+    ª   ª                       DriverMapperImpl.class
     ª   ª                       FleetMapper.class
     ª   ª                       FleetMapperImpl.class
     ª   ª                       ProductMapper.class
@@ -530,6 +550,7 @@ D:.
     ª               +---fleet
     ª                   +---infrastructure
     ª                       +---mappers
+    ª                               DriverMapperImpl.java
     ª                               FleetMapperImpl.java
     ª                               ProductMapperImpl.java
     ª                               VehicleLocalMapperImpl.java
@@ -828,7 +849,7 @@ Ce projet est dÃ©veloppÃ© en mode **Pair Programming** avec une IA (Gemini/C
 - [x] **TÃ¢che 2.2 :** IntÃ©gration du Service d'Authentification externe (Adaptateur WebClient).
 - [x] **TÃ¢che 2.3 :** ImplÃ©mentation du **Mode DÃ©gradÃ© (Fake Auth)** pour le dÃ©veloppement local.
 - [x] **TÃ¢che 2.4 :** **Validation Postman** : Tests de login, gÃ©nÃ©ration de token et accÃ¨s restreint par rÃ´les (RBAC).
-- [ ] **TÃ¢che 2.5 :** IntÃ©gration des routes "mot de passe oubliÃ©" et autres via l'API d'authentification externe.
+- [x] **TÃ¢che 2.5 :** IntÃ©gration des routes "mot de passe oubliÃ©" et autres via l'API d'authentification externe.
 
 #### Jalon 3 : Exploitation (Flottes & VÃ©hicules)`Gabriel`
 - [x] **TÃ¢che 3.1 :** Infrastructure technique de communication (Adaptateur WebClient).
@@ -840,9 +861,9 @@ Ce projet est dÃ©veloppÃ© en mode **Pair Programming** avec une IA (Gemini/C
 
 
 #### Jalon 4 : Gestion des Chauffeurs & Assignations (CU21, CU24) `Hassana`
-- [ ] **TÃ¢che 4.1 :** Use-Case : CrÃ©er / GÃ©rer un profil Driver (liÃ© Ã  l'utilisateur distant).
-- [ ] **TÃ¢che 4.2 :** Use-Case : Assigner / LibÃ©rer un vÃ©hicule Ã  un chauffeur.
-- [ ] **TÃ¢che 4.3 :** **Validation Postman** : ScÃ©nario complet d'enregistrement et d'affectation d'un chauffeur.
+- [x] **TÃ¢che 4.1 :** Use-Case : CrÃ©er / GÃ©rer un profil Driver (liÃ© Ã  l'utilisateur distant).
+- [x] **TÃ¢che 4.2 :** Use-Case : Assigner / LibÃ©rer un vÃ©hicule Ã  un chauffeur.
+- [x] **TÃ¢che 4.3 :** **Validation Postman** : ScÃ©nario complet d'enregistrement et d'affectation d'un chauffeur.
 
 #### Jalon 5 : Gestion des Trajets & Temps RÃ©el (CU4, CU5, CU2, CU14)`Gabriel`
 - [ ] **TÃ¢che 5.1 :** Use-Case : DÃ©marrer un trajet (Start Trip).
@@ -6853,6 +6874,52 @@ public class AuthService implements AuthUseCase {
 }
 
 ---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\DriverService.java
+`$ext
+package com.yowyob.fleet.application.service;
+
+import com.yowyob.fleet.domain.model.Driver;
+import com.yowyob.fleet.domain.ports.in.ManageDriverUseCase;
+import com.yowyob.fleet.domain.ports.out.DriverPersistencePort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class DriverService implements ManageDriverUseCase {
+
+    private final DriverPersistencePort driverPersistencePort;
+
+    @Override
+    public Mono<Driver> registerDriver(Driver driver) {
+        return driverPersistencePort.save(driver);
+    }
+
+    @Override
+    public Mono<Driver> getDriverById(UUID userId) {
+        return driverPersistencePort.findById(userId);
+    }
+
+    @Override
+    public Flux<Driver> getAllDrivers(Boolean status) {
+        return driverPersistencePort.findAll(status);
+    }
+
+    @Override
+    public Mono<Void> assignVehicle(UUID userId, UUID vehicleId) {
+        return driverPersistencePort.updateVehicleAssignment(userId, vehicleId);
+    }
+
+    @Override
+    public Mono<Void> unassignVehicle(UUID userId) {
+        return driverPersistencePort.updateVehicleAssignment(userId, null);
+    }
+}
+
+---
 ### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\FleetService.java
 `$ext
 package com.yowyob.fleet.application.service;
@@ -7085,6 +7152,20 @@ public class StockFullException extends RuntimeException {
 }
 
 ---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Driver.java
+`$ext
+package com.yowyob.fleet.domain.model;
+
+import java.util.UUID;
+
+public record Driver(
+    UUID userId,
+    String licenceNumber,
+    Boolean status,
+    UUID assignedVehicleId
+) {}
+
+---
 ### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Fleet.java
 `$ext
 package com.yowyob.fleet.domain.model;
@@ -7219,6 +7300,24 @@ public interface CreateProductUseCase {
 }
 
 ---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageDriverUseCase.java
+`$ext
+package com.yowyob.fleet.domain.ports.in;
+
+import com.yowyob.fleet.domain.model.Driver;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import java.util.UUID;
+
+public interface ManageDriverUseCase {
+    Mono<Driver> registerDriver(Driver driver);
+    Mono<Driver> getDriverById(UUID userId);
+    Flux<Driver> getAllDrivers(Boolean status);
+    Mono<Void> assignVehicle(UUID userId, UUID vehicleId);
+    Mono<Void> unassignVehicle(UUID userId);
+}
+
+---
 ### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageFleetUseCase.java
 `$ext
 package com.yowyob.fleet.domain.ports.in;
@@ -7317,6 +7416,23 @@ public interface AuthPort {
         List<String> permissions
     ) {}
 }   
+
+---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\DriverPersistencePort.java
+`$ext
+package com.yowyob.fleet.domain.ports.out;
+
+import com.yowyob.fleet.domain.model.Driver;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import java.util.UUID;
+
+public interface DriverPersistencePort {
+    Mono<Driver> save(Driver driver);
+    Mono<Driver> findById(UUID userId);
+    Flux<Driver> findAll(Boolean status);
+    Mono<Void> updateVehicleAssignment(UUID userId, UUID vehicleId);
+}
 
 ---
 ### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ExternalVehiclePort.java
@@ -7541,6 +7657,59 @@ public class AuthController {
     ) {}
     public record TokenRefreshRequest(String refreshToken) {}
     
+}
+
+---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\DriverController.java
+`$ext
+package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
+
+import com.yowyob.fleet.domain.model.Driver;
+import com.yowyob.fleet.domain.ports.in.ManageDriverUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/v1/drivers")
+@RequiredArgsConstructor
+@Tag(name = "Drivers", description = "Operations for Driver Management")
+public class DriverController {
+
+    private final ManageDriverUseCase driverUseCase;
+
+    // @PostMapping
+    // @ResponseStatus(HttpStatus.CREATED)
+    // public Mono<Driver> register(@RequestBody Driver driver) {
+    //     return driverUseCase.registerDriver(driver);
+    // }
+
+    @GetMapping
+    public Flux<Driver> list(@RequestParam(required = false) Boolean status) {
+        return driverUseCase.getAllDrivers(status);
+    }
+
+    @GetMapping("/{userId}")
+    public Mono<Driver> get(@PathVariable UUID userId) {
+        return driverUseCase.getDriverById(userId);
+    }
+
+    @PostMapping("/{userId}/assign-vehicle")
+    public Mono<Void> assign(@PathVariable UUID userId, @RequestBody VehicleAssignRequest req) {
+        return driverUseCase.assignVehicle(userId, req.vehicleId());
+    }
+
+    @PostMapping("/{userId}/unassign-vehicle")
+    public Mono<Void> unassign(@PathVariable UUID userId) {
+        return driverUseCase.unassignVehicle(userId);
+    }
+
+    public record VehicleAssignRequest(UUID vehicleId) {}
 }
 
 ---
@@ -8337,6 +8506,61 @@ public class KafkaAdapter implements ProductEventPublisherPort {
 }
 
 ---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\DriverPersistenceAdapter.java
+`$ext
+package com.yowyob.fleet.infrastructure.adapters.outbound.persistence;
+
+import com.yowyob.fleet.domain.model.Driver;
+import com.yowyob.fleet.domain.ports.out.DriverPersistencePort;
+import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository.DriverR2dbcRepository;
+import com.yowyob.fleet.infrastructure.mappers.DriverMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.UUID;
+
+@Component
+@RequiredArgsConstructor
+public class DriverPersistenceAdapter implements DriverPersistencePort {
+
+    private final DriverR2dbcRepository repository;
+    private final DriverMapper mapper;
+
+    @Override
+    public Mono<Driver> save(Driver driver) {
+        return repository.save(mapper.toEntity(driver))
+                .map(mapper::toDomain);
+    }
+
+    @Override
+    public Mono<Driver> findById(UUID userId) {
+        return repository.findById(userId)
+                .map(mapper::toDomain);
+    }
+
+    @Override
+    public Flux<Driver> findAll(Boolean status) {
+        if (status != null) {
+            return repository.findByStatus(status).map(mapper::toDomain);
+        }
+        return repository.findAll().map(mapper::toDomain);
+    }
+
+    @Override
+    public Mono<Void> updateVehicleAssignment(UUID userId, UUID vehicleId) {
+        return repository.findById(userId)
+                .flatMap(entity -> {
+                    entity.setAssignedVehicleId(vehicleId);
+                    return repository.save(entity);
+                })
+                .switchIfEmpty(Mono.error(new RuntimeException("Chauffeur non trouvÃ©")))
+                .then();
+    }
+}
+
+---
 ### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\FleetPersistenceAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence;
@@ -8477,6 +8701,38 @@ public class VehiclePersistenceAdapter implements VehiclePersistencePort {
         // Delete pivot - the CASCADE in SQL will handle the parameters
         return vehicleRepo.deleteById(id);
     }
+}
+
+---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\DriverEntity.java
+`$ext
+package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.UUID;
+
+@Table("drivers")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DriverEntity {
+    @Id
+    @Column("userid") // Correspond au userId de la table
+    private UUID userId;
+    
+    @Column("licencenumber")
+    private String licenceNumber;
+    
+    private Boolean status;
+    
+    @Column("assignedvehicleid")
+    private UUID assignedVehicleId;
 }
 
 ---
@@ -8629,6 +8885,23 @@ public class VehicleLocalEntity {
     @Column("user_id")
     private UUID userId;
     // Note: brand, model, color are NOT here because they are remote
+}
+
+---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\DriverR2dbcRepository.java
+`$ext
+package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
+
+import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity.DriverEntity;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+
+import java.util.UUID;
+
+@Repository
+public interface DriverR2dbcRepository extends ReactiveCrudRepository<DriverEntity, UUID> {
+    Flux<DriverEntity> findByStatus(Boolean status);
 }
 
 ---
@@ -9000,6 +9273,7 @@ public class SecurityConfig {
                                 "/api/v1/health/**",
                                 "/api/v1/fleets/**",
                                 "/api/v1/vehicles/**",
+                                "/api/v1/drivers/**",
                                 "/api/v1/auth/**" 
                         ).permitAll()
                         
@@ -9083,6 +9357,21 @@ public class WebClientConfig {
             .build()
             .createClient(AuthApiClient.class);
 }
+}
+
+---
+### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\DriverMapper.java
+`$ext
+package com.yowyob.fleet.infrastructure.mappers;
+
+import com.yowyob.fleet.domain.model.Driver;
+import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity.DriverEntity;
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring")
+public interface DriverMapper {
+    DriverEntity toEntity(Driver domain);
+    Driver toDomain(DriverEntity entity);
 }
 
 ---
