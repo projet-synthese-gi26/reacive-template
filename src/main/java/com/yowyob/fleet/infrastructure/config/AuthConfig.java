@@ -19,7 +19,7 @@ public class AuthConfig {
 
     @Bean
     @ConditionalOnProperty(name = "application.auth.mode", havingValue = "remote", matchIfMissing = true)
-    public AuthPort remoteAuthPort(AuthApiClient authApiClient) {
+    public AuthPort remoteAuthPort(AuthApiClient authApiClient, com.fasterxml.jackson.databind.ObjectMapper objectMapper) {
         // Maintenant, le constructeur de RemoteAuthAdapter accepte bien l'interface
         return new RemoteAuthAdapter(authApiClient);
     }

@@ -9,10 +9,10 @@
 
 #### Jalon 2 : Authentification & Accès (CU1)`Hassana`
 - [x] **Tâche 2.1 :** Configuration de la Sécurité Réactive (Spring Security).
-- [ ] **Tâche 2.2 :** Intégration du Service d'Authentification externe (Adaptateur WebClient).
-- [ ] **Tâche 2.3 :** Implémentation du **Mode Dégradé (Fake Auth)** pour le développement local.
-- [ ] **Tâche 2.4 :** **Validation Postman** : Tests de login, génération de token et accès restreint par rôles (RBAC).
-- [ ] **Tâche 2.5 :** Intégration des routes "mot de passe oublié" et autres via l'API d'authentification externe.
+- [x] **Tâche 2.2 :** Intégration du Service d'Authentification externe (Adaptateur WebClient).
+- [x] **Tâche 2.3 :** Implémentation du **Mode Dégradé (Fake Auth)** pour le développement local.
+- [x] **Tâche 2.4 :** **Validation Postman** : Tests de login, génération de token et accès restreint par rôles (RBAC).
+- [x] **Tâche 2.5 :** Intégration des routes "mot de passe oublié" et autres via l'API d'authentification externe.
 
 #### Jalon 3 : Exploitation (Flottes & Véhicules)`Gabriel`
 - [x] **Tâche 3.1 :** Infrastructure technique de communication (Adaptateur WebClient).

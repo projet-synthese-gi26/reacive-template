@@ -3,7 +3,9 @@ package com.yowyob.fleet.domain.ports.out;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
+
+// import com.yowyob.fleet.infrastructure.adapters.outbound.external.client.AuthApiClient.UserDetailResponse;
 
 public interface AuthPort {
     Mono<AuthResponse> login(String email, String password);
@@ -16,14 +18,33 @@ public interface AuthPort {
         String email, 
         String phone, 
         String firstName, 
-        String lastName);
+        String lastName,
+        List<String> roles);
 
+     // Nouvelles méthodes
+    Mono<UserDetail> me(String accessToken);
+
+    Mono<AuthResponse> refresh(String refreshToken);
+
+    Mono<Void> logout(UUID userId, String accessToken);
     
     record AuthResponse(
         String accessToken, 
         String refreshToken, 
+        UserDetail user
+    ) {}
+
+
+
+    record UserDetail(
+        UUID id, 
         String username, 
-        List<String> roles,
+        String email,
+        String phone,
+        String firstName,
+        String lastName,
+        String service,
+        List<String> roles, 
         List<String> permissions
     ) {}
-}
+}   
