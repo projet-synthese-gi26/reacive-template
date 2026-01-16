@@ -1,5 +1,5 @@
 ﻿# Contexte du Projet : Fleet & Geofence API
-GÃ©nÃ©rÃ© le : 01/01/2026 18:49:51
+GÃ©nÃ©rÃ© le : 01/15/2026 12:03:44
 Framework : Spring Boot WebFlux (Reactive)
 
 ## 1. Arborescence du Projet
@@ -53,7 +53,9 @@ D:.
 ª           
 +---.settings
 ª       org.eclipse.core.resources.prefs
+ª       org.eclipse.jdt.apt.core.prefs
 ª       org.eclipse.jdt.core.prefs
+ª       org.eclipse.m2e.core.prefs
 ª       
 ª       settings.json
 ª       
@@ -307,6 +309,7 @@ D:.
 ª   ª   ª                   ª   ª       ª   VehicleController.java
 ª   ª   ª                   ª   ª       ª   
 ª   ª   ª                   ª   ª       +---dto
+ª   ª   ª                   ª   ª               DriverRegistrationRequest.java
 ª   ª   ª                   ª   ª               FinancialUpdateRequest.java
 ª   ª   ª                   ª   ª               FleetRequest.java
 ª   ª   ª                   ª   ª               FleetResponse.java
@@ -463,6 +466,7 @@ D:.
     ª   ª               ª   ª       ª   VehicleController.class
     ª   ª               ª   ª       ª   
     ª   ª               ª   ª       +---dto
+    ª   ª               ª   ª               DriverRegistrationRequest.class
     ª   ª               ª   ª               FinancialUpdateRequest.class
     ª   ª               ª   ª               FleetRequest.class
     ª   ª               ª   ª               FleetResponse.class
@@ -585,7 +589,7 @@ D:.
 ## 2. Contenu des Fichiers
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docker-compose.yml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docker-compose.yml
 `$ext
 services:
   fleet-db:
@@ -604,7 +608,7 @@ volumes:
   postgres_data:
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\pom.xml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\pom.xml
 `$ext
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
@@ -795,7 +799,7 @@ volumes:
 </project>
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\Readme.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\Readme.md
 `$ext
 # Fleet Management & Geofencing API ðŸššðŸ›°ï¸
 
@@ -833,7 +837,7 @@ Ce projet est dÃ©veloppÃ© en mode **Pair Programming** avec une IA (Gemini/C
 
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\todo.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\todo.md
 `$ext
 ### ðŸ“‹ Roadmap Macro : API Fleet & Geofence
 
@@ -885,14 +889,14 @@ Ce projet est dÃ©veloppÃ© en mode **Pair Programming** avec une IA (Gemini/C
 
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\.mvn\wrapper\maven-wrapper.properties
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\.mvn\wrapper\maven-wrapper.properties
 `$ext
 wrapperVersion=3.3.4
 distributionType=only-script
 distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docker-compose.yml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docker-compose.yml
 `$ext
 services:
   fleet-db:
@@ -911,7 +915,7 @@ volumes:
   postgres_data:
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\pom.xml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\pom.xml
 `$ext
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
@@ -1102,7 +1106,7 @@ volumes:
 </project>
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\Readme.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\Readme.md
 `$ext
 # Fleet Management & Geofencing API ðŸššðŸ›°ï¸
 
@@ -1140,7 +1144,7 @@ Ce projet est dÃ©veloppÃ© en mode **Pair Programming** avec une IA (Gemini/C
 
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\todo.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\todo.md
 `$ext
 ### ðŸ“‹ Roadmap Macro : API Fleet & Geofence
 
@@ -1189,14 +1193,14 @@ Ce projet est dÃ©veloppÃ© en mode **Pair Programming** avec une IA (Gemini/C
 
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\.mvn\wrapper\maven-wrapper.properties
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\.mvn\wrapper\maven-wrapper.properties
 `$ext
 wrapperVersion=3.3.4
 distributionType=only-script
 distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\contracts_fleet_management.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\contracts_fleet_management.md
 `$ext
 # **API Contracts v1.0 - Fleet Management Service**
 
@@ -1678,7 +1682,7 @@ Represents the fleet-specific information of a driver.
 -   **Response (`200 OK`)**: An array of geofence event objects.
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\database_setup.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\database_setup.md
 `$ext
 # ðŸ—„ï¸ Database Setup Guide (Local Development)
 
@@ -1746,7 +1750,7 @@ Once the log shows `ðŸš€ LOCAL DATABASE READY!`, open your browser:
   ```
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\remarks_of_conception.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\remarks_of_conception.md
 `$ext
 # Remarques cahier d'analyse et conception
 
@@ -1819,7 +1823,7 @@ Je remarque la factorisation qui est regroupage elegant des cas d'utilisation da
 ---
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\README.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\README.md
 `$ext
 # Yowyob Database - Instructions
 
@@ -1864,7 +1868,7 @@ psql -U <user> -d yowyob_db -f yowyob_db_test.sql
 ```
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\yowyob_db_init.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\yowyob_db_init.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - INIT SCRIPT
@@ -2760,7 +2764,7 @@ COMMIT;
 -- =====================================================
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\yowyob_db_seed.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\yowyob_db_seed.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - DATA SEEDING SCRIPT
@@ -3054,7 +3058,7 @@ FROM generate_series(1, 40) as i;
 COMMIT;
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\yowyob_db_test.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\data\YOWYOB_DB\yowyob_db_test.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - TEST QUERIES (SEMI-VALIDATION)
@@ -3256,7 +3260,7 @@ LIMIT 5;
 -- =====================================================
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\prompts\master_pair_programmer.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\docs\prompts\master_pair_programmer.md
 `$ext
 # ðŸ¤– Master Prompt : Senior Pair Programmer WebFlux
 
@@ -3291,7 +3295,7 @@ Le code source complet est disponible dans le fichier `project_context.txt`.
 La roadmap est suivie dans `todo.md`.
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\application.yml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\application.yml
 `$ext
 server:
   port: 8080
@@ -3388,7 +3392,7 @@ spring:
       mode: never # SAFETY: Never run the destructive schema.sql on the remote server
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\prod.application.yml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\prod.application.yml
 `$ext
 server:
   port: 8080
@@ -3456,7 +3460,7 @@ resilience4j:
         slidingWindowSize: 5
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\local\data.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\local\data.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - DATA SEEDING SCRIPT
@@ -3748,7 +3752,7 @@ FROM generate_series(1, 40) as i;
 
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\local\schema.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\bin\src\main\resources\local\schema.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - INIT SCRIPT
@@ -4710,7 +4714,7 @@ CREATE TABLE user_has_roles (
 -- =====================================================
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\contracts_fleet_management.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\contracts_fleet_management.md
 `$ext
 # **API Contracts v1.0 - Fleet Management Service**
 
@@ -5192,7 +5196,7 @@ Represents the fleet-specific information of a driver.
 -   **Response (`200 OK`)**: An array of geofence event objects.
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\database_setup.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\database_setup.md
 `$ext
 # ðŸ—„ï¸ Database Setup Guide (Local Development)
 
@@ -5260,7 +5264,7 @@ Once the log shows `ðŸš€ LOCAL DATABASE READY!`, open your browser:
   ```
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\remarks_of_conception.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\remarks_of_conception.md
 `$ext
 # Remarques cahier d'analyse et conception
 
@@ -5333,7 +5337,7 @@ Je remarque la factorisation qui est regroupage elegant des cas d'utilisation da
 ---
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\README.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\README.md
 `$ext
 # Yowyob Database - Instructions
 
@@ -5378,7 +5382,7 @@ psql -U <user> -d yowyob_db -f yowyob_db_test.sql
 ```
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\yowyob_db_init.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\yowyob_db_init.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - INIT SCRIPT
@@ -6274,7 +6278,7 @@ COMMIT;
 -- =====================================================
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\yowyob_db_seed.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\yowyob_db_seed.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - DATA SEEDING SCRIPT
@@ -6568,7 +6572,7 @@ FROM generate_series(1, 40) as i;
 COMMIT;
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\yowyob_db_test.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\data\YOWYOB_DB\yowyob_db_test.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - TEST QUERIES (SEMI-VALIDATION)
@@ -6770,7 +6774,7 @@ LIMIT 5;
 -- =====================================================
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\prompts\master_pair_programmer.md
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\docs\prompts\master_pair_programmer.md
 `$ext
 # ðŸ¤– Master Prompt : Senior Pair Programmer WebFlux
 
@@ -6805,7 +6809,7 @@ Le code source complet est disponible dans le fichier `project_context.txt`.
 La roadmap est suivie dans `todo.md`.
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\FleetManagementApplication.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\FleetManagementApplication.java
 `$ext
 package com.yowyob.fleet;
 
@@ -6822,7 +6826,7 @@ public class FleetManagementApplication {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\AuthService.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\AuthService.java
 `$ext
 package com.yowyob.fleet.application.service;
 
@@ -6874,53 +6878,64 @@ public class AuthService implements AuthUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\DriverService.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\DriverService.java
 `$ext
 package com.yowyob.fleet.application.service;
 
 import com.yowyob.fleet.domain.model.Driver;
 import com.yowyob.fleet.domain.ports.in.ManageDriverUseCase;
+import com.yowyob.fleet.domain.ports.out.AuthPort;
 import com.yowyob.fleet.domain.ports.out.DriverPersistencePort;
+import com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto.DriverRegistrationRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DriverService implements ManageDriverUseCase {
 
     private final DriverPersistencePort driverPersistencePort;
+    private final AuthPort authPort;
 
     @Override
-    public Mono<Driver> registerDriver(Driver driver) {
-        return driverPersistencePort.save(driver);
+    public Mono<Driver> registerDriver(DriverRegistrationRequest request) {
+        log.info("Ã‰tape 1 : CrÃ©ation du compte utilisateur distant pour {}", request.username());
+        
+        // 1. Appel au service d'authentification distant
+        return authPort.register(
+            request.username(), request.password(), request.email(),
+            request.phone(), request.firstName(), request.lastName(),
+            List.of("DRIVER") // On impose le rÃ´le DRIVER
+        ).flatMap(authRes -> {
+            log.info("Ã‰tape 2 : CrÃ©ation du profil chauffeur local pour UUID {}", authRes.user().id());
+            
+            // 2. CrÃ©ation du modÃ¨le de domaine Driver avec l'UUID reÃ§u
+            Driver localDriver = new Driver(
+                authRes.user().id(), // UUID TraMaSys
+                request.licenceNumber(),
+                true, // Actif par dÃ©faut
+                null  // Aucun vÃ©hicule au dÃ©part
+            );
+            
+            // 3. Sauvegarde en base de donnÃ©es locale
+            return driverPersistencePort.save(localDriver);
+        });
     }
 
-    @Override
-    public Mono<Driver> getDriverById(UUID userId) {
-        return driverPersistencePort.findById(userId);
-    }
-
-    @Override
-    public Flux<Driver> getAllDrivers(Boolean status) {
-        return driverPersistencePort.findAll(status);
-    }
-
-    @Override
-    public Mono<Void> assignVehicle(UUID userId, UUID vehicleId) {
-        return driverPersistencePort.updateVehicleAssignment(userId, vehicleId);
-    }
-
-    @Override
-    public Mono<Void> unassignVehicle(UUID userId) {
-        return driverPersistencePort.updateVehicleAssignment(userId, null);
-    }
+    @Override public Mono<Driver> getDriverById(UUID userId) { return driverPersistencePort.findById(userId); }
+    @Override public Flux<Driver> getAllDrivers(Boolean status) { return driverPersistencePort.findAll(status); }
+    @Override public Mono<Void> assignVehicle(UUID userId, UUID vehicleId) { return driverPersistencePort.updateVehicleAssignment(userId, vehicleId); }
+    @Override public Mono<Void> unassignVehicle(UUID userId) { return driverPersistencePort.updateVehicleAssignment(userId, null); }
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\FleetService.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\FleetService.java
 `$ext
 package com.yowyob.fleet.application.service;
 
@@ -7002,7 +7017,7 @@ public class FleetService implements ManageFleetUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\ProductService.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\ProductService.java
 `$ext
 package com.yowyob.fleet.application.service;
 
@@ -7055,7 +7070,7 @@ public class ProductService implements CreateProductUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\VehicleService.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\application\service\VehicleService.java
 `$ext
 package com.yowyob.fleet.application.service;
 
@@ -7141,7 +7156,7 @@ public class VehicleService implements ManageVehicleUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\exception\StockFullException.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\exception\StockFullException.java
 `$ext
 package com.yowyob.fleet.domain.exception;
 
@@ -7152,7 +7167,7 @@ public class StockFullException extends RuntimeException {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Driver.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Driver.java
 `$ext
 package com.yowyob.fleet.domain.model;
 
@@ -7166,7 +7181,7 @@ public record Driver(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Fleet.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Fleet.java
 `$ext
 package com.yowyob.fleet.domain.model;
 
@@ -7182,7 +7197,7 @@ public record Fleet(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Product.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Product.java
 `$ext
 package com.yowyob.fleet.domain.model;
 
@@ -7192,7 +7207,7 @@ import java.util.UUID;
 public record Product(UUID id, String name, BigDecimal price, String status) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Vehicle.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\Vehicle.java
 `$ext
 package com.yowyob.fleet.domain.model;
 
@@ -7213,7 +7228,7 @@ public record Vehicle(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\VehicleParameters.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\model\VehicleParameters.java
 `$ext
 package com.yowyob.fleet.domain.model;
 
@@ -7254,7 +7269,7 @@ public class VehicleParameters {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\AuthUseCase.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\AuthUseCase.java
 `$ext
 package com.yowyob.fleet.domain.ports.in;
 
@@ -7287,7 +7302,7 @@ public interface AuthUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\CreateProductUseCase.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\CreateProductUseCase.java
 `$ext
 package com.yowyob.fleet.domain.ports.in;
 
@@ -7300,17 +7315,20 @@ public interface CreateProductUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageDriverUseCase.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageDriverUseCase.java
 `$ext
 package com.yowyob.fleet.domain.ports.in;
 
 import com.yowyob.fleet.domain.model.Driver;
+import com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto.DriverRegistrationRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 public interface ManageDriverUseCase {
-    Mono<Driver> registerDriver(Driver driver);
+    // Changement de signature pour inclure les infos de crÃ©ation d'utilisateur
+    Mono<Driver> registerDriver(DriverRegistrationRequest request);
+    
     Mono<Driver> getDriverById(UUID userId);
     Flux<Driver> getAllDrivers(Boolean status);
     Mono<Void> assignVehicle(UUID userId, UUID vehicleId);
@@ -7318,7 +7336,7 @@ public interface ManageDriverUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageFleetUseCase.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageFleetUseCase.java
 `$ext
 package com.yowyob.fleet.domain.ports.in;
 
@@ -7337,7 +7355,7 @@ public interface ManageFleetUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageVehicleUseCase.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\in\ManageVehicleUseCase.java
 `$ext
 package com.yowyob.fleet.domain.ports.in;
 
@@ -7364,7 +7382,7 @@ public interface ManageVehicleUseCase {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\AuthPort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\AuthPort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7418,7 +7436,7 @@ public interface AuthPort {
 }   
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\DriverPersistencePort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\DriverPersistencePort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7435,7 +7453,7 @@ public interface DriverPersistencePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ExternalVehiclePort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ExternalVehiclePort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7454,7 +7472,7 @@ public interface ExternalVehiclePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\FleetRepositoryPort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\FleetRepositoryPort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7471,7 +7489,7 @@ public interface FleetRepositoryPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ProductCachePort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ProductCachePort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7484,7 +7502,7 @@ public interface ProductCachePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ProductEventPublisherPort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ProductEventPublisherPort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7497,7 +7515,7 @@ public interface ProductEventPublisherPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ProductRepositoryPort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\ProductRepositoryPort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7510,7 +7528,7 @@ public interface ProductRepositoryPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\StockClientPort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\StockClientPort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7525,7 +7543,7 @@ public interface StockClientPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\VehiclePersistencePort.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\domain\ports\out\VehiclePersistencePort.java
 `$ext
 package com.yowyob.fleet.domain.ports.out;
 
@@ -7551,7 +7569,7 @@ public interface VehiclePersistencePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\kafka\ProductEventConsumer.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\kafka\ProductEventConsumer.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.kafka;
 
@@ -7577,7 +7595,7 @@ public class ProductEventConsumer {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\AuthController.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\AuthController.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
@@ -7660,13 +7678,18 @@ public class AuthController {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\DriverController.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\DriverController.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
 import com.yowyob.fleet.domain.model.Driver;
 import com.yowyob.fleet.domain.ports.in.ManageDriverUseCase;
+import com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto.DriverRegistrationRequest;
+
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -7683,28 +7706,49 @@ public class DriverController {
 
     private final ManageDriverUseCase driverUseCase;
 
-    // @PostMapping
-    // @ResponseStatus(HttpStatus.CREATED)
-    // public Mono<Driver> register(@RequestBody Driver driver) {
-    //     return driverUseCase.registerDriver(driver);
-    // }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Register a new Driver (Remote Auth + Local Profile)")
+    public Mono<Driver> register(@RequestBody DriverRegistrationRequest request) {
+        return driverUseCase.registerDriver(request);
+    }
 
     @GetMapping
-    public Flux<Driver> list(@RequestParam(required = false) Boolean status) {
+    @Operation(summary = "List all drivers", description = "Retrieve all drivers with optional status filtering")
+    public Flux<Driver> list(
+        @Parameter(
+            name = "status", 
+            description = "Filter by active (true) or inactive (false) status", 
+            in = ParameterIn.QUERY, 
+            schema = @Schema(type = "boolean")
+        ) 
+        @RequestParam(required = false) Boolean status
+    ) {
         return driverUseCase.getAllDrivers(status);
     }
 
     @GetMapping("/{userId}")
-    public Mono<Driver> get(@PathVariable UUID userId) {
+    @Operation(summary = "Get driver by ID")
+    public Mono<Driver> get(
+        @Parameter(
+            name = "userId",
+            description = "Unique identifier of the driver",
+            in = ParameterIn.PATH,
+            schema = @Schema(type = "string", format = "uuid")
+        )
+        @PathVariable UUID userId
+    ) {
         return driverUseCase.getDriverById(userId);
     }
 
     @PostMapping("/{userId}/assign-vehicle")
+    @Operation(summary = "Assign a vehicle to a driver")
     public Mono<Void> assign(@PathVariable UUID userId, @RequestBody VehicleAssignRequest req) {
         return driverUseCase.assignVehicle(userId, req.vehicleId());
     }
 
     @PostMapping("/{userId}/unassign-vehicle")
+    @Operation(summary = "Remove vehicle assignment from driver")
     public Mono<Void> unassign(@PathVariable UUID userId) {
         return driverUseCase.unassignVehicle(userId);
     }
@@ -7713,7 +7757,7 @@ public class DriverController {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\FleetController.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\FleetController.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
@@ -7787,7 +7831,7 @@ public class FleetController {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\GlobalExceptionHandler.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\GlobalExceptionHandler.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
@@ -7829,7 +7873,7 @@ public class GlobalExceptionHandler {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\HealthCheckController.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\HealthCheckController.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
@@ -7866,7 +7910,7 @@ public class HealthCheckController {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\ProductController.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\ProductController.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
@@ -7909,7 +7953,7 @@ public class ProductController {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\VehicleController.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\VehicleController.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
@@ -7977,7 +8021,27 @@ public class VehicleController {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\FinancialUpdateRequest.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\DriverRegistrationRequest.java
+`$ext
+package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
+
+import java.util.List;
+
+public record DriverRegistrationRequest(
+    // Infos TraMaSys
+    String username,
+    String password,
+    String email,
+    String phone,
+    String firstName,
+    String lastName,
+    
+    // Infos MÃ©tier (Locales)
+    String licenceNumber
+) {}
+
+---
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\FinancialUpdateRequest.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
 
@@ -7993,7 +8057,7 @@ public record FinancialUpdateRequest(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\FleetRequest.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\FleetRequest.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
 
@@ -8007,7 +8071,7 @@ public record FleetRequest(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\FleetResponse.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\FleetResponse.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
 
@@ -8023,7 +8087,7 @@ public record FleetResponse(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\MaintenanceUpdateRequest.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\MaintenanceUpdateRequest.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
 
@@ -8038,7 +8102,7 @@ public record MaintenanceUpdateRequest(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\ProductRequest.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\ProductRequest.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
 import jakarta.validation.constraints.NotBlank;
@@ -8049,7 +8113,7 @@ import java.math.BigDecimal;
 public record ProductRequest(@NotBlank String name, @Positive BigDecimal price) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\ProductResponse.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\ProductResponse.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
 import java.math.BigDecimal;
@@ -8059,7 +8123,7 @@ import java.util.UUID;
 public record ProductResponse(UUID id, String name, BigDecimal price, String status) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\VehicleRegistrationRequest.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\inbound\rest\dto\VehicleRegistrationRequest.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
 
@@ -8071,7 +8135,7 @@ public record VehicleRegistrationRequest(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\cache\RedisAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\cache\RedisAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.cache;
 
@@ -8098,7 +8162,7 @@ public class RedisAdapter implements ProductCachePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\FakeAuthAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\FakeAuthAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external;
 
@@ -8173,7 +8237,7 @@ public class FakeAuthAdapter implements AuthPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\RemoteAuthAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\RemoteAuthAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external;
 
@@ -8268,7 +8332,7 @@ public class RemoteAuthAdapter implements AuthPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\StockAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\StockAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external;
 
@@ -8309,7 +8373,7 @@ public class StockAdapter implements StockClientPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\VehicleApiAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\VehicleApiAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external;
 
@@ -8350,7 +8414,7 @@ public class VehicleApiAdapter implements ExternalVehiclePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\client\AuthApiClient.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\client\AuthApiClient.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external.client;
 
@@ -8417,7 +8481,7 @@ public interface AuthApiClient {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\client\StockApiClient.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\client\StockApiClient.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external.client;
 
@@ -8435,7 +8499,7 @@ public interface StockApiClient {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\client\VehicleApiClient.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\client\VehicleApiClient.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external.client;
 
@@ -8454,7 +8518,7 @@ public interface VehicleApiClient {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\dto\VehicleExternalResponse.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\external\dto\VehicleExternalResponse.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.external.dto;
 
@@ -8474,7 +8538,7 @@ public record VehicleExternalResponse(
 ) {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\messaging\KafkaAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\messaging\KafkaAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.messaging;
 
@@ -8506,7 +8570,7 @@ public class KafkaAdapter implements ProductEventPublisherPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\DriverPersistenceAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\DriverPersistenceAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence;
 
@@ -8561,7 +8625,7 @@ public class DriverPersistenceAdapter implements DriverPersistencePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\FleetPersistenceAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\FleetPersistenceAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence;
 
@@ -8607,7 +8671,7 @@ public class FleetPersistenceAdapter implements FleetRepositoryPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\PostgresR2dbcAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\PostgresR2dbcAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence;
 
@@ -8636,7 +8700,7 @@ public class PostgresR2dbcAdapter implements ProductRepositoryPort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\VehiclePersistenceAdapter.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\VehiclePersistenceAdapter.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence;
 
@@ -8704,7 +8768,7 @@ public class VehiclePersistenceAdapter implements VehiclePersistencePort {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\DriverEntity.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\DriverEntity.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
 
@@ -8736,7 +8800,7 @@ public class DriverEntity {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\FinancialParameterEntity.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\FinancialParameterEntity.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
 
@@ -8771,7 +8835,7 @@ public class FinancialParameterEntity {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\FleetEntity.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\FleetEntity.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
 
@@ -8805,7 +8869,7 @@ public class FleetEntity {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\MaintenanceParameterEntity.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\MaintenanceParameterEntity.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
 
@@ -8838,7 +8902,7 @@ public class MaintenanceParameterEntity {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\ProductEntity.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\ProductEntity.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
 
@@ -8861,7 +8925,7 @@ public class ProductEntity {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\VehicleLocalEntity.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\entity\VehicleLocalEntity.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
 
@@ -8888,7 +8952,7 @@ public class VehicleLocalEntity {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\DriverR2dbcRepository.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\DriverR2dbcRepository.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
 
@@ -8905,7 +8969,7 @@ public interface DriverR2dbcRepository extends ReactiveCrudRepository<DriverEnti
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\FinancialParameterR2dbcRepository.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\FinancialParameterR2dbcRepository.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
 
@@ -8925,7 +8989,7 @@ public interface FinancialParameterR2dbcRepository extends ReactiveCrudRepositor
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\FleetR2dbcRepository.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\FleetR2dbcRepository.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
 
@@ -8937,7 +9001,7 @@ public interface FleetR2dbcRepository extends ReactiveCrudRepository<FleetEntity
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\MaintenanceParameterR2dbcRepository.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\MaintenanceParameterR2dbcRepository.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
 
@@ -8957,7 +9021,7 @@ public interface MaintenanceParameterR2dbcRepository extends ReactiveCrudReposit
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\ProductR2dbcRepository.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\ProductR2dbcRepository.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
 
@@ -8970,7 +9034,7 @@ import java.util.UUID;
 public interface ProductR2dbcRepository extends ReactiveCrudRepository<ProductEntity, UUID> {}
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\VehicleLocalR2dbcRepository.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\adapters\outbound\persistence\repository\VehicleLocalR2dbcRepository.java
 `$ext
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
 
@@ -8995,7 +9059,7 @@ public interface VehicleLocalR2dbcRepository extends ReactiveCrudRepository<Vehi
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\AuthConfig.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\AuthConfig.java
 `$ext
 package com.yowyob.fleet.infrastructure.config;
 
@@ -9025,7 +9089,7 @@ public class AuthConfig {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\DatabaseInitConfig.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\DatabaseInitConfig.java
 `$ext
 package com.yowyob.fleet.infrastructure.config;
 
@@ -9114,7 +9178,7 @@ public class DatabaseInitConfig {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\KafkaConfig.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\KafkaConfig.java
 `$ext
 package com.yowyob.fleet.infrastructure.config;
 
@@ -9149,7 +9213,7 @@ public class KafkaConfig {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\OpenApiConfig.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\OpenApiConfig.java
 `$ext
 package com.yowyob.fleet.infrastructure.config;
 
@@ -9194,7 +9258,7 @@ public class OpenApiConfig {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\RedisConfig.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\RedisConfig.java
 `$ext
 package com.yowyob.fleet.infrastructure.config;
 
@@ -9232,7 +9296,7 @@ public class RedisConfig {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\SecurityConfig.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\SecurityConfig.java
 `$ext
 package com.yowyob.fleet.infrastructure.config;
 
@@ -9302,7 +9366,7 @@ public class SecurityConfig {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\WebClientConfig.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\config\WebClientConfig.java
 `$ext
 package com.yowyob.fleet.infrastructure.config;
 
@@ -9360,7 +9424,7 @@ public class WebClientConfig {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\DriverMapper.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\DriverMapper.java
 `$ext
 package com.yowyob.fleet.infrastructure.mappers;
 
@@ -9375,7 +9439,7 @@ public interface DriverMapper {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\FleetMapper.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\FleetMapper.java
 `$ext
 package com.yowyob.fleet.infrastructure.mappers;
 
@@ -9428,7 +9492,7 @@ public interface FleetMapper {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\ProductMapper.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\ProductMapper.java
 `$ext
 package com.yowyob.fleet.infrastructure.mappers;
 
@@ -9449,7 +9513,7 @@ public interface ProductMapper {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\VehicleLocalMapper.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\java\com\yowyob\fleet\infrastructure\mappers\VehicleLocalMapper.java
 `$ext
 package com.yowyob.fleet.infrastructure.mappers;
 
@@ -9511,7 +9575,7 @@ public interface VehicleLocalMapper {
 }
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\application.yml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\application.yml
 `$ext
 server:
   port: 8080
@@ -9635,7 +9699,7 @@ sql:
     mode: never
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\prod.application.yml
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\prod.application.yml
 `$ext
 server:
   port: 8080
@@ -9730,7 +9794,7 @@ resilience4j:
         slidingWindowSize: 5
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\local\data.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\local\data.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - DATA SEEDING SCRIPT
@@ -10022,7 +10086,7 @@ FROM generate_series(1, 40) as i;
 
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\local\schema.sql
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\main\resources\local\schema.sql
 `$ext
 -- =====================================================
 -- YOWYOB DB - INIT SCRIPT
@@ -10984,7 +11048,7 @@ CREATE TABLE user_has_roles (
 -- =====================================================
 
 ---
-### Fichier : D:\Ecole\HASSANA 5GI 2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\test\java\com\yowyob\reactive_hexagonal\ReactiveHexagonalApplicationTests.java
+### Fichier : D:\Ecole\HASSANA_5GI_2025_2026\Projet Synthèse\fleetman\fleet-management-geofence\src\test\java\com\yowyob\reactive_hexagonal\ReactiveHexagonalApplicationTests.java
 `$ext
 package com.yowyob.reactive_hexagonal;
 
