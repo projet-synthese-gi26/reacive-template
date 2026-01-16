@@ -1,5 +1,5 @@
 # Contexte du Projet : Fleet & Geofence API
-Généré le : Fri 16 Jan 2026 01:59:54 PM WAT
+Généré le : Fri 16 Jan 2026 02:45:52 PM WAT
 Framework : Spring Boot WebFlux (Reactive)
 
 ## 1. Arborescence du Projet
@@ -11,6 +11,10 @@ Framework : Spring Boot WebFlux (Reactive)
 │   ├── contracts_fleet_management.md
 │   ├── data
 │   │   └── YOWYOB_DB
+│   │       ├── last_schema
+│   │       │   ├── data.sql
+│   │       │   ├── guide_database_setup.md
+│   │       │   └── schema.sql
 │   │       ├── README.md
 │   │       ├── yowyob_db_init.sql
 │   │       ├── yowyob_db_seed.sql
@@ -117,6 +121,7 @@ Framework : Spring Boot WebFlux (Reactive)
 │   │   │                   │           │   ├── FinancialParameterEntity.java
 │   │   │                   │           │   ├── FleetEntity.java
 │   │   │                   │           │   ├── MaintenanceParameterEntity.java
+│   │   │                   │           │   ├── OperationalParameterEntity.java
 │   │   │                   │           │   ├── ProductEntity.java
 │   │   │                   │           │   └── VehicleLocalEntity.java
 │   │   │                   │           ├── FleetPersistenceAdapter.java
@@ -131,7 +136,6 @@ Framework : Spring Boot WebFlux (Reactive)
 │   │   │                   │           └── VehiclePersistenceAdapter.java
 │   │   │                   ├── config
 │   │   │                   │   ├── AuthConfig.java
-│   │   │                   │   ├── DatabaseInitConfig.java
 │   │   │                   │   ├── KafkaConfig.java
 │   │   │                   │   ├── OpenApiConfig.java
 │   │   │                   │   ├── RedisConfig.java
@@ -144,11 +148,15 @@ Framework : Spring Boot WebFlux (Reactive)
 │   │   │                       └── VehicleLocalMapper.java
 │   │   └── resources
 │   │       ├── application.yml
+│   │       ├── db
+│   │       │   └── changelog
+│   │       │       ├── changes
+│   │       │       │   ├── 001-init-schemas.sql
+│   │       │       │   └── 002-fleet-tables.sql
+│   │       │       ├── data
+│   │       │       │   └── 001-local-public-mock.sql
+│   │       │       └── db.changelog-master.yaml
 │   │       ├── db_updates_by_gabriel.zip
-│   │       ├── local
-│   │       │   ├── data.sql
-│   │       │   ├── guide_database_setup.md
-│   │       │   └── schema.sql
 │   │       ├── prod.application.yml
 │   │       └── schema.sql.bak
 │   └── test
@@ -160,7 +168,7 @@ Framework : Spring Boot WebFlux (Reactive)
 ├── sync_auth.sh
 └── todo.md
 
-44 directories, 110 files
+48 directories, 114 files
 ```
 ## 2. Contenu des Fichiers
 
@@ -4844,6 +4852,1360 @@ FROM generate_series(1, 40) as i;
 COMMIT;```
 
 ---
+### Fichier : `./docs/data/YOWYOB_DB/last_schema/data.sql`
+```sql
+-- =====================================================
+-- YOWYOB DB - DATA SEEDING SCRIPT
+-- PostgreSQL
+-- =====================================================
+
+
+-- =====================================================
+-- 1. CLEANUP EXISTING DATA
+-- =====================================================
+TRUNCATE TABLE 
+    users, images, countries, business_actors, 
+    admins, fleet_managers, drivers, customers, 
+    providers, employees, prospects, sales_persons,
+    profiles, settings, addresses, contacts,
+    roles, permissions, role_has_permissions,  user_has_permissions,user_has_roles,
+    organizations, agencies, business_domains, organization_business_domains,
+    certifications, third_parties, proposed_activities, services, branches,
+    fleets, vehicles, geofence_zones, geofence_points, geofence_events,
+    roads, trips, offers, rides, reviews, offer_driver_linkages,
+    operational_parameters, financial_parameters, maintenance_parameters,
+    geofence_point_zone_linkages,
+    syndicats, abstract_products, products, 
+    publications, publication_images, publication_votes, votes,
+    events, event_images, reactions, comments, avis,
+    subscriptions, payments
+    RESTART IDENTITY CASCADE;
+
+-- =====================================================
+-- 2. STATIC REFERENCE DATA
+-- =====================================================
+
+-- Countries
+INSERT INTO countries (name, code) VALUES
+('Cameroun', 'CM'), ('Sénégal', 'SN'), ('Côte d''Ivoire', 'CI'), 
+('Gabon', 'GA'), ('Nigéria', 'NG'), ('Togo', 'TG');
+
+-- Roles
+INSERT INTO roles (name, guard_name) VALUES
+('ADMIN', 'web'), ('FLEET_MANAGER', 'web'), ('DRIVER', 'web'), ('CUSTOMER', 'web');
+
+-- Images (Random placeholders from Picsum)
+INSERT INTO images (url, alt_text) 
+SELECT 
+    'https://picsum.photos/seed/' || i || '/800/600', 
+    'Image aléatoire ' || i
+FROM generate_series(1, 50) as i;
+
+-- =====================================================
+-- 3. USERS GENERATION (100 users)
+-- =====================================================
+
+INSERT INTO users (name, phone_number, email_address)
+SELECT 
+    (ARRAY['Mamadou', 'Jean-Pierre', 'Ibrahim', 'Fatou', 'Aminata', 'Ngolo', 'Aboubakar', 'Clarisse', 'Samuel', 'Kouamé', 'Aissatou', 'Bachelard', 'Landry', 'Thérèse'])[floor(random()*14)+1] 
+    || ' ' || 
+    (ARRAY['Diop', 'Njoya', 'Mbarga', 'Kone', 'Sow', 'Etoundi', 'Kamga', 'Traoré', 'Diallo', 'Fofana', 'Mensah', 'Atangana', 'Eto''o', 'Drogba'])[floor(random()*14)+1],
+    (ARRAY['+237', '+221', '+225'])[floor(random()*3)+1] || (600000000 + floor(random()*99999999)::int),
+    'user_' || i || '@yowyob.test'
+FROM generate_series(1, 100) as i;
+
+-- Settings & Profiles
+INSERT INTO settings (user_id, theme, language, receive_push_notifications)
+SELECT id, 'LIGHT', 'fr', true FROM users;
+
+INSERT INTO profiles (user_id, first_name, nationality, is_verified)
+SELECT id, split_part(name, ' ', 1), 'Camerounais', (random() > 0.5) FROM users;
+
+-- =====================================================
+-- 4. ACTORS DISPATCHING
+-- User -> BusinessActor -> SpecificActor
+-- =====================================================
+
+-- 4.1 Admins (First 5 users)
+INSERT INTO admins (id, name, email_address)
+SELECT id, name, email_address FROM users ORDER BY email_address LIMIT 5;
+
+-- 4.2 Fleet Managers (Next 5 users)
+-- STEP 1: Insert into PARENT (BusinessActor)
+INSERT INTO business_actors (id, name, phone_number, email_address)
+SELECT id, name, phone_number, email_address FROM users ORDER BY email_address LIMIT 5 OFFSET 5;
+
+-- STEP 2: Insert into CHILD (FleetManager)
+INSERT INTO fleet_managers (id, name, email_address)
+SELECT id, name, email_address FROM users ORDER BY email_address LIMIT 5 OFFSET 5;
+
+-- 4.3 Drivers (Next 30 users)
+-- STEP 1: Insert into PARENT (BusinessActor)
+INSERT INTO business_actors (id, name, phone_number, email_address)
+SELECT id, name, phone_number, email_address FROM users ORDER BY email_address LIMIT 30 OFFSET 10;
+
+-- STEP 2: Insert into CHILD (Driver)
+INSERT INTO drivers (id, status, license_number, has_car)
+SELECT 
+    id, 
+    (ARRAY['AVAILABLE', 'BUSY', 'OFFLINE'])[floor(random()*3)+1], 
+    'LIC-' || floor(random()*100000) || '-CM',
+    (random() > 0.3)
+FROM users ORDER BY email_address LIMIT 30 OFFSET 10;
+
+-- 4.4 Customers (Remaining 60 users)
+INSERT INTO customers (id, code, payment_method)
+SELECT 
+    id, 
+    'CUST-' || substr(id::text, 1, 8),
+    (ARRAY['CASH', 'MOBILE_MONEY', 'CARD'])[floor(random()*3)+1]
+FROM users ORDER BY email_address LIMIT 60 OFFSET 40;
+
+-- Assign Roles
+INSERT INTO user_has_roles (user_id, role_id)
+SELECT id, (SELECT id FROM roles WHERE name = 'ADMIN') FROM users ORDER BY email_address LIMIT 5;
+
+INSERT INTO user_has_roles (user_id, role_id)
+SELECT id, (SELECT id FROM roles WHERE name = 'FLEET_MANAGER') FROM users ORDER BY email_address LIMIT 5 OFFSET 5;
+
+INSERT INTO user_has_roles (user_id, role_id)
+SELECT id, (SELECT id FROM roles WHERE name = 'DRIVER') FROM users ORDER BY email_address LIMIT 30 OFFSET 10;
+
+INSERT INTO user_has_roles (user_id, role_id)
+SELECT id, (SELECT id FROM roles WHERE name = 'CUSTOMER') FROM users ORDER BY email_address LIMIT 60 OFFSET 40;
+
+-- =====================================================
+-- 5. ORGANIZATIONS & AGENCIES
+-- =====================================================
+
+INSERT INTO organizations (
+    business_actor_id, logo_id, code, short_name, long_name, 
+    description, tax_number, is_active, status
+)
+SELECT
+    (SELECT id FROM fleet_managers ORDER BY random() LIMIT 1),
+    (SELECT id FROM images ORDER BY random() LIMIT 1),
+    'ORG-' || i,
+    'Transport ' || i,
+    'Société de Transport ' || i,
+    'Description ' || i,
+    'TAX-' || floor(random()*1000000),
+    true,
+    'PUBLISHED'
+FROM generate_series(1, 35) as i;
+
+INSERT INTO agencies (
+    organization_id, manager_id, name, city, location, is_headquarter
+)
+SELECT 
+    id, 
+    (SELECT id FROM fleet_managers ORDER BY random() LIMIT 1),
+    'Agence Centrale',
+    (ARRAY['Douala', 'Yaoundé', 'Abidjan'])[floor(random()*3)+1],
+    'Rue Principale',
+    true
+FROM organizations;
+
+-- =====================================================
+-- 6. FLEETS & VEHICLES
+-- =====================================================
+
+INSERT INTO fleets (fleet_manager_id, name, phone_number)
+SELECT 
+    id, 'Flotte de ' || name, '+237699000000'
+FROM fleet_managers;
+
+-- Vehicles
+INSERT INTO vehicles (
+    fleet_id, user_id, driver_id, license_plate, brand, model, type, color, manufacturing_year
+)
+SELECT 
+    f.id,
+    f.fleet_manager_id,
+    (SELECT id FROM drivers ORDER BY random() LIMIT 1),
+    'LT-' || floor(random()*999)::text || '-AA',
+    (ARRAY['Toyota', 'Peugeot'])[floor(random()*2)+1],
+    (ARRAY['Yaris', 'Partner'])[floor(random()*2)+1],
+    (ARRAY['CAR', 'VAN'])[floor(random()*2)+1]::vehicle_type_enum,
+    'Jaune',
+    2020
+FROM fleets f;
+
+-- =====================================================
+-- 7. OFFERS & RIDES
+-- =====================================================
+
+INSERT INTO offers (
+    passenger_id, start_point, end_point, price, state, created_at
+)
+SELECT 
+    (SELECT id FROM customers ORDER BY random() LIMIT 1),
+    'Point A', 'Point B', 
+    2000, 
+    'CHOSEN',
+    NOW()
+FROM generate_series(1, 60) as i;
+
+-- Rides
+INSERT INTO rides (
+    offer_id, passenger_id, driver_id, 
+    distance, time_estimation, real_time, state, created_at
+)
+SELECT 
+    id, -- offer_id
+    passenger_id,
+    (SELECT id FROM drivers ORDER BY random() LIMIT 1),
+    15.5, 30, 35,
+    'COMPLETED',
+    created_at
+FROM offers 
+LIMIT 40;
+
+-- Reviews
+INSERT INTO reviews (ride_id, author_id, subject, comment, rating)
+SELECT 
+    id,
+    passenger_id,
+    'Chauffeur',
+    'Bonne course, chauffeur ponctuel',
+    5
+FROM rides
+WHERE state = 'COMPLETED';
+
+-- =====================================================
+-- 8. PRODUCTS
+-- =====================================================
+
+INSERT INTO products (
+    organization_id, name, description, standard_price, 
+    status, is_active, departure_location
+)
+SELECT 
+    (SELECT id FROM organizations ORDER BY random() LIMIT 1),
+    'Trajet Spécial ' || i,
+    'Description produit',
+    5000,
+    'PUBLISHED',
+    true,
+    'Douala'
+FROM generate_series(1, 40) as i;
+
+-- =====================================================
+-- 9. SUBSCRIPTIONS & PAYMENTS
+-- =====================================================
+
+INSERT INTO subscriptions (
+    admin_id, label, price, duration_in_days, description, is_active
+) VALUES 
+((SELECT id FROM admins LIMIT 1), 'Pack Hebdo', 2500, 7, 'Standard', true),
+((SELECT id FROM admins LIMIT 1), 'Pack Mensuel', 10000, 30, 'Pro', true),
+((SELECT id FROM admins LIMIT 1), 'Pack Annuel', 100000, 365, 'VIP', true);
+
+INSERT INTO payments (
+    driver_id, user_id, subscription_id, amount_paid, status, id_provider_transaction, created_at
+)
+SELECT 
+    d.id, -- Driver ID
+    d.id, -- Payer ID
+    s.id, -- Subscription ID
+    s.price,
+    'SUCCESS',
+    'TXN-' || floor(random()*10000000),
+    NOW()
+FROM drivers d
+CROSS JOIN subscriptions s
+ORDER BY random()
+LIMIT 50;
+
+-- =====================================================
+-- 10. SOCIAL & ADDRESSES
+-- =====================================================
+
+INSERT INTO syndicats (organization_id, name, is_approved)
+SELECT id, 'Syndicat Transports', true FROM organizations LIMIT 1;
+
+INSERT INTO branches (id, syndicat_id, name, location)
+SELECT 
+    ag.id,
+    (SELECT id FROM syndicats LIMIT 1),
+    'Branche ' || ag.name, 
+    ag.location 
+FROM agencies ag 
+LIMIT 10;
+
+INSERT INTO publications (branch_id, author_id, content, status, n_likes)
+SELECT 
+    (SELECT id FROM branches ORDER BY random() LIMIT 1),
+    (SELECT id FROM admins ORDER BY random() LIMIT 1),
+    'Info Trafic ' || i,
+    'PUBLISHED',
+    floor(random() * 50)::int
+FROM generate_series(1, 40) as i;
+
+-- =====================================================
+-- SEEDING DIRECT PERMISSIONS (Test)
+-- =====================================================
+
+-- On crée quelques permissions
+INSERT INTO permissions (id, name) VALUES 
+(uuid_generate_v4(), 'extra:special_access'),
+(uuid_generate_v4(), 'fleet:emergency_stop');
+
+-- On donne la première permission au premier utilisateur (Admin 1)
+INSERT INTO user_has_permissions (user_id, permission_id)
+VALUES (
+    (SELECT id FROM users ORDER BY email_address LIMIT 1),
+    (SELECT id FROM permissions WHERE name = 'extra:special_access' LIMIT 1)
+);
+```
+
+---
+### Fichier : `./docs/data/YOWYOB_DB/last_schema/schema.sql`
+```sql
+-- =====================================================
+-- YOWYOB DB - INIT SCRIPT
+-- PostgreSQL
+-- Structure: Core -> Organization -> RBAC
+-- =====================================================
+
+-- Clean up existing tables and types to ensure a fresh start
+-- We drop them in reverse order of dependency
+DROP TABLE IF EXISTS user_has_roles CASCADE;
+DROP TABLE IF EXISTS role_has_permissions CASCADE;
+DROP TABLE IF EXISTS permissions CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS payments CASCADE;
+DROP TABLE IF EXISTS subscriptions CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
+DROP TABLE IF EXISTS profiles CASCADE;
+DROP TABLE IF EXISTS comments CASCADE;
+DROP TABLE IF EXISTS reactions CASCADE;
+DROP TABLE IF EXISTS event_images CASCADE;
+DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE IF EXISTS publication_images CASCADE;
+DROP TABLE IF EXISTS publications CASCADE;
+DROP TABLE IF EXISTS branches CASCADE;
+DROP TABLE IF EXISTS avis CASCADE;
+DROP TABLE IF EXISTS votes CASCADE;
+DROP TABLE IF EXISTS publication_votes CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS abstract_products CASCADE;
+DROP TABLE IF EXISTS syndicats CASCADE;
+DROP TABLE IF EXISTS offer_driver_linkages CASCADE;
+DROP TABLE IF EXISTS geofence_events CASCADE;
+DROP TABLE IF EXISTS geofence_point_zone_linkages CASCADE;
+DROP TABLE IF EXISTS geofence_points CASCADE;
+DROP TABLE IF EXISTS maintenance_parameters CASCADE;
+DROP TABLE IF EXISTS financial_parameters CASCADE;
+DROP TABLE IF EXISTS operational_parameters CASCADE;
+DROP TABLE IF EXISTS trips CASCADE;
+DROP TABLE IF EXISTS roads CASCADE;
+DROP TABLE IF EXISTS vehicles CASCADE;
+DROP TABLE IF EXISTS geofence_zones CASCADE;
+DROP TABLE IF EXISTS fleets CASCADE;
+DROP TABLE IF EXISTS fleet_managers CASCADE;
+DROP TABLE IF EXISTS rides CASCADE;
+DROP TABLE IF EXISTS offers CASCADE;
+DROP TABLE IF EXISTS drivers CASCADE;
+DROP TABLE IF EXISTS services CASCADE;
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS sales_persons CASCADE;
+DROP TABLE IF EXISTS prospects CASCADE;
+DROP TABLE IF EXISTS employees CASCADE;
+DROP TABLE IF EXISTS providers CASCADE;
+DROP TABLE IF EXISTS addresses CASCADE;
+DROP TABLE IF EXISTS proposed_activities CASCADE;
+DROP TABLE IF EXISTS settings CASCADE;
+DROP TABLE IF EXISTS third_parties CASCADE;
+DROP TABLE IF EXISTS certifications CASCADE;
+DROP TABLE IF EXISTS organization_business_domains CASCADE;
+DROP TABLE IF EXISTS contacts CASCADE;
+DROP TABLE IF EXISTS business_domains CASCADE;
+DROP TABLE IF EXISTS agencies CASCADE;
+DROP TABLE IF EXISTS organizations CASCADE;
+DROP TABLE IF EXISTS business_actors CASCADE;
+DROP TABLE IF EXISTS countries CASCADE;
+DROP TABLE IF EXISTS images CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
+-- Drop existing types
+DROP TYPE IF EXISTS reaction_type_enum CASCADE;
+DROP TYPE IF EXISTS type_enum CASCADE;
+DROP TYPE IF EXISTS role_type_enum CASCADE;
+DROP TYPE IF EXISTS engine_status_enum CASCADE;
+DROP TYPE IF EXISTS maintenance_status_enum CASCADE;
+DROP TYPE IF EXISTS event_type_enum CASCADE;
+DROP TYPE IF EXISTS ride_state_enum CASCADE;
+DROP TYPE IF EXISTS offer_state_enum CASCADE;
+DROP TYPE IF EXISTS vehicle_type_enum CASCADE;
+DROP TYPE IF EXISTS action_enum CASCADE;
+DROP TYPE IF EXISTS category_enum CASCADE;
+DROP TYPE IF EXISTS status_enum CASCADE;
+
+-- Re-enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+-- =====================================================
+-- ENUM TYPES
+-- =====================================================
+
+CREATE TYPE status_enum AS ENUM (
+  'DRAFT', 'WAITING_CONFIRMATION', 'PUBLISHED', 'IN_PROGRESS', 'CANCELLED', 'EXPIRED'
+);
+
+CREATE TYPE category_enum AS ENUM (
+  'ANNOUNCE', 'PLANNING', 'VEHICLE', 'ADDRESS', 'EXPERIENCE'
+);
+
+CREATE TYPE action_enum AS ENUM (
+  'CREATE', 'UPDATE', 'READ', 'DELETE'
+);
+
+CREATE TYPE vehicle_type_enum AS ENUM (
+  'CAR', 'VAN', 'TRUCK', 'BIKE'
+);
+
+CREATE TYPE offer_state_enum AS ENUM (
+  'NEW', 'PENDING', 'CHOSEN', 'TERMINATED', 'CANCELED'
+);
+
+CREATE TYPE ride_state_enum AS ENUM (
+  'CONFIRMED', 'ONGOING', 'COMPLETED', 'CANCELED'
+);
+
+CREATE TYPE event_type_enum AS ENUM (
+  'ENTRY', 'EXIT'
+);
+
+CREATE TYPE maintenance_status_enum AS ENUM (
+  'UP_TO_DATE', 'PENDING', 'OVERDUE'
+);
+
+CREATE TYPE engine_status_enum AS ENUM (
+  'OK', 'NEED_SERVICE', 'OUT_OF_SERVICE'
+);
+
+CREATE TYPE role_type_enum AS ENUM (
+  'CUSTOMER', 'DRIVER', 'FLEET_MANAGER', 'ADMIN', 'PASSENGER', 'PRESIDENT', 'MODERATOR', 'CLIENT'
+);
+
+CREATE TYPE type_enum AS ENUM (
+  'NOTIFICATION', 'CHAT', 'PAYMENT', 'MEDIA'
+);
+
+CREATE TYPE reaction_type_enum AS ENUM (
+  'LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY'
+);
+
+-- =====================================================
+-- CORE TABLES
+-- =====================================================
+
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  phone_number TEXT,
+  email_address TEXT UNIQUE
+);
+
+CREATE TABLE images (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  url TEXT NOT NULL,
+  alt_text TEXT,
+  uploaded_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE countries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  code TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE business_actors (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT,
+  phone_number TEXT,
+  email_address TEXT,
+  CONSTRAINT fk_business_actor_user
+    FOREIGN KEY (id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+-- =====================================================
+-- ORGANIZATION TABLES
+-- =====================================================
+
+CREATE TABLE organizations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  business_actor_id UUID REFERENCES business_actors(id),
+  logo_id UUID REFERENCES images(id),
+
+  code TEXT,
+  service TEXT,
+  is_individual_business BOOLEAN DEFAULT false,
+  email TEXT,
+  short_name TEXT,
+  long_name TEXT,
+  description TEXT,
+  logo_uri TEXT,
+  website_url TEXT,
+  social_network TEXT,
+  business_registration_number TEXT,
+  tax_number TEXT,
+  capital_share NUMERIC,
+  ceo_name TEXT,
+  year_founded INT,
+  keywords TEXT,
+  number_of_employees INT,
+  legal_form TEXT,
+  is_active BOOLEAN DEFAULT true,
+  status status_enum DEFAULT 'DRAFT',
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE agencies (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE, -- Must belong to an org
+
+  owner_id UUID REFERENCES business_actors(id),
+  manager_id UUID REFERENCES business_actors(id),
+  logo_id UUID REFERENCES images(id),
+
+  code TEXT,
+  name TEXT,
+  location TEXT,
+  description TEXT,
+  transferable BOOLEAN DEFAULT false,
+  is_active BOOLEAN DEFAULT true,
+  logo_uri TEXT,
+  short_name TEXT,
+  long_name TEXT,
+  is_individual_business BOOLEAN DEFAULT false,
+  is_headquarter BOOLEAN DEFAULT false,
+  country TEXT,
+  city TEXT,
+  latitude NUMERIC,
+  longitude NUMERIC,
+  open_time TIME,
+  close_time TIME,
+  phone TEXT,
+  email TEXT,
+  whatsapp TEXT,
+  greeting_message TEXT,
+  average_revenue NUMERIC,
+  capital_share NUMERIC,
+  registration_number TEXT,
+  social_network TEXT,
+  tax_number TEXT,
+  keywords TEXT,
+  is_public BOOLEAN DEFAULT false,
+  is_business BOOLEAN DEFAULT true,
+  total_affiliated_customers INT DEFAULT 0,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE business_domains (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL, -- optional link to organization
+  parent_id UUID REFERENCES business_domains(id) ON DELETE SET NULL,   -- self-referential for hierarchy
+  image_id UUID REFERENCES images(id),
+
+  code TEXT,
+  service TEXT,
+  name TEXT,
+  image_uri TEXT,
+  type TEXT,
+  type_label TEXT,
+  description TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE organization_business_domains (
+  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  business_domain_id UUID REFERENCES business_domains(id) ON DELETE CASCADE,
+  PRIMARY KEY (organization_id, business_domain_id)
+);
+
+CREATE TABLE contacts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  contactable_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+
+  contactable_type TEXT,
+  first_name TEXT,
+  last_name TEXT,
+  title TEXT,
+  is_email_verified BOOLEAN DEFAULT false,
+  is_phone_number_verified BOOLEAN DEFAULT false,
+  is_favorite BOOLEAN DEFAULT false,
+  phone_number TEXT,
+  secondary_phone_number TEXT,
+  fax_number TEXT,
+  email TEXT,
+  secondary_email TEXT,
+  email_verified_at TIMESTAMP,
+  phone_verified_at TIMESTAMP,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE certifications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+
+  type TEXT,
+  name TEXT,
+  description TEXT,
+  obtainment_date DATE,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE third_parties (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  logo_id UUID REFERENCES images(id),
+
+  code TEXT,
+  type TEXT,
+  legal_form TEXT,
+  unique_identification_number TEXT,
+  trade_registration_number TEXT,
+  name TEXT,
+  acronym TEXT,
+  long_name TEXT,
+  logo_uri TEXT,
+  accounting_account_numbers TEXT,
+  authorized_payment_methods TEXT,
+  authorized_credit_limit NUMERIC,
+  max_discount_rate NUMERIC,
+  vat_subject BOOLEAN,
+  operations_balance NUMERIC,
+  opening_balance NUMERIC,
+  pay_term_number INT,
+  pay_term_type TEXT,
+  third_party_family TEXT,
+  classification TEXT,
+  tax_number TEXT,
+  loyalty_points NUMERIC,
+  loyalty_points_used NUMERIC,
+  loyalty_points_expired NUMERIC,
+  enabled BOOLEAN DEFAULT true,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE settings (
+  user_id UUID PRIMARY KEY REFERENCES users(id),
+  theme TEXT,
+  language TEXT,
+  long_ride_enabled BOOLEAN DEFAULT false,
+  short_ride_enabled BOOLEAN DEFAULT false,
+  privacy_enable BOOLEAN DEFAULT true,
+  allow_calls BOOLEAN DEFAULT true,
+  allow_messages BOOLEAN DEFAULT true,
+  notify_new_rides BOOLEAN DEFAULT true,
+  notify_ratings BOOLEAN DEFAULT true,
+  notify_practical_tips BOOLEAN DEFAULT true,
+  notify_promotions BOOLEAN DEFAULT true,
+  notify_policy_updates BOOLEAN DEFAULT true,
+  notify_peak_hour_recommendations BOOLEAN DEFAULT true,
+  receive_email BOOLEAN DEFAULT true,
+  receive_sms BOOLEAN DEFAULT true,
+  receive_push_notifications BOOLEAN DEFAULT true,
+  receive_whatsapp BOOLEAN DEFAULT true,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE proposed_activities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+
+  type TEXT,
+  name TEXT,
+  rate NUMERIC,
+  description TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE addresses (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  addressable_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  country_id UUID REFERENCES countries(id) ON DELETE SET NULL,
+
+  addressable_type TEXT,
+  type TEXT,
+  address_line_1 TEXT,
+  address_line_2 TEXT,
+  city TEXT,
+  state TEXT,
+  locality TEXT,
+  zip_code TEXT,
+  postal_code TEXT,
+  po_box TEXT,
+  is_default BOOLEAN DEFAULT false,
+  neighbor_hood TEXT,
+  informal_description TEXT,
+  latitude NUMERIC,
+  longitude NUMERIC,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+-- =====================================================
+-- USERS EXTENDED
+-- =====================================================
+
+CREATE TABLE providers (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+
+  code TEXT,
+  contact_info TEXT,
+  address TEXT,
+  is_active BOOLEAN DEFAULT true,
+  product_service_type TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE employees (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+
+  code TEXT,
+  is_manager BOOLEAN DEFAULT false,
+  role TEXT,
+  department TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE prospects (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+
+  code TEXT,
+  payment_method TEXT,
+  amount_paid NUMERIC,
+  interest_level TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE sales_persons (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+
+  code TEXT,
+  commission_rate NUMERIC,
+  credit NUMERIC,
+  current_balance NUMERIC,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE customers (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+
+  code TEXT,
+  payment_method TEXT,
+  amount_paid NUMERIC,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  deleted_at TIMESTAMP
+);
+
+CREATE TABLE services (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  name TEXT,
+  phone_number TEXT,
+  email_address TEXT
+);
+
+-- =====================================================
+-- RIDE & FLEET MANAGEMENT
+-- =====================================================
+
+CREATE TABLE drivers (
+  id UUID PRIMARY KEY REFERENCES business_actors(id) ON DELETE CASCADE,
+
+  status TEXT,
+  license_number TEXT,
+  has_car BOOLEAN DEFAULT false
+);
+
+CREATE TABLE offers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  passenger_id UUID REFERENCES customers(id) ON DELETE CASCADE,
+
+  start_point TEXT,
+  end_point TEXT,
+  price NUMERIC,
+  state offer_state_enum DEFAULT 'NEW',
+  ids_interested_drivers TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE rides (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  offer_id UUID REFERENCES offers(id) ON DELETE SET NULL,
+  passenger_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
+
+  distance NUMERIC,
+  time_estimation NUMERIC,
+  real_time NUMERIC,
+  state ride_state_enum DEFAULT 'CONFIRMED',
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE fleet_managers (
+  id UUID PRIMARY KEY REFERENCES business_actors(id) ON DELETE CASCADE,
+
+  name TEXT,
+  phone_number TEXT,
+  email_address TEXT
+);
+
+CREATE TABLE fleets (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  fleet_manager_id UUID REFERENCES fleet_managers(id) ON DELETE SET NULL,
+
+  name TEXT,
+  phone_number TEXT,
+  email_address TEXT,
+
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE geofence_zones (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  surface_area NUMERIC,
+  perimeter NUMERIC
+);
+
+CREATE TABLE vehicles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
+  fleet_id UUID REFERENCES fleets(id) ON DELETE SET NULL,
+  zone_id UUID REFERENCES geofence_zones(id) ON DELETE SET NULL,
+
+  license_plate TEXT,
+  model TEXT,
+  brand TEXT,
+  manufacturing_year INT,
+  type vehicle_type_enum,
+  color TEXT
+);
+
+CREATE TABLE roads (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  start_point TEXT,
+  end_point TEXT
+);
+
+CREATE TABLE trips (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  road_id UUID REFERENCES roads(id) ON DELETE SET NULL,
+  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
+
+  start_date DATE,
+  end_date DATE,
+  start_time TIME,
+  end_time TIME,
+  type TEXT,
+  color TEXT
+);
+
+CREATE TABLE operational_parameters (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
+  trip_id UUID REFERENCES trips(id) ON DELETE CASCADE,
+
+  statut TEXT,
+  current_location TEXT,
+  current_speed NUMERIC,
+  fuel_level NUMERIC,
+  mileage NUMERIC,
+  odometer_reading NUMERIC,
+  bearing NUMERIC,
+
+  timestamp TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE financial_parameters (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
+  trip_id UUID REFERENCES trips(id) ON DELETE CASCADE,
+
+  insurance_number TEXT,
+  insurance_expired_at DATE,
+  registered_at DATE,
+  purchased_at DATE,
+  depreciation_rate NUMERIC,
+  cost_per_km NUMERIC
+);
+
+CREATE TABLE maintenance_parameters (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
+  trip_id UUID REFERENCES trips(id) ON DELETE CASCADE,
+
+  last_maintenance_at DATE,
+  next_maintenance_at DATE,
+  engine_status engine_status_enum DEFAULT 'OK',
+  battery_health TEXT,
+  maintenance_status maintenance_status_enum DEFAULT 'UP_TO_DATE'
+);
+
+CREATE TABLE geofence_points (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  latitude NUMERIC,
+  longitude NUMERIC
+);
+
+CREATE TABLE geofence_point_zone_linkages (
+  point_id UUID REFERENCES geofence_points(id) ON DELETE CASCADE,
+  zone_id UUID REFERENCES geofence_zones(id) ON DELETE CASCADE,
+  PRIMARY KEY (point_id, zone_id)
+);
+
+CREATE TABLE geofence_events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
+  zone_id UUID REFERENCES geofence_zones(id) ON DELETE SET NULL,
+  point_id UUID REFERENCES geofence_points(id) ON DELETE SET NULL,
+
+  type event_type_enum,
+
+  timestamp TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE offer_driver_linkages (
+  offer_id UUID REFERENCES offers(id) ON DELETE CASCADE,
+  driver_id UUID REFERENCES drivers(id) ON DELETE CASCADE,
+  PRIMARY KEY (offer_id, driver_id),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- =====================================================
+-- OTHERS: PRODUCTS, SYNDICATS, PUBLICATIONS & REVIEWS
+-- =====================================================
+
+CREATE TABLE syndicats (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+
+  is_approved BOOLEAN DEFAULT false,
+  name TEXT,
+  description TEXT,
+  domain TEXT,
+  type TEXT,
+  charte_url TEXT,
+  status_url TEXT,
+  members_list_url TEXT,
+  commitment_certificate_url TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE abstract_products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  syndicat_id UUID REFERENCES syndicats(id) ON DELETE SET NULL,
+
+  name TEXT,
+  description TEXT,
+
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
+  abstract_product_id UUID REFERENCES abstract_products(id) ON DELETE SET NULL,
+
+  name TEXT,
+  description TEXT,
+  is_active BOOLEAN DEFAULT true,
+  standard_price NUMERIC,
+  departure_location TEXT,
+  arrival_location TEXT,
+  start_date DATE,
+  start_time TIME,
+  end_date DATE,
+  end_time TIME,
+  baggage_info TEXT,
+  is_negotiable BOOLEAN DEFAULT false,
+  payment_method TEXT,
+  title TEXT,
+  status status_enum DEFAULT 'DRAFT',
+  product_urls TEXT,
+  regular_amount NUMERIC,
+  discount_percentage NUMERIC,
+  discounted_amount NUMERIC,
+  metadata JSONB,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE publication_votes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  title TEXT,
+  description TEXT,
+  closing_at TIMESTAMP,
+  type category_enum
+);
+
+CREATE TABLE votes (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  publication_vote_id UUID REFERENCES publication_votes(id) ON DELETE CASCADE,
+
+  label TEXT
+);
+
+CREATE TABLE avis (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+  syndicat_id UUID REFERENCES syndicats(id) ON DELETE SET NULL,
+
+  comment TEXT,
+  number INT,
+
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE branches (
+  id UUID PRIMARY KEY REFERENCES agencies(id),
+  syndicat_id UUID REFERENCES syndicats(id) ON DELETE SET NULL,
+
+  name TEXT,
+  location TEXT,
+  contact TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE publications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  branch_id UUID REFERENCES branches(id) ON DELETE SET NULL,
+  author_id UUID REFERENCES users(id) ON DELETE SET NULL,
+
+  content TEXT,
+  status status_enum DEFAULT 'DRAFT',
+  n_likes INT DEFAULT 0,
+
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE publication_images (
+  publication_id UUID REFERENCES publications(id) ON DELETE CASCADE,
+  image_id UUID REFERENCES images(id) ON DELETE CASCADE,
+  PRIMARY KEY (publication_id, image_id),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  branch_id UUID REFERENCES branches(id) ON DELETE SET NULL,
+
+  title TEXT,
+  description TEXT,
+  location TEXT,
+  date DATE,
+  start_time TIME,
+  end_time TIME,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE event_images (
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+  image_id UUID REFERENCES images(id) ON DELETE CASCADE,
+  PRIMARY KEY (event_id, image_id),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE reactions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  publication_id UUID REFERENCES publications(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+
+  type reaction_type_enum,
+
+  reacted_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE comments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  author_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  publication_id UUID REFERENCES publications(id) ON DELETE CASCADE,
+  parent_id UUID REFERENCES comments(id) ON DELETE SET NULL,
+  image_id UUID REFERENCES images(id) ON DELETE SET NULL,
+
+  content TEXT,
+
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE profiles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+
+  first_name TEXT,
+  last_name TEXT,
+  nickname TEXT,
+  profile_image_url TEXT,
+  birth_date DATE,
+  nationality TEXT,
+  gender TEXT,
+  language TEXT,
+  company_name TEXT,
+  biography TEXT,
+  rating NUMERIC,
+  total_trips INT,
+  is_available BOOLEAN DEFAULT true,
+  is_verified BOOLEAN DEFAULT false,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- =====================================================
+-- PAYMENTS & SUBSCRIPTIONS
+-- =====================================================
+
+CREATE TABLE admins (
+  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+
+  name TEXT,
+  phone_number TEXT,
+  email_address TEXT
+);
+
+CREATE TABLE subscriptions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  admin_id UUID REFERENCES admins(id) ON DELETE SET NULL,
+
+  label TEXT,
+  price NUMERIC,
+  duration_in_days INT,
+  description TEXT,
+  is_active BOOLEAN DEFAULT true,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE payments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
+  subscription_id UUID REFERENCES subscriptions(id) ON DELETE SET NULL,
+  user_id UUID REFERENCES business_actors(id) ON DELETE SET NULL,
+
+  amount_paid NUMERIC,
+  status TEXT,
+  id_provider_transaction TEXT,
+
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE reviews (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  ride_id UUID REFERENCES rides(id) ON DELETE CASCADE,
+  author_id UUID REFERENCES users(id) ON DELETE SET NULL,
+
+  subject TEXT,
+  comment TEXT,
+  rating NUMERIC,
+
+  created_at TIMESTAMP DEFAULT now()
+);
+
+-- =====================================================
+-- ROLE-BASED ACCESS CONTROL (RBAC)
+-- =====================================================
+
+CREATE TABLE roles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  name TEXT NOT NULL,
+  guard_name TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE permissions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  name TEXT NOT NULL,
+  guard_name TEXT,
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE role_has_permissions (
+  role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
+  permission_id UUID REFERENCES permissions(id) ON DELETE CASCADE,
+  PRIMARY KEY (role_id, permission_id),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE user_has_roles (
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, role_id),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- =====================================================
+-- FIX: DIRECT PERMISSIONS (USER <-> PERMISSIONS)
+-- =====================================================
+
+-- Table de liaison pour les permissions accordées directement à un utilisateur
+CREATE TABLE IF NOT EXISTS user_has_permissions (
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  permission_id UUID REFERENCES permissions(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, permission_id),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- Commit the transaction
+
+
+-- =====================================================
+-- END OF SCRIPT. NOTHING AFTER HERE!
+-- =====================================================
+```
+
+---
+### Fichier : `./docs/data/YOWYOB_DB/last_schema/guide_database_setup.md`
+```md
+# 🗄️ Database Setup Guide (Local Development)
+
+This guide explains how to set up and initialize the Fleet Management database on your local machine. This process is fully automated for both **Linux** and **Windows**.
+
+## 📋 Prerequisites
+
+Ensure you have the following installed:
+- **Docker** & **Docker Compose**
+  - *Linux*: `sudo apt install docker-compose`
+  - *Windows*: Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+## 🚀 Step 1: Start the Database Container
+
+Open a terminal at the root of the project and run:
+
+```bash
+# Start the PostgreSQL 16 container in the background
+docker-compose up -d
+```
+
+*Note: This will automatically pull the official Postgres 16 image and create a database named `yowyob_db`.*
+
+## ⚙️ Step 2: Configure the Application
+
+The application is configured to use a **Hybrid Mode** (Local DB + Remote Kafka/Redis).
+
+1. Open `src/main/resources/application.yml`.
+2. Ensure the active profile is set to `local`:
+   ```yaml
+   spring:
+     profiles:
+       active: local
+   ```
+3. (Optional) In the `LOCAL CONFIGURATION` block, verify that the credentials match those in `docker-compose.yml` (default: `fleet_admin` / `fleet_password`).
+
+## 🛠️ Step 3: Run and Auto-Initialize
+
+Simply start the application. The system will detect the local environment and automatically:
+1. Create all tables and ENUM types (from `resources/local/schema.sql`).
+2. Inject 100 test users and sample data (from `resources/local/data.sql`).
+
+**Run Command:**
+```bash
+# Linux / macOS
+./mvnw clean spring-boot:run
+
+# Windows (CMD / PowerShell)
+mvnw.cmd clean spring-boot:run
+```
+
+## ✅ Step 4: Verify the Setup
+
+Once the log shows `🚀 LOCAL DATABASE READY!`, open your browser:
+
+- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **Check Data**: Find the `health-check-controller` and execute `/api/v1/health/users-count`. You should see `users_in_db: 100`.
+
+## ❌ Troubleshooting
+
+- **Port 5432 already in use**: If you have a local PostgreSQL installed outside of Docker, stop it or change the port mapping in `docker-compose.yml`.
+- **DNS/Pull Issues**: If Docker fails to pull the image, try:
+  ```bash
+  docker pull postgres:16
+  ```
+```
+
+---
 ### Fichier : `./docs/data/YOWYOB_DB/yowyob_db_init.sql`
 ```sql
 -- =====================================================
@@ -6165,1360 +7527,6 @@ class ReactiveHexagonalApplicationTests {
 ```
 
 ---
-### Fichier : `./src/main/resources/local/data.sql`
-```sql
--- =====================================================
--- YOWYOB DB - DATA SEEDING SCRIPT
--- PostgreSQL
--- =====================================================
-
-
--- =====================================================
--- 1. CLEANUP EXISTING DATA
--- =====================================================
-TRUNCATE TABLE 
-    users, images, countries, business_actors, 
-    admins, fleet_managers, drivers, customers, 
-    providers, employees, prospects, sales_persons,
-    profiles, settings, addresses, contacts,
-    roles, permissions, role_has_permissions,  user_has_permissions,user_has_roles,
-    organizations, agencies, business_domains, organization_business_domains,
-    certifications, third_parties, proposed_activities, services, branches,
-    fleets, vehicles, geofence_zones, geofence_points, geofence_events,
-    roads, trips, offers, rides, reviews, offer_driver_linkages,
-    operational_parameters, financial_parameters, maintenance_parameters,
-    geofence_point_zone_linkages,
-    syndicats, abstract_products, products, 
-    publications, publication_images, publication_votes, votes,
-    events, event_images, reactions, comments, avis,
-    subscriptions, payments
-    RESTART IDENTITY CASCADE;
-
--- =====================================================
--- 2. STATIC REFERENCE DATA
--- =====================================================
-
--- Countries
-INSERT INTO countries (name, code) VALUES
-('Cameroun', 'CM'), ('Sénégal', 'SN'), ('Côte d''Ivoire', 'CI'), 
-('Gabon', 'GA'), ('Nigéria', 'NG'), ('Togo', 'TG');
-
--- Roles
-INSERT INTO roles (name, guard_name) VALUES
-('ADMIN', 'web'), ('FLEET_MANAGER', 'web'), ('DRIVER', 'web'), ('CUSTOMER', 'web');
-
--- Images (Random placeholders from Picsum)
-INSERT INTO images (url, alt_text) 
-SELECT 
-    'https://picsum.photos/seed/' || i || '/800/600', 
-    'Image aléatoire ' || i
-FROM generate_series(1, 50) as i;
-
--- =====================================================
--- 3. USERS GENERATION (100 users)
--- =====================================================
-
-INSERT INTO users (name, phone_number, email_address)
-SELECT 
-    (ARRAY['Mamadou', 'Jean-Pierre', 'Ibrahim', 'Fatou', 'Aminata', 'Ngolo', 'Aboubakar', 'Clarisse', 'Samuel', 'Kouamé', 'Aissatou', 'Bachelard', 'Landry', 'Thérèse'])[floor(random()*14)+1] 
-    || ' ' || 
-    (ARRAY['Diop', 'Njoya', 'Mbarga', 'Kone', 'Sow', 'Etoundi', 'Kamga', 'Traoré', 'Diallo', 'Fofana', 'Mensah', 'Atangana', 'Eto''o', 'Drogba'])[floor(random()*14)+1],
-    (ARRAY['+237', '+221', '+225'])[floor(random()*3)+1] || (600000000 + floor(random()*99999999)::int),
-    'user_' || i || '@yowyob.test'
-FROM generate_series(1, 100) as i;
-
--- Settings & Profiles
-INSERT INTO settings (user_id, theme, language, receive_push_notifications)
-SELECT id, 'LIGHT', 'fr', true FROM users;
-
-INSERT INTO profiles (user_id, first_name, nationality, is_verified)
-SELECT id, split_part(name, ' ', 1), 'Camerounais', (random() > 0.5) FROM users;
-
--- =====================================================
--- 4. ACTORS DISPATCHING
--- User -> BusinessActor -> SpecificActor
--- =====================================================
-
--- 4.1 Admins (First 5 users)
-INSERT INTO admins (id, name, email_address)
-SELECT id, name, email_address FROM users ORDER BY email_address LIMIT 5;
-
--- 4.2 Fleet Managers (Next 5 users)
--- STEP 1: Insert into PARENT (BusinessActor)
-INSERT INTO business_actors (id, name, phone_number, email_address)
-SELECT id, name, phone_number, email_address FROM users ORDER BY email_address LIMIT 5 OFFSET 5;
-
--- STEP 2: Insert into CHILD (FleetManager)
-INSERT INTO fleet_managers (id, name, email_address)
-SELECT id, name, email_address FROM users ORDER BY email_address LIMIT 5 OFFSET 5;
-
--- 4.3 Drivers (Next 30 users)
--- STEP 1: Insert into PARENT (BusinessActor)
-INSERT INTO business_actors (id, name, phone_number, email_address)
-SELECT id, name, phone_number, email_address FROM users ORDER BY email_address LIMIT 30 OFFSET 10;
-
--- STEP 2: Insert into CHILD (Driver)
-INSERT INTO drivers (id, status, license_number, has_car)
-SELECT 
-    id, 
-    (ARRAY['AVAILABLE', 'BUSY', 'OFFLINE'])[floor(random()*3)+1], 
-    'LIC-' || floor(random()*100000) || '-CM',
-    (random() > 0.3)
-FROM users ORDER BY email_address LIMIT 30 OFFSET 10;
-
--- 4.4 Customers (Remaining 60 users)
-INSERT INTO customers (id, code, payment_method)
-SELECT 
-    id, 
-    'CUST-' || substr(id::text, 1, 8),
-    (ARRAY['CASH', 'MOBILE_MONEY', 'CARD'])[floor(random()*3)+1]
-FROM users ORDER BY email_address LIMIT 60 OFFSET 40;
-
--- Assign Roles
-INSERT INTO user_has_roles (user_id, role_id)
-SELECT id, (SELECT id FROM roles WHERE name = 'ADMIN') FROM users ORDER BY email_address LIMIT 5;
-
-INSERT INTO user_has_roles (user_id, role_id)
-SELECT id, (SELECT id FROM roles WHERE name = 'FLEET_MANAGER') FROM users ORDER BY email_address LIMIT 5 OFFSET 5;
-
-INSERT INTO user_has_roles (user_id, role_id)
-SELECT id, (SELECT id FROM roles WHERE name = 'DRIVER') FROM users ORDER BY email_address LIMIT 30 OFFSET 10;
-
-INSERT INTO user_has_roles (user_id, role_id)
-SELECT id, (SELECT id FROM roles WHERE name = 'CUSTOMER') FROM users ORDER BY email_address LIMIT 60 OFFSET 40;
-
--- =====================================================
--- 5. ORGANIZATIONS & AGENCIES
--- =====================================================
-
-INSERT INTO organizations (
-    business_actor_id, logo_id, code, short_name, long_name, 
-    description, tax_number, is_active, status
-)
-SELECT
-    (SELECT id FROM fleet_managers ORDER BY random() LIMIT 1),
-    (SELECT id FROM images ORDER BY random() LIMIT 1),
-    'ORG-' || i,
-    'Transport ' || i,
-    'Société de Transport ' || i,
-    'Description ' || i,
-    'TAX-' || floor(random()*1000000),
-    true,
-    'PUBLISHED'
-FROM generate_series(1, 35) as i;
-
-INSERT INTO agencies (
-    organization_id, manager_id, name, city, location, is_headquarter
-)
-SELECT 
-    id, 
-    (SELECT id FROM fleet_managers ORDER BY random() LIMIT 1),
-    'Agence Centrale',
-    (ARRAY['Douala', 'Yaoundé', 'Abidjan'])[floor(random()*3)+1],
-    'Rue Principale',
-    true
-FROM organizations;
-
--- =====================================================
--- 6. FLEETS & VEHICLES
--- =====================================================
-
-INSERT INTO fleets (fleet_manager_id, name, phone_number)
-SELECT 
-    id, 'Flotte de ' || name, '+237699000000'
-FROM fleet_managers;
-
--- Vehicles
-INSERT INTO vehicles (
-    fleet_id, user_id, driver_id, license_plate, brand, model, type, color, manufacturing_year
-)
-SELECT 
-    f.id,
-    f.fleet_manager_id,
-    (SELECT id FROM drivers ORDER BY random() LIMIT 1),
-    'LT-' || floor(random()*999)::text || '-AA',
-    (ARRAY['Toyota', 'Peugeot'])[floor(random()*2)+1],
-    (ARRAY['Yaris', 'Partner'])[floor(random()*2)+1],
-    (ARRAY['CAR', 'VAN'])[floor(random()*2)+1]::vehicle_type_enum,
-    'Jaune',
-    2020
-FROM fleets f;
-
--- =====================================================
--- 7. OFFERS & RIDES
--- =====================================================
-
-INSERT INTO offers (
-    passenger_id, start_point, end_point, price, state, created_at
-)
-SELECT 
-    (SELECT id FROM customers ORDER BY random() LIMIT 1),
-    'Point A', 'Point B', 
-    2000, 
-    'CHOSEN',
-    NOW()
-FROM generate_series(1, 60) as i;
-
--- Rides
-INSERT INTO rides (
-    offer_id, passenger_id, driver_id, 
-    distance, time_estimation, real_time, state, created_at
-)
-SELECT 
-    id, -- offer_id
-    passenger_id,
-    (SELECT id FROM drivers ORDER BY random() LIMIT 1),
-    15.5, 30, 35,
-    'COMPLETED',
-    created_at
-FROM offers 
-LIMIT 40;
-
--- Reviews
-INSERT INTO reviews (ride_id, author_id, subject, comment, rating)
-SELECT 
-    id,
-    passenger_id,
-    'Chauffeur',
-    'Bonne course, chauffeur ponctuel',
-    5
-FROM rides
-WHERE state = 'COMPLETED';
-
--- =====================================================
--- 8. PRODUCTS
--- =====================================================
-
-INSERT INTO products (
-    organization_id, name, description, standard_price, 
-    status, is_active, departure_location
-)
-SELECT 
-    (SELECT id FROM organizations ORDER BY random() LIMIT 1),
-    'Trajet Spécial ' || i,
-    'Description produit',
-    5000,
-    'PUBLISHED',
-    true,
-    'Douala'
-FROM generate_series(1, 40) as i;
-
--- =====================================================
--- 9. SUBSCRIPTIONS & PAYMENTS
--- =====================================================
-
-INSERT INTO subscriptions (
-    admin_id, label, price, duration_in_days, description, is_active
-) VALUES 
-((SELECT id FROM admins LIMIT 1), 'Pack Hebdo', 2500, 7, 'Standard', true),
-((SELECT id FROM admins LIMIT 1), 'Pack Mensuel', 10000, 30, 'Pro', true),
-((SELECT id FROM admins LIMIT 1), 'Pack Annuel', 100000, 365, 'VIP', true);
-
-INSERT INTO payments (
-    driver_id, user_id, subscription_id, amount_paid, status, id_provider_transaction, created_at
-)
-SELECT 
-    d.id, -- Driver ID
-    d.id, -- Payer ID
-    s.id, -- Subscription ID
-    s.price,
-    'SUCCESS',
-    'TXN-' || floor(random()*10000000),
-    NOW()
-FROM drivers d
-CROSS JOIN subscriptions s
-ORDER BY random()
-LIMIT 50;
-
--- =====================================================
--- 10. SOCIAL & ADDRESSES
--- =====================================================
-
-INSERT INTO syndicats (organization_id, name, is_approved)
-SELECT id, 'Syndicat Transports', true FROM organizations LIMIT 1;
-
-INSERT INTO branches (id, syndicat_id, name, location)
-SELECT 
-    ag.id,
-    (SELECT id FROM syndicats LIMIT 1),
-    'Branche ' || ag.name, 
-    ag.location 
-FROM agencies ag 
-LIMIT 10;
-
-INSERT INTO publications (branch_id, author_id, content, status, n_likes)
-SELECT 
-    (SELECT id FROM branches ORDER BY random() LIMIT 1),
-    (SELECT id FROM admins ORDER BY random() LIMIT 1),
-    'Info Trafic ' || i,
-    'PUBLISHED',
-    floor(random() * 50)::int
-FROM generate_series(1, 40) as i;
-
--- =====================================================
--- SEEDING DIRECT PERMISSIONS (Test)
--- =====================================================
-
--- On crée quelques permissions
-INSERT INTO permissions (id, name) VALUES 
-(uuid_generate_v4(), 'extra:special_access'),
-(uuid_generate_v4(), 'fleet:emergency_stop');
-
--- On donne la première permission au premier utilisateur (Admin 1)
-INSERT INTO user_has_permissions (user_id, permission_id)
-VALUES (
-    (SELECT id FROM users ORDER BY email_address LIMIT 1),
-    (SELECT id FROM permissions WHERE name = 'extra:special_access' LIMIT 1)
-);
-```
-
----
-### Fichier : `./src/main/resources/local/schema.sql`
-```sql
--- =====================================================
--- YOWYOB DB - INIT SCRIPT
--- PostgreSQL
--- Structure: Core -> Organization -> RBAC
--- =====================================================
-
--- Clean up existing tables and types to ensure a fresh start
--- We drop them in reverse order of dependency
-DROP TABLE IF EXISTS user_has_roles CASCADE;
-DROP TABLE IF EXISTS role_has_permissions CASCADE;
-DROP TABLE IF EXISTS permissions CASCADE;
-DROP TABLE IF EXISTS roles CASCADE;
-DROP TABLE IF EXISTS reviews CASCADE;
-DROP TABLE IF EXISTS payments CASCADE;
-DROP TABLE IF EXISTS subscriptions CASCADE;
-DROP TABLE IF EXISTS admins CASCADE;
-DROP TABLE IF EXISTS profiles CASCADE;
-DROP TABLE IF EXISTS comments CASCADE;
-DROP TABLE IF EXISTS reactions CASCADE;
-DROP TABLE IF EXISTS event_images CASCADE;
-DROP TABLE IF EXISTS events CASCADE;
-DROP TABLE IF EXISTS publication_images CASCADE;
-DROP TABLE IF EXISTS publications CASCADE;
-DROP TABLE IF EXISTS branches CASCADE;
-DROP TABLE IF EXISTS avis CASCADE;
-DROP TABLE IF EXISTS votes CASCADE;
-DROP TABLE IF EXISTS publication_votes CASCADE;
-DROP TABLE IF EXISTS products CASCADE;
-DROP TABLE IF EXISTS abstract_products CASCADE;
-DROP TABLE IF EXISTS syndicats CASCADE;
-DROP TABLE IF EXISTS offer_driver_linkages CASCADE;
-DROP TABLE IF EXISTS geofence_events CASCADE;
-DROP TABLE IF EXISTS geofence_point_zone_linkages CASCADE;
-DROP TABLE IF EXISTS geofence_points CASCADE;
-DROP TABLE IF EXISTS maintenance_parameters CASCADE;
-DROP TABLE IF EXISTS financial_parameters CASCADE;
-DROP TABLE IF EXISTS operational_parameters CASCADE;
-DROP TABLE IF EXISTS trips CASCADE;
-DROP TABLE IF EXISTS roads CASCADE;
-DROP TABLE IF EXISTS vehicles CASCADE;
-DROP TABLE IF EXISTS geofence_zones CASCADE;
-DROP TABLE IF EXISTS fleets CASCADE;
-DROP TABLE IF EXISTS fleet_managers CASCADE;
-DROP TABLE IF EXISTS rides CASCADE;
-DROP TABLE IF EXISTS offers CASCADE;
-DROP TABLE IF EXISTS drivers CASCADE;
-DROP TABLE IF EXISTS services CASCADE;
-DROP TABLE IF EXISTS customers CASCADE;
-DROP TABLE IF EXISTS sales_persons CASCADE;
-DROP TABLE IF EXISTS prospects CASCADE;
-DROP TABLE IF EXISTS employees CASCADE;
-DROP TABLE IF EXISTS providers CASCADE;
-DROP TABLE IF EXISTS addresses CASCADE;
-DROP TABLE IF EXISTS proposed_activities CASCADE;
-DROP TABLE IF EXISTS settings CASCADE;
-DROP TABLE IF EXISTS third_parties CASCADE;
-DROP TABLE IF EXISTS certifications CASCADE;
-DROP TABLE IF EXISTS organization_business_domains CASCADE;
-DROP TABLE IF EXISTS contacts CASCADE;
-DROP TABLE IF EXISTS business_domains CASCADE;
-DROP TABLE IF EXISTS agencies CASCADE;
-DROP TABLE IF EXISTS organizations CASCADE;
-DROP TABLE IF EXISTS business_actors CASCADE;
-DROP TABLE IF EXISTS countries CASCADE;
-DROP TABLE IF EXISTS images CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
--- Drop existing types
-DROP TYPE IF EXISTS reaction_type_enum CASCADE;
-DROP TYPE IF EXISTS type_enum CASCADE;
-DROP TYPE IF EXISTS role_type_enum CASCADE;
-DROP TYPE IF EXISTS engine_status_enum CASCADE;
-DROP TYPE IF EXISTS maintenance_status_enum CASCADE;
-DROP TYPE IF EXISTS event_type_enum CASCADE;
-DROP TYPE IF EXISTS ride_state_enum CASCADE;
-DROP TYPE IF EXISTS offer_state_enum CASCADE;
-DROP TYPE IF EXISTS vehicle_type_enum CASCADE;
-DROP TYPE IF EXISTS action_enum CASCADE;
-DROP TYPE IF EXISTS category_enum CASCADE;
-DROP TYPE IF EXISTS status_enum CASCADE;
-
--- Re-enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-
--- =====================================================
--- ENUM TYPES
--- =====================================================
-
-CREATE TYPE status_enum AS ENUM (
-  'DRAFT', 'WAITING_CONFIRMATION', 'PUBLISHED', 'IN_PROGRESS', 'CANCELLED', 'EXPIRED'
-);
-
-CREATE TYPE category_enum AS ENUM (
-  'ANNOUNCE', 'PLANNING', 'VEHICLE', 'ADDRESS', 'EXPERIENCE'
-);
-
-CREATE TYPE action_enum AS ENUM (
-  'CREATE', 'UPDATE', 'READ', 'DELETE'
-);
-
-CREATE TYPE vehicle_type_enum AS ENUM (
-  'CAR', 'VAN', 'TRUCK', 'BIKE'
-);
-
-CREATE TYPE offer_state_enum AS ENUM (
-  'NEW', 'PENDING', 'CHOSEN', 'TERMINATED', 'CANCELED'
-);
-
-CREATE TYPE ride_state_enum AS ENUM (
-  'CONFIRMED', 'ONGOING', 'COMPLETED', 'CANCELED'
-);
-
-CREATE TYPE event_type_enum AS ENUM (
-  'ENTRY', 'EXIT'
-);
-
-CREATE TYPE maintenance_status_enum AS ENUM (
-  'UP_TO_DATE', 'PENDING', 'OVERDUE'
-);
-
-CREATE TYPE engine_status_enum AS ENUM (
-  'OK', 'NEED_SERVICE', 'OUT_OF_SERVICE'
-);
-
-CREATE TYPE role_type_enum AS ENUM (
-  'CUSTOMER', 'DRIVER', 'FLEET_MANAGER', 'ADMIN', 'PASSENGER', 'PRESIDENT', 'MODERATOR', 'CLIENT'
-);
-
-CREATE TYPE type_enum AS ENUM (
-  'NOTIFICATION', 'CHAT', 'PAYMENT', 'MEDIA'
-);
-
-CREATE TYPE reaction_type_enum AS ENUM (
-  'LIKE', 'LOVE', 'HAHA', 'WOW', 'SAD', 'ANGRY'
-);
-
--- =====================================================
--- CORE TABLES
--- =====================================================
-
-CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  phone_number TEXT,
-  email_address TEXT UNIQUE
-);
-
-CREATE TABLE images (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  url TEXT NOT NULL,
-  alt_text TEXT,
-  uploaded_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE countries (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  code TEXT NOT NULL UNIQUE,
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE business_actors (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT,
-  phone_number TEXT,
-  email_address TEXT,
-  CONSTRAINT fk_business_actor_user
-    FOREIGN KEY (id) REFERENCES users(id)
-    ON DELETE CASCADE
-);
-
--- =====================================================
--- ORGANIZATION TABLES
--- =====================================================
-
-CREATE TABLE organizations (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  business_actor_id UUID REFERENCES business_actors(id),
-  logo_id UUID REFERENCES images(id),
-
-  code TEXT,
-  service TEXT,
-  is_individual_business BOOLEAN DEFAULT false,
-  email TEXT,
-  short_name TEXT,
-  long_name TEXT,
-  description TEXT,
-  logo_uri TEXT,
-  website_url TEXT,
-  social_network TEXT,
-  business_registration_number TEXT,
-  tax_number TEXT,
-  capital_share NUMERIC,
-  ceo_name TEXT,
-  year_founded INT,
-  keywords TEXT,
-  number_of_employees INT,
-  legal_form TEXT,
-  is_active BOOLEAN DEFAULT true,
-  status status_enum DEFAULT 'DRAFT',
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE agencies (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE, -- Must belong to an org
-
-  owner_id UUID REFERENCES business_actors(id),
-  manager_id UUID REFERENCES business_actors(id),
-  logo_id UUID REFERENCES images(id),
-
-  code TEXT,
-  name TEXT,
-  location TEXT,
-  description TEXT,
-  transferable BOOLEAN DEFAULT false,
-  is_active BOOLEAN DEFAULT true,
-  logo_uri TEXT,
-  short_name TEXT,
-  long_name TEXT,
-  is_individual_business BOOLEAN DEFAULT false,
-  is_headquarter BOOLEAN DEFAULT false,
-  country TEXT,
-  city TEXT,
-  latitude NUMERIC,
-  longitude NUMERIC,
-  open_time TIME,
-  close_time TIME,
-  phone TEXT,
-  email TEXT,
-  whatsapp TEXT,
-  greeting_message TEXT,
-  average_revenue NUMERIC,
-  capital_share NUMERIC,
-  registration_number TEXT,
-  social_network TEXT,
-  tax_number TEXT,
-  keywords TEXT,
-  is_public BOOLEAN DEFAULT false,
-  is_business BOOLEAN DEFAULT true,
-  total_affiliated_customers INT DEFAULT 0,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE business_domains (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  organization_id UUID REFERENCES organizations(id) ON DELETE SET NULL, -- optional link to organization
-  parent_id UUID REFERENCES business_domains(id) ON DELETE SET NULL,   -- self-referential for hierarchy
-  image_id UUID REFERENCES images(id),
-
-  code TEXT,
-  service TEXT,
-  name TEXT,
-  image_uri TEXT,
-  type TEXT,
-  type_label TEXT,
-  description TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE organization_business_domains (
-  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-  business_domain_id UUID REFERENCES business_domains(id) ON DELETE CASCADE,
-  PRIMARY KEY (organization_id, business_domain_id)
-);
-
-CREATE TABLE contacts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  contactable_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-
-  contactable_type TEXT,
-  first_name TEXT,
-  last_name TEXT,
-  title TEXT,
-  is_email_verified BOOLEAN DEFAULT false,
-  is_phone_number_verified BOOLEAN DEFAULT false,
-  is_favorite BOOLEAN DEFAULT false,
-  phone_number TEXT,
-  secondary_phone_number TEXT,
-  fax_number TEXT,
-  email TEXT,
-  secondary_email TEXT,
-  email_verified_at TIMESTAMP,
-  phone_verified_at TIMESTAMP,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE certifications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-
-  type TEXT,
-  name TEXT,
-  description TEXT,
-  obtainment_date DATE,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE third_parties (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-  logo_id UUID REFERENCES images(id),
-
-  code TEXT,
-  type TEXT,
-  legal_form TEXT,
-  unique_identification_number TEXT,
-  trade_registration_number TEXT,
-  name TEXT,
-  acronym TEXT,
-  long_name TEXT,
-  logo_uri TEXT,
-  accounting_account_numbers TEXT,
-  authorized_payment_methods TEXT,
-  authorized_credit_limit NUMERIC,
-  max_discount_rate NUMERIC,
-  vat_subject BOOLEAN,
-  operations_balance NUMERIC,
-  opening_balance NUMERIC,
-  pay_term_number INT,
-  pay_term_type TEXT,
-  third_party_family TEXT,
-  classification TEXT,
-  tax_number TEXT,
-  loyalty_points NUMERIC,
-  loyalty_points_used NUMERIC,
-  loyalty_points_expired NUMERIC,
-  enabled BOOLEAN DEFAULT true,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE settings (
-  user_id UUID PRIMARY KEY REFERENCES users(id),
-  theme TEXT,
-  language TEXT,
-  long_ride_enabled BOOLEAN DEFAULT false,
-  short_ride_enabled BOOLEAN DEFAULT false,
-  privacy_enable BOOLEAN DEFAULT true,
-  allow_calls BOOLEAN DEFAULT true,
-  allow_messages BOOLEAN DEFAULT true,
-  notify_new_rides BOOLEAN DEFAULT true,
-  notify_ratings BOOLEAN DEFAULT true,
-  notify_practical_tips BOOLEAN DEFAULT true,
-  notify_promotions BOOLEAN DEFAULT true,
-  notify_policy_updates BOOLEAN DEFAULT true,
-  notify_peak_hour_recommendations BOOLEAN DEFAULT true,
-  receive_email BOOLEAN DEFAULT true,
-  receive_sms BOOLEAN DEFAULT true,
-  receive_push_notifications BOOLEAN DEFAULT true,
-  receive_whatsapp BOOLEAN DEFAULT true,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE proposed_activities (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-
-  type TEXT,
-  name TEXT,
-  rate NUMERIC,
-  description TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE addresses (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  addressable_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-  country_id UUID REFERENCES countries(id) ON DELETE SET NULL,
-
-  addressable_type TEXT,
-  type TEXT,
-  address_line_1 TEXT,
-  address_line_2 TEXT,
-  city TEXT,
-  state TEXT,
-  locality TEXT,
-  zip_code TEXT,
-  postal_code TEXT,
-  po_box TEXT,
-  is_default BOOLEAN DEFAULT false,
-  neighbor_hood TEXT,
-  informal_description TEXT,
-  latitude NUMERIC,
-  longitude NUMERIC,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
--- =====================================================
--- USERS EXTENDED
--- =====================================================
-
-CREATE TABLE providers (
-  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-
-  code TEXT,
-  contact_info TEXT,
-  address TEXT,
-  is_active BOOLEAN DEFAULT true,
-  product_service_type TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE employees (
-  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-
-  code TEXT,
-  is_manager BOOLEAN DEFAULT false,
-  role TEXT,
-  department TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE prospects (
-  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-
-  code TEXT,
-  payment_method TEXT,
-  amount_paid NUMERIC,
-  interest_level TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE sales_persons (
-  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-
-  code TEXT,
-  commission_rate NUMERIC,
-  credit NUMERIC,
-  current_balance NUMERIC,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE customers (
-  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-
-  code TEXT,
-  payment_method TEXT,
-  amount_paid NUMERIC,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now(),
-  deleted_at TIMESTAMP
-);
-
-CREATE TABLE services (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-  name TEXT,
-  phone_number TEXT,
-  email_address TEXT
-);
-
--- =====================================================
--- RIDE & FLEET MANAGEMENT
--- =====================================================
-
-CREATE TABLE drivers (
-  id UUID PRIMARY KEY REFERENCES business_actors(id) ON DELETE CASCADE,
-
-  status TEXT,
-  license_number TEXT,
-  has_car BOOLEAN DEFAULT false
-);
-
-CREATE TABLE offers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  passenger_id UUID REFERENCES customers(id) ON DELETE CASCADE,
-
-  start_point TEXT,
-  end_point TEXT,
-  price NUMERIC,
-  state offer_state_enum DEFAULT 'NEW',
-  ids_interested_drivers TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE rides (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  offer_id UUID REFERENCES offers(id) ON DELETE SET NULL,
-  passenger_id UUID REFERENCES users(id) ON DELETE SET NULL,
-  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
-
-  distance NUMERIC,
-  time_estimation NUMERIC,
-  real_time NUMERIC,
-  state ride_state_enum DEFAULT 'CONFIRMED',
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE fleet_managers (
-  id UUID PRIMARY KEY REFERENCES business_actors(id) ON DELETE CASCADE,
-
-  name TEXT,
-  phone_number TEXT,
-  email_address TEXT
-);
-
-CREATE TABLE fleets (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  fleet_manager_id UUID REFERENCES fleet_managers(id) ON DELETE SET NULL,
-
-  name TEXT,
-  phone_number TEXT,
-  email_address TEXT,
-
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE geofence_zones (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-  surface_area NUMERIC,
-  perimeter NUMERIC
-);
-
-CREATE TABLE vehicles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
-  fleet_id UUID REFERENCES fleets(id) ON DELETE SET NULL,
-  zone_id UUID REFERENCES geofence_zones(id) ON DELETE SET NULL,
-
-  license_plate TEXT,
-  model TEXT,
-  brand TEXT,
-  manufacturing_year INT,
-  type vehicle_type_enum,
-  color TEXT
-);
-
-CREATE TABLE roads (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-  start_point TEXT,
-  end_point TEXT
-);
-
-CREATE TABLE trips (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  road_id UUID REFERENCES roads(id) ON DELETE SET NULL,
-  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
-
-  start_date DATE,
-  end_date DATE,
-  start_time TIME,
-  end_time TIME,
-  type TEXT,
-  color TEXT
-);
-
-CREATE TABLE operational_parameters (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
-  trip_id UUID REFERENCES trips(id) ON DELETE CASCADE,
-
-  statut TEXT,
-  current_location TEXT,
-  current_speed NUMERIC,
-  fuel_level NUMERIC,
-  mileage NUMERIC,
-  odometer_reading NUMERIC,
-  bearing NUMERIC,
-
-  timestamp TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE financial_parameters (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
-  trip_id UUID REFERENCES trips(id) ON DELETE CASCADE,
-
-  insurance_number TEXT,
-  insurance_expired_at DATE,
-  registered_at DATE,
-  purchased_at DATE,
-  depreciation_rate NUMERIC,
-  cost_per_km NUMERIC
-);
-
-CREATE TABLE maintenance_parameters (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
-  trip_id UUID REFERENCES trips(id) ON DELETE CASCADE,
-
-  last_maintenance_at DATE,
-  next_maintenance_at DATE,
-  engine_status engine_status_enum DEFAULT 'OK',
-  battery_health TEXT,
-  maintenance_status maintenance_status_enum DEFAULT 'UP_TO_DATE'
-);
-
-CREATE TABLE geofence_points (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-  latitude NUMERIC,
-  longitude NUMERIC
-);
-
-CREATE TABLE geofence_point_zone_linkages (
-  point_id UUID REFERENCES geofence_points(id) ON DELETE CASCADE,
-  zone_id UUID REFERENCES geofence_zones(id) ON DELETE CASCADE,
-  PRIMARY KEY (point_id, zone_id)
-);
-
-CREATE TABLE geofence_events (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
-  zone_id UUID REFERENCES geofence_zones(id) ON DELETE SET NULL,
-  point_id UUID REFERENCES geofence_points(id) ON DELETE SET NULL,
-
-  type event_type_enum,
-
-  timestamp TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE offer_driver_linkages (
-  offer_id UUID REFERENCES offers(id) ON DELETE CASCADE,
-  driver_id UUID REFERENCES drivers(id) ON DELETE CASCADE,
-  PRIMARY KEY (offer_id, driver_id),
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
--- =====================================================
--- OTHERS: PRODUCTS, SYNDICATS, PUBLICATIONS & REVIEWS
--- =====================================================
-
-CREATE TABLE syndicats (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-
-  is_approved BOOLEAN DEFAULT false,
-  name TEXT,
-  description TEXT,
-  domain TEXT,
-  type TEXT,
-  charte_url TEXT,
-  status_url TEXT,
-  members_list_url TEXT,
-  commitment_certificate_url TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE abstract_products (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  syndicat_id UUID REFERENCES syndicats(id) ON DELETE SET NULL,
-
-  name TEXT,
-  description TEXT,
-
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE products (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  organization_id UUID REFERENCES organizations(id) ON DELETE CASCADE,
-  abstract_product_id UUID REFERENCES abstract_products(id) ON DELETE SET NULL,
-
-  name TEXT,
-  description TEXT,
-  is_active BOOLEAN DEFAULT true,
-  standard_price NUMERIC,
-  departure_location TEXT,
-  arrival_location TEXT,
-  start_date DATE,
-  start_time TIME,
-  end_date DATE,
-  end_time TIME,
-  baggage_info TEXT,
-  is_negotiable BOOLEAN DEFAULT false,
-  payment_method TEXT,
-  title TEXT,
-  status status_enum DEFAULT 'DRAFT',
-  product_urls TEXT,
-  regular_amount NUMERIC,
-  discount_percentage NUMERIC,
-  discounted_amount NUMERIC,
-  metadata JSONB,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE publication_votes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-  title TEXT,
-  description TEXT,
-  closing_at TIMESTAMP,
-  type category_enum
-);
-
-CREATE TABLE votes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  publication_vote_id UUID REFERENCES publication_votes(id) ON DELETE CASCADE,
-
-  label TEXT
-);
-
-CREATE TABLE avis (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  product_id UUID REFERENCES products(id) ON DELETE CASCADE,
-  syndicat_id UUID REFERENCES syndicats(id) ON DELETE SET NULL,
-
-  comment TEXT,
-  number INT,
-
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE branches (
-  id UUID PRIMARY KEY REFERENCES agencies(id),
-  syndicat_id UUID REFERENCES syndicats(id) ON DELETE SET NULL,
-
-  name TEXT,
-  location TEXT,
-  contact TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE publications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  branch_id UUID REFERENCES branches(id) ON DELETE SET NULL,
-  author_id UUID REFERENCES users(id) ON DELETE SET NULL,
-
-  content TEXT,
-  status status_enum DEFAULT 'DRAFT',
-  n_likes INT DEFAULT 0,
-
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE publication_images (
-  publication_id UUID REFERENCES publications(id) ON DELETE CASCADE,
-  image_id UUID REFERENCES images(id) ON DELETE CASCADE,
-  PRIMARY KEY (publication_id, image_id),
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE events (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  branch_id UUID REFERENCES branches(id) ON DELETE SET NULL,
-
-  title TEXT,
-  description TEXT,
-  location TEXT,
-  date DATE,
-  start_time TIME,
-  end_time TIME,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE event_images (
-  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
-  image_id UUID REFERENCES images(id) ON DELETE CASCADE,
-  PRIMARY KEY (event_id, image_id),
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE reactions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  publication_id UUID REFERENCES publications(id) ON DELETE CASCADE,
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-
-  type reaction_type_enum,
-
-  reacted_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE comments (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  author_id UUID REFERENCES users(id) ON DELETE SET NULL,
-  publication_id UUID REFERENCES publications(id) ON DELETE CASCADE,
-  parent_id UUID REFERENCES comments(id) ON DELETE SET NULL,
-  image_id UUID REFERENCES images(id) ON DELETE SET NULL,
-
-  content TEXT,
-
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE profiles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-
-  first_name TEXT,
-  last_name TEXT,
-  nickname TEXT,
-  profile_image_url TEXT,
-  birth_date DATE,
-  nationality TEXT,
-  gender TEXT,
-  language TEXT,
-  company_name TEXT,
-  biography TEXT,
-  rating NUMERIC,
-  total_trips INT,
-  is_available BOOLEAN DEFAULT true,
-  is_verified BOOLEAN DEFAULT false,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
--- =====================================================
--- PAYMENTS & SUBSCRIPTIONS
--- =====================================================
-
-CREATE TABLE admins (
-  id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-
-  name TEXT,
-  phone_number TEXT,
-  email_address TEXT
-);
-
-CREATE TABLE subscriptions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  admin_id UUID REFERENCES admins(id) ON DELETE SET NULL,
-
-  label TEXT,
-  price NUMERIC,
-  duration_in_days INT,
-  description TEXT,
-  is_active BOOLEAN DEFAULT true,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE payments (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  driver_id UUID REFERENCES drivers(id) ON DELETE SET NULL,
-  subscription_id UUID REFERENCES subscriptions(id) ON DELETE SET NULL,
-  user_id UUID REFERENCES business_actors(id) ON DELETE SET NULL,
-
-  amount_paid NUMERIC,
-  status TEXT,
-  id_provider_transaction TEXT,
-
-  created_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE reviews (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  ride_id UUID REFERENCES rides(id) ON DELETE CASCADE,
-  author_id UUID REFERENCES users(id) ON DELETE SET NULL,
-
-  subject TEXT,
-  comment TEXT,
-  rating NUMERIC,
-
-  created_at TIMESTAMP DEFAULT now()
-);
-
--- =====================================================
--- ROLE-BASED ACCESS CONTROL (RBAC)
--- =====================================================
-
-CREATE TABLE roles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-  name TEXT NOT NULL,
-  guard_name TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE permissions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-
-  name TEXT NOT NULL,
-  guard_name TEXT,
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE role_has_permissions (
-  role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
-  permission_id UUID REFERENCES permissions(id) ON DELETE CASCADE,
-  PRIMARY KEY (role_id, permission_id),
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
-CREATE TABLE user_has_roles (
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
-  PRIMARY KEY (user_id, role_id),
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
--- =====================================================
--- FIX: DIRECT PERMISSIONS (USER <-> PERMISSIONS)
--- =====================================================
-
--- Table de liaison pour les permissions accordées directement à un utilisateur
-CREATE TABLE IF NOT EXISTS user_has_permissions (
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  permission_id UUID REFERENCES permissions(id) ON DELETE CASCADE,
-  PRIMARY KEY (user_id, permission_id),
-
-  created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);
-
--- Commit the transaction
-
-
--- =====================================================
--- END OF SCRIPT. NOTHING AFTER HERE!
--- =====================================================
-```
-
----
-### Fichier : `./src/main/resources/local/guide_database_setup.md`
-```md
-# 🗄️ Database Setup Guide (Local Development)
-
-This guide explains how to set up and initialize the Fleet Management database on your local machine. This process is fully automated for both **Linux** and **Windows**.
-
-## 📋 Prerequisites
-
-Ensure you have the following installed:
-- **Docker** & **Docker Compose**
-  - *Linux*: `sudo apt install docker-compose`
-  - *Windows*: Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-
-## 🚀 Step 1: Start the Database Container
-
-Open a terminal at the root of the project and run:
-
-```bash
-# Start the PostgreSQL 16 container in the background
-docker-compose up -d
-```
-
-*Note: This will automatically pull the official Postgres 16 image and create a database named `yowyob_db`.*
-
-## ⚙️ Step 2: Configure the Application
-
-The application is configured to use a **Hybrid Mode** (Local DB + Remote Kafka/Redis).
-
-1. Open `src/main/resources/application.yml`.
-2. Ensure the active profile is set to `local`:
-   ```yaml
-   spring:
-     profiles:
-       active: local
-   ```
-3. (Optional) In the `LOCAL CONFIGURATION` block, verify that the credentials match those in `docker-compose.yml` (default: `fleet_admin` / `fleet_password`).
-
-## 🛠️ Step 3: Run and Auto-Initialize
-
-Simply start the application. The system will detect the local environment and automatically:
-1. Create all tables and ENUM types (from `resources/local/schema.sql`).
-2. Inject 100 test users and sample data (from `resources/local/data.sql`).
-
-**Run Command:**
-```bash
-# Linux / macOS
-./mvnw clean spring-boot:run
-
-# Windows (CMD / PowerShell)
-mvnw.cmd clean spring-boot:run
-```
-
-## ✅ Step 4: Verify the Setup
-
-Once the log shows `🚀 LOCAL DATABASE READY!`, open your browser:
-
-- **Swagger UI**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
-- **Check Data**: Find the `health-check-controller` and execute `/api/v1/health/users-count`. You should see `users_in_db: 100`.
-
-## ❌ Troubleshooting
-
-- **Port 5432 already in use**: If you have a local PostgreSQL installed outside of Docker, stop it or change the port mapping in `docker-compose.yml`.
-- **DNS/Pull Issues**: If Docker fails to pull the image, try:
-  ```bash
-  docker pull postgres:16
-  ```
-```
-
----
 ### Fichier : `./src/main/resources/application.yml`
 ```yaml
 server:
@@ -7621,13 +7629,38 @@ resilience4j:
 ---
 # LOCAL CONFIGURATION
 spring:
-  config:
-    activate:
-      on-profile: local
+  application:
+    name: fleet-management
+
+  profiles:
+    active: local
+
+  # 1. CONFIGURATION R2DBC (Runtime Réactif)
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/yowyob_db
-    username: fleet_admin
-    password: fleet_password
+    url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yowyob}
+    username: ${DB_USERNAME:fleet_admin}
+    password: ${DB_PASSWORD:fleet_password}
+    pool:
+      enabled: true
+      initial-size: 2
+      max-size: 10
+
+  # 2. CONFIGURATION JDBC (Pour Liquibase uniquement)
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yowyob}
+    username: ${DB_USERNAME:fleet_admin}
+    password: ${DB_PASSWORD:fleet_password}
+    driver-class-name: org.postgresql.Driver
+
+  # 3. CONFIGURATION LIQUIBASE
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: fleet
+    liquibase-schema: fleet
+    enabled: true
+    contexts: ${spring.profiles.active}
+
+  # On désactive l'ancien init SQL
   sql:
     init:
       mode: never
@@ -7642,6 +7675,172 @@ sql:
   init:
     mode: never
 ```
+
+---
+### Fichier : `./src/main/resources/db/changelog/changes/002-fleet-tables.sql`
+```sql
+--liquibase formatted sql
+
+--changeset gabriel:create-fleet-enums splitStatements:true
+CREATE TYPE fleet.vehicle_type_enum AS ENUM ('CAR', 'VAN', 'TRUCK', 'BIKE');
+CREATE TYPE fleet.engine_status_enum AS ENUM ('OK', 'NEED_SERVICE', 'OUT_OF_SERVICE');
+CREATE TYPE fleet.maintenance_status_enum AS ENUM ('UP_TO_DATE', 'PENDING', 'OVERDUE');
+CREATE TYPE fleet.event_type_enum AS ENUM ('ENTRY', 'EXIT');
+
+--changeset gabriel:create-fleet-tables splitStatements:true
+-- 1. Fleets
+CREATE TABLE fleet.fleets (
+  id UUID PRIMARY KEY,
+  fleet_manager_id UUID NOT NULL, 
+  name VARCHAR(255) NOT NULL,
+  phone_number VARCHAR(50),
+  created_at TIMESTAMP DEFAULT now()
+);
+
+-- 2. Geofence Zones
+CREATE TABLE fleet.geofence_zones (
+  id UUID PRIMARY KEY,
+  surface_area NUMERIC,
+  perimeter NUMERIC
+);
+
+-- 3. Vehicles (Pivot Central)
+CREATE TABLE fleet.vehicles (
+  id UUID PRIMARY KEY,
+  fleet_id UUID REFERENCES fleet.fleets(id) ON DELETE CASCADE,
+  zone_id UUID REFERENCES fleet.geofence_zones(id) ON DELETE SET NULL,
+  license_plate VARCHAR(50) UNIQUE NOT NULL,
+  brand VARCHAR(100),
+  model VARCHAR(100),
+  manufacturing_year INT,
+  type fleet.vehicle_type_enum,
+  color VARCHAR(50)
+);
+
+-- 4. Drivers
+CREATE TABLE fleet.drivers (
+  user_id UUID PRIMARY KEY,
+  status BOOLEAN DEFAULT true,
+  licence_number VARCHAR(100) UNIQUE NOT NULL,
+  assigned_vehicle_id UUID REFERENCES fleet.vehicles(id) ON DELETE SET NULL
+);
+
+-- Mise à jour de la ref véhicule -> driver
+ALTER TABLE fleet.vehicles ADD COLUMN driver_id UUID REFERENCES fleet.drivers(user_id) ON DELETE SET NULL;
+
+-- 5. Roads & Trips
+CREATE TABLE fleet.roads (
+  id UUID PRIMARY KEY,
+  start_point TEXT,
+  end_point TEXT
+);
+
+CREATE TABLE fleet.trips (
+  id UUID PRIMARY KEY,
+  vehicle_id UUID REFERENCES fleet.vehicles(id) ON DELETE CASCADE,
+  driver_id UUID REFERENCES fleet.drivers(user_id) ON DELETE SET NULL,
+  road_id UUID REFERENCES fleet.roads(id) ON DELETE SET NULL,
+  start_date DATE NOT NULL,
+  end_date DATE,
+  start_time TIME NOT NULL,
+  end_time TIME,
+  type fleet.vehicle_type_enum,
+  color VARCHAR(50)
+);
+
+-- 6. Parameters
+CREATE TABLE fleet.operational_parameters (
+  id UUID PRIMARY KEY,
+  vehicle_id UUID UNIQUE REFERENCES fleet.vehicles(id) ON DELETE CASCADE,
+  trip_id UUID REFERENCES fleet.trips(id) ON DELETE SET NULL,
+  statut BOOLEAN DEFAULT true,
+  current_location TEXT,
+  current_speed NUMERIC,
+  fuel_level VARCHAR(50),
+  mileage NUMERIC,
+  odometer_reading NUMERIC,
+  bearing NUMERIC,
+  timestamp TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE fleet.financial_parameters (
+  id UUID PRIMARY KEY,
+  vehicle_id UUID UNIQUE REFERENCES fleet.vehicles(id) ON DELETE CASCADE,
+  insurance_number VARCHAR(100),
+  insurance_expired_at DATE,
+  registered_at DATE,
+  purchased_at DATE,
+  depreciation_rate INT,
+  cost_per_km NUMERIC
+);
+
+CREATE TABLE fleet.maintenance_parameters (
+  id UUID PRIMARY KEY,
+  vehicle_id UUID UNIQUE REFERENCES fleet.vehicles(id) ON DELETE CASCADE,
+  last_maintenance_at DATE,
+  next_maintenance_at DATE,
+  engine_status fleet.engine_status_enum DEFAULT 'OK',
+  battery_health INT,
+  maintenance_status fleet.maintenance_status_enum DEFAULT 'UP_TO_DATE'
+);
+
+-- 7. Geofence Details
+CREATE TABLE fleet.geofence_points (
+  id UUID PRIMARY KEY,
+  latitude NUMERIC NOT NULL,
+  longitude NUMERIC NOT NULL
+);
+
+CREATE TABLE fleet.geofence_point_zone_linkages (
+  point_id UUID REFERENCES fleet.geofence_points(id) ON DELETE CASCADE,
+  zone_id UUID REFERENCES fleet.geofence_zones(id) ON DELETE CASCADE,
+  vertex_order INT,
+  PRIMARY KEY (point_id, zone_id)
+);
+
+CREATE TABLE fleet.geofence_events (
+  id UUID PRIMARY KEY,
+  vehicle_id UUID REFERENCES fleet.vehicles(id) ON DELETE CASCADE,
+  zone_id UUID REFERENCES fleet.geofence_zones(id) ON DELETE SET NULL,
+  type fleet.event_type_enum,
+  timestamp TIMESTAMP DEFAULT now()
+);```
+
+---
+### Fichier : `./src/main/resources/db/changelog/changes/001-init-schemas.sql`
+```sql
+--liquibase formatted sql
+
+--changeset gabriel:create-fleet-schema
+CREATE SCHEMA IF NOT EXISTS fleet;```
+
+---
+### Fichier : `./src/main/resources/db/changelog/data/001-local-public-mock.sql`
+```sql
+--liquibase formatted sql
+
+--changeset gabriel:mock-public-schema context:local
+-- Création des tables public minimales pour éviter les erreurs de FK si elles existent
+-- Note: Dans un environnement réel, ces tables sont gérées par le service Core
+
+CREATE TABLE IF NOT EXISTS public.users (
+    id UUID PRIMARY KEY,
+    name TEXT,
+    email_address TEXT
+);
+
+CREATE TABLE IF NOT EXISTS public.business_actors (
+    id UUID PRIMARY KEY REFERENCES public.users(id)
+);
+
+-- Données de test pour le développement local
+INSERT INTO public.users (id, name, email_address) VALUES 
+('7b2e3f4a-1c9d-4b8a-8e6f-2d3c4b5a6d7e', 'Gabriel Manager', 'manager@yowyob.com')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO public.business_actors (id) VALUES 
+('7b2e3f4a-1c9d-4b8a-8e6f-2d3c4b5a6d7e')
+ON CONFLICT DO NOTHING;```
 
 ---
 ### Fichier : `./src/main/resources/prod.application.yml`
@@ -8396,18 +8595,27 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 import java.util.UUID;
 
-@Table("vehicles")
+@Table(name = "vehicles", schema = "fleet")
 @Data @NoArgsConstructor @AllArgsConstructor
 public class VehicleLocalEntity {
     @Id
-    private UUID id; // This must match the External ID
+    private UUID id;
+
     @Column("fleet_id")
     private UUID fleetId;
+
     @Column("driver_id")
     private UUID driverId;
-    @Column("user_id")
-    private UUID userId;
-    // Note: brand, model, color are NOT here because they are remote
+
+    @Column("zone_id")
+    private UUID zoneId;
+
+    @Column("license_plate")
+    private String licensePlate;
+    
+    // Les autres champs (brand, model) sont gérés via l'API externe VehicleService
+    // ou ajoutés ici si on décide de les cacher localement.
+    // Pour l'instant, on garde la structure pivot minimale.
 }```
 
 ---
@@ -8424,23 +8632,30 @@ import org.springframework.data.relational.core.mapping.Column;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Table("financial_parameters")
+@Table(name = "financial_parameters", schema = "fleet")
 @Data @NoArgsConstructor @AllArgsConstructor
 public class FinancialParameterEntity {
     @Id
     private UUID id;
+    
     @Column("vehicle_id")
     private UUID vehicleId;
+    
     @Column("insurance_number")
     private String insuranceNumber;
+    
     @Column("insurance_expired_at")
     private LocalDate insuranceExpiredAt;
+    
     @Column("registered_at")
     private LocalDate registeredAt;
+    
     @Column("purchased_at")
     private LocalDate purchasedAt;
+    
     @Column("depreciation_rate")
     private Integer depreciationRate;
+    
     @Column("cost_per_km")
     private Float costPerKm;
 }```
@@ -8459,21 +8674,21 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Table("drivers")
+@Table(name = "drivers", schema = "fleet")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DriverEntity {
     @Id
-    @Column("userid") // Correspond au userId de la table
+    @Column("user_id") // Correspond à la PK user_id dans fleet.drivers
     private UUID userId;
     
-    @Column("licencenumber")
+    @Column("licence_number")
     private String licenceNumber;
     
     private Boolean status;
     
-    @Column("assignedvehicleid")
+    @Column("assigned_vehicle_id")
     private UUID assignedVehicleId;
 }```
 
@@ -8491,21 +8706,27 @@ import org.springframework.data.relational.core.mapping.Column;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Table("maintenance_parameters")
+@Table(name = "maintenance_parameters", schema = "fleet")
 @Data @NoArgsConstructor @AllArgsConstructor
 public class MaintenanceParameterEntity {
     @Id
     private UUID id;
+    
     @Column("vehicle_id")
     private UUID vehicleId;
+    
     @Column("last_maintenance_at")
     private LocalDate lastMaintenanceAt;
+    
     @Column("next_maintenance_at")
     private LocalDate nextMaintenanceAt;
+    
     @Column("engine_status")
     private String engineStatus; 
+    
     @Column("battery_health")
-    private String batteryHealth;
+    private String batteryHealth; // Converti en String car l'entité attend ça (ou Integer selon mapping)
+    
     @Column("maintenance_status")
     private String maintenanceStatus;
 }```
@@ -8524,7 +8745,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import java.time.Instant;
 import java.util.UUID;
 
-@Table("fleets")
+@Table(name = "fleets", schema = "fleet")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -8533,7 +8754,7 @@ public class FleetEntity {
     private UUID id;
     
     @Column("fleet_manager_id")
-    private UUID fleetManagerId;
+    private UUID fleetManagerId; // Ref to public.business_actors
     
     private String name;
     
@@ -8542,6 +8763,54 @@ public class FleetEntity {
     
     @Column("created_at")
     private Instant createdAt;
+}```
+
+---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/outbound/persistence/entity/OperationalParameterEntity.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
+import java.time.Instant;
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@Table(name = "operational_parameters", schema = "fleet")
+@Data @NoArgsConstructor @AllArgsConstructor
+public class OperationalParameterEntity {
+    @Id
+    private UUID id;
+    
+    @Column("vehicle_id")
+    private UUID vehicleId;
+    
+    @Column("trip_id")
+    private UUID tripId;
+    
+    private Boolean statut;
+    
+    @Column("current_location")
+    private String currentLocation;
+    
+    @Column("current_speed")
+    private BigDecimal currentSpeed;
+    
+    @Column("fuel_level")
+    private String fuelLevel;
+    
+    private BigDecimal mileage;
+    
+    @Column("odometer_reading")
+    private BigDecimal odometerReading;
+    
+    private BigDecimal bearing;
+    
+    private Instant timestamp;
 }```
 
 ---
@@ -9631,95 +9900,6 @@ public class KafkaConfig {
 ```
 
 ---
-### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/config/DatabaseInitConfig.java`
-```java
-package com.yowyob.fleet.infrastructure.config;
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.r2dbc.core.DatabaseClient;
-import jakarta.annotation.PostConstruct;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
-
-@Configuration
-@Profile("local")
-public class DatabaseInitConfig {
-
-    private final DatabaseClient databaseClient;
-
-    public DatabaseInitConfig(DatabaseClient databaseClient) {
-        this.databaseClient = databaseClient;
-    }
-
-    @PostConstruct
-    public void init() {
-        System.out.println("⚙️ LOCAL ENVIRONMENT: Starting database initialization...");
-
-        // 1. Run Schema -> 2. Seed if empty
-        executeSqlFile("local/schema.sql")
-                .then(checkIfDataExists())
-                .flatMap(hasData -> {
-                    if (!hasData) {
-                        System.out.println("🌱 Seeding: Database is empty. Injecting test data...");
-                        return executeSqlFile("local/data.sql");
-                    }
-                    System.out.println("✅ Seeding: Data already exists. Skipping.");
-                    return Mono.empty();
-                })
-                .subscribe(
-                        null,
-                        err -> {
-                            System.err.println("❌ DB INIT ERROR: " + err.getMessage());
-                            // Log the error but don't stop the app
-                        },
-                        () -> System.out.println("🚀 LOCAL DATABASE READY!")
-                );
-    }
-
-    private Mono<Void> executeSqlFile(String filePath) {
-        return Mono.fromCallable(() -> {
-            ClassPathResource resource = new ClassPathResource(filePath);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-                return reader.lines().collect(Collectors.joining("\n"));
-            }
-        })
-        .flatMapMany(sql -> {
-            // Split by semicolon
-            return Flux.fromArray(sql.split(";"));
-        })
-        .map(String::trim)
-        .filter(s -> !s.isEmpty()) // We only filter out truly empty strings
-        .concatMap(s -> {
-            // Execute each statement sequentially
-            return databaseClient.sql(s)
-                    .then()
-                    .onErrorResume(e -> {
-                        // Ignore errors on DROP commands (often happen if object doesn't exist)
-                        if (s.toUpperCase().startsWith("DROP")) {
-                            return Mono.empty();
-                        }
-                        return Mono.error(e);
-                    });
-        })
-        .then();
-    }
-
-    private Mono<Boolean> checkIfDataExists() {
-        return databaseClient.sql("SELECT COUNT(*) FROM users")
-                .map((row, metadata) -> row.get(0, Long.class))
-                .first()
-                .map(count -> count > 0)
-                .onErrorReturn(false);
-    }
-}```
-
----
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/config/OpenApiConfig.java`
 ```java
 package com.yowyob.fleet.infrastructure.config;
@@ -10686,6 +10866,26 @@ Ce projet est développé en mode **Pair Programming** avec une IA (Gemini/ChatG
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
             <version>2.5.0</version>
+        </dependency>
+
+        <!-- JDBC SUPPORT (Requis uniquement pour Liquibase au démarrage) -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <exclusions>
+         <!-- On évite de charger HikariCP en trop si possible, mais Spring en a besoin pour l'auto-config -->
+            </exclusions>
+            
+        </dependency>
+        <!-- Driver JDBC PostgreSQL (Scope runtime pour Liquibase) -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

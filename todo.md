@@ -6,7 +6,7 @@
 - [x] **Tâche 1.3 :** Mise en place du mécanisme de **Seeding** (Génération automatique de données de test au démarrage).
 - [x] **Tâche 1.4 :** **Validation swagger** : Vérification de l'état de la base de données via un endpoint de santé (Health Check).
 - [x] **Tâche 1.5:** *Guide*: Elaboration d'un guide pour que les collaborateurs puissent initialiser la bd sans probleme et la seed en mode local.(le plus facilement possible) 
-- [] **Tache 1.6:** intgrer liquid-base
+- [x] **Tâche 1.6:** Intégration de **Liquibase** (Multi-schémas `fleet`/`public`, migration JDBC au boot, compatibilité R2DBC).
 
 #### Jalon 2 : Authentification & Accès (CU1)`Hassana`
 - [x] **Tâche 2.1 :** Configuration de la Sécurité Réactive (Spring Security).

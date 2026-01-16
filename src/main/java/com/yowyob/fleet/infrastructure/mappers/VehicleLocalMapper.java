@@ -13,13 +13,15 @@ public interface VehicleLocalMapper {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "fleetId", source = "fleetId")
     @Mapping(target = "driverId", ignore = true) // Will be handled during assignment task
-    @Mapping(target = "userId", ignore = true)   // Will be handled during assignment task
+    @Mapping(target = "zoneId", ignore = true)   // Nouveau champ dans l'entité, ignoré pour l'instant
+    @Mapping(target = "licensePlate", source = "licensePlate")
+    // NOTE: 'userId' a été supprimé ici car supprimé de l'entité
     VehicleLocalEntity toVehicleEntity(Vehicle domain);
 
     // Mapping to Financial Table
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "vehicleId", source = "id")
-    @Mapping(target = "insuranceNumber", source = "financialParameters.insuranceNumber") // Added
+    @Mapping(target = "insuranceNumber", source = "financialParameters.insuranceNumber")
     @Mapping(target = "insuranceExpiredAt", source = "financialParameters.insuranceExpiryDate")
     @Mapping(target = "registeredAt", source = "financialParameters.registrationDate")
     @Mapping(target = "purchasedAt", source = "financialParameters.purchaseDate")
@@ -32,9 +34,9 @@ public interface VehicleLocalMapper {
     @Mapping(target = "vehicleId", source = "id")
     @Mapping(target = "lastMaintenanceAt", source = "maintenanceParameters.lastMaintenanceDate")
     @Mapping(target = "nextMaintenanceAt", source = "maintenanceParameters.nextMaintenanceDue")
-    @Mapping(target = "engineStatus", source = "maintenanceParameters.engineStatus") // Added
-    @Mapping(target = "batteryHealth", source = "maintenanceParameters.batteryHealth") // Added
-    @Mapping(target = "maintenanceStatus", source = "maintenanceParameters.maintenanceStatus") // Added
+    @Mapping(target = "engineStatus", source = "maintenanceParameters.engineStatus")
+    @Mapping(target = "batteryHealth", expression = "java(domain.maintenanceParameters() != null && domain.maintenanceParameters().batteryHealth() != null ? String.valueOf(domain.maintenanceParameters().batteryHealth()) : null)") 
+    @Mapping(target = "maintenanceStatus", source = "maintenanceParameters.maintenanceStatus")
     MaintenanceParameterEntity toMaintenanceEntity(Vehicle domain);
 
     // Domain reconstruction (Helper)
@@ -43,16 +45,25 @@ public interface VehicleLocalMapper {
         return new Vehicle(
             v.getId(),
             v.getFleetId(),
-            null, null, null, null, null, null, // Remote data
+            v.getLicensePlate(), // Récupération locale
+            null, null, null, null, null, // Remote data (brand, model...) ne sont pas stockés localement sauf licensePlate
             f == null ? null : new VehicleParameters.Financial(
                 f.getInsuranceNumber(), f.getInsuranceExpiredAt(), f.getRegisteredAt(), f.getPurchasedAt(), f.getDepreciationRate(), f.getCostPerKm()
             ),
             m == null ? null : new VehicleParameters.Maintenance(
                 m.getLastMaintenanceAt(), m.getNextMaintenanceAt(), m.getEngineStatus(), 
-                m.getBatteryHealth() != null ? Integer.parseInt(m.getBatteryHealth()) : null, 
+                m.getBatteryHealth() != null ? tryParseInt(m.getBatteryHealth()) : null, 
                 m.getMaintenanceStatus()
             ),
             null
         );
+    }
+
+    default Integer tryParseInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

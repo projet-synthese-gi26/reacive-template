@@ -9,21 +9,27 @@ import org.springframework.data.relational.core.mapping.Column;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Table("maintenance_parameters")
+@Table(name = "maintenance_parameters", schema = "fleet")
 @Data @NoArgsConstructor @AllArgsConstructor
 public class MaintenanceParameterEntity {
     @Id
     private UUID id;
+    
     @Column("vehicle_id")
     private UUID vehicleId;
+    
     @Column("last_maintenance_at")
     private LocalDate lastMaintenanceAt;
+    
     @Column("next_maintenance_at")
     private LocalDate nextMaintenanceAt;
+    
     @Column("engine_status")
     private String engineStatus; 
+    
     @Column("battery_health")
-    private String batteryHealth;
+    private String batteryHealth; // Converti en String car l'entité attend ça (ou Integer selon mapping)
+    
     @Column("maintenance_status")
     private String maintenanceStatus;
 }

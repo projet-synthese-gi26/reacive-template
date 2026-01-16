@@ -8,16 +8,25 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 import java.util.UUID;
 
-@Table("vehicles")
+@Table(name = "vehicles", schema = "fleet")
 @Data @NoArgsConstructor @AllArgsConstructor
 public class VehicleLocalEntity {
     @Id
-    private UUID id; // This must match the External ID
+    private UUID id;
+
     @Column("fleet_id")
     private UUID fleetId;
+
     @Column("driver_id")
     private UUID driverId;
-    @Column("user_id")
-    private UUID userId;
-    // Note: brand, model, color are NOT here because they are remote
+
+    @Column("zone_id")
+    private UUID zoneId;
+
+    @Column("license_plate")
+    private String licensePlate;
+    
+    // Les autres champs (brand, model) sont gérés via l'API externe VehicleService
+    // ou ajoutés ici si on décide de les cacher localement.
+    // Pour l'instant, on garde la structure pivot minimale.
 }

@@ -9,20 +9,20 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Table("drivers")
+@Table(name = "drivers", schema = "fleet")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DriverEntity {
     @Id
-    @Column("userid") // Correspond au userId de la table
+    @Column("user_id") // Correspond à la PK user_id dans fleet.drivers
     private UUID userId;
     
-    @Column("licencenumber")
+    @Column("licence_number")
     private String licenceNumber;
     
     private Boolean status;
     
-    @Column("assignedvehicleid")
+    @Column("assigned_vehicle_id")
     private UUID assignedVehicleId;
 }

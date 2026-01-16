@@ -36,19 +36,18 @@
         <dependency>
              <groupId>org.springframework.boot</groupId>
              <artifactId>spring-boot-starter-actuator</artifactId>
-	</dependency>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
   
-	<dependency>
-	   <groupId>io.micrometer</groupId>
-	   <artifactId>micrometer-registry-prometheus</artifactId>
-	</dependency>
+        <dependency>
+           <groupId>io.micrometer</groupId>
+           <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
 
-        <!-- DATA (R2DBC & REDIS) -->
+        <!-- DATA (R2DBC) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-r2dbc</artifactId>
@@ -58,14 +57,30 @@
             <artifactId>r2dbc-postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+        <!-- DATA (REDIS) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+        </dependency>
+
+        <!-- LIQUIBASE & JDBC (Migration uniquement) -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <exclusions>
+                <!-- On exclut HikariCP pour ne pas confondre avec R2DBC, mais Spring en a besoin pour Liquibase -->
+            </exclusions>
+        </dependency>
+        <!-- Driver JDBC PostgreSQL (Scope runtime pour Liquibase) - UNIQUE DECLARATION -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
         </dependency>
 
         <!-- MESSAGING (KAFKA) -->

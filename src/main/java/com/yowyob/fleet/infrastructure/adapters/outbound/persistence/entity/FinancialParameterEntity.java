@@ -9,23 +9,30 @@ import org.springframework.data.relational.core.mapping.Column;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Table("financial_parameters")
+@Table(name = "financial_parameters", schema = "fleet")
 @Data @NoArgsConstructor @AllArgsConstructor
 public class FinancialParameterEntity {
     @Id
     private UUID id;
+    
     @Column("vehicle_id")
     private UUID vehicleId;
+    
     @Column("insurance_number")
     private String insuranceNumber;
+    
     @Column("insurance_expired_at")
     private LocalDate insuranceExpiredAt;
+    
     @Column("registered_at")
     private LocalDate registeredAt;
+    
     @Column("purchased_at")
     private LocalDate purchasedAt;
+    
     @Column("depreciation_rate")
     private Integer depreciationRate;
+    
     @Column("cost_per_km")
     private Float costPerKm;
 }
