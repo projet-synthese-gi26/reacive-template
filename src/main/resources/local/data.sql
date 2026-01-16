@@ -12,7 +12,7 @@ TRUNCATE TABLE
     admins, fleet_managers, drivers, customers, 
     providers, employees, prospects, sales_persons,
     profiles, settings, addresses, contacts,
-    roles, permissions, role_has_permissions, user_has_roles,
+    roles, permissions, role_has_permissions,  user_has_permissions,user_has_roles,
     organizations, agencies, business_domains, organization_business_domains,
     certifications, third_parties, proposed_activities, services, branches,
     fleets, vehicles, geofence_zones, geofence_points, geofence_events,
@@ -286,3 +286,18 @@ SELECT
     floor(random() * 50)::int
 FROM generate_series(1, 40) as i;
 
+-- =====================================================
+-- SEEDING DIRECT PERMISSIONS (Test)
+-- =====================================================
+
+-- On crée quelques permissions
+INSERT INTO permissions (id, name) VALUES 
+(uuid_generate_v4(), 'extra:special_access'),
+(uuid_generate_v4(), 'fleet:emergency_stop');
+
+-- On donne la première permission au premier utilisateur (Admin 1)
+INSERT INTO user_has_permissions (user_id, permission_id)
+VALUES (
+    (SELECT id FROM users ORDER BY email_address LIMIT 1),
+    (SELECT id FROM permissions WHERE name = 'extra:special_access' LIMIT 1)
+);

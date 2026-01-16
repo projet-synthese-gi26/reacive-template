@@ -950,6 +950,20 @@ CREATE TABLE user_has_roles (
   updated_at TIMESTAMP DEFAULT now()
 );
 
+-- =====================================================
+-- FIX: DIRECT PERMISSIONS (USER <-> PERMISSIONS)
+-- =====================================================
+
+-- Table de liaison pour les permissions accordées directement à un utilisateur
+CREATE TABLE IF NOT EXISTS user_has_permissions (
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  permission_id UUID REFERENCES permissions(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, permission_id),
+
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
 -- Commit the transaction
 
 

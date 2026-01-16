@@ -53,7 +53,7 @@ application:
     vehicle-service-url: https://vehicule-service.pynfi.com
     
   auth:
-    mode: fake # Mettez 'remote' pour tester le vrai service TraMaSys et 'fake' pour la fausse authentification en test
+    mode: remote # Mettez 'remote' pour tester le vrai service TraMaSys et 'fake' pour la fausse authentification en test
     url: https://auth-service.pynfi.com # URL de la doc TraMaSys
 
   kafka:
