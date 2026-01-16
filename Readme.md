@@ -21,14 +21,24 @@ Ce projet est développé en mode **Pair Programming** avec une IA (Gemini/ChatG
 - Java 21
 - PostgreSQL (avec accès aux serveurs distants configurés dans le `.yml`)
 
-### Lancer l'application
-```bash
-./mvnw clean install
-./mvnw spring-boot:run
-```
+
+### Comment lancer le projet ?
+
+**Sur Linux / Mac :**
+1. Oouvrez un terminal à la racine.
+2. Lancez : `./run_local.sh`
+
+**Sur Windows :**
+1. Double-cliquez sur `run_local.bat` (ou lancez-le depuis un terminal).
+
+*Cela va automatiquement monter la base de données Docker et lancer l'application avec la configuration locale.*
+
+### En cas de problème de base de données
+Si vous avez des erreurs Liquibase ou de schéma, réinitialisez la base avec :
+- Linux/Mac : `./reset_db.sh`
+- Windows : `reset_db.bat`
 
 ### Valider les changements
 - **Swagger UI** : [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 - **Santé de la DB** : Utilisez les endpoints définis dans chaque jalon (voir `todo.md`).
 ```
-
