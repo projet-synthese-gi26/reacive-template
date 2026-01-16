@@ -14,6 +14,15 @@ spring:
     url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yowyob}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:password}
+    pool:
+      enabled: true
+      initial-size: 1
+      max-size: 5
+      max-idle-time: 30m
+      max-life-time: 10m
+      acquire-retry: 3
+      max-acquire-time: 30s
+      validation-query: SELECT 1
   sql:
     init:
       mode: always
@@ -49,6 +58,9 @@ application:
   external:
     stock-service-url: http://${EXTERNAL_HOST:localhost}:8081
     vehicle-service-url: https://fare-calculator-service.pynfi.com
+  auth:
+    mode: remote # Mettez 'remote' pour tester le vrai service TraMaSys et 'fake' pour la fausse authentification en test
+    url: https://auth-service.pynfi.com
 
   kafka:
     topics:
