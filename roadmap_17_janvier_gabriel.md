@@ -10,15 +10,15 @@ Assurer un environnement de développement local stable et complet (Docker), val
 #### ⚙️ Sous-Jalon 1.1 : Infrastructure Docker Locale Complète
 *Ce jalon vise à avoir un environnement local fonctionnel incluant la base de données, Kafka et Redis.*
 
-- [ ] **Tâche 1.1.1 :** Mettre à jour `docker-compose.yml` pour inclure Kafka et Redis.
-    - [ ] Ajouter un service `kafka` (ex: `bitnami/kafka` ou un broker léger).
-    - [ ] Ajouter un service `zookeeper` (si nécessaire pour la version de Kafka choisie).
-    - [ ] Ajouter un service `redis` (ex: `redis:latest`).
-    - [ ] Configurer les réseaux Docker pour la communication inter-conteneurs.
-    - [ ] Adapter `application.yml` pour utiliser les bonnes adresses (`localhost:9092` pour Kafka, `localhost:6379` pour Redis).
-- [ ] **Tâche 1.1.2 :** Lancer l'environnement Docker complet (`docker-compose up -d`).
-- [ ] **Tâche 1.1.3 :** Vérifier la connectivité de l'application aux nouveaux services (Kafka/Redis) via les logs Spring Boot.
-- [ ] **Tâche 1.1.4 :** Vérifier l'absence des logs d'erreur Kafka (`Bootstrap broker localhost:9092 disconnected`) après configuration correcte.
+- [x] **Tâche 1.1.1 :** Mettre à jour `docker-compose.yml` pour inclure Kafka et Redis.
+    - [x] Ajouter un service `kafka` (ex: `bitnami/kafka` ou un broker léger).
+    - [x] Ajouter un service `zookeeper` (si nécessaire pour la version de Kafka choisie).
+    - [x] Ajouter un service `redis` (ex: `redis:latest`).
+    - [x] Configurer les réseaux Docker pour la communication inter-conteneurs.
+    - [x] Adapter `application.yml` pour utiliser les bonnes adresses (`localhost:9092` pour Kafka, `localhost:6379` pour Redis).
+- [x] **Tâche 1.1.2 :** Lancer l'environnement Docker complet (`docker-compose up -d`).
+- [x] **Tâche 1.1.3 :** Vérifier la connectivité de l'application aux nouveaux services (Kafka/Redis) via les logs Spring Boot.
+- [x] **Tâche 1.1.4 :** Vérifier l'absence des logs d'erreur Kafka (`Bootstrap broker localhost:9092 disconnected`) après configuration correcte.
 
 #### ⚙️ Sous-Jalon 1.2 : Validation de Non-Régression Post-Liquibase
 *Tester les fonctionnalités CRUD existantes via Swagger pour s'assurer que la migration de base de données n'a rien cassé.*

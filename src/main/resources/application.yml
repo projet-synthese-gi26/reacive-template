@@ -4,35 +4,45 @@ server:
 spring:
   application:
     name: fleet-management
-
+  
   profiles:
     active: local
 
-  # CONFIG GLOBALE (Surchargeable par env vars)
+  # R2DBC (Application Runtime - Non bloquant)
   r2dbc:
-    url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yowyob}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:password}
+    url: r2dbc:postgresql://localhost:5432/yowyob_db
+    username: fleet_admin
+    password: fleet_password
     pool:
       enabled: true
       initial-size: 2
       max-size: 10
 
-  # Liquibase par défaut (sera surchargé en local)
+  # JDBC (Liquibase Migration - Bloquant au démarrage)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/yowyob_db
+    username: fleet_admin
+    password: fleet_password
+    driver-class-name: org.postgresql.Driver
+
+  # LIQUIBASE
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     default-schema: fleet
-    liquibase-schema: public # Schéma où se trouve la table DATABASECHANGELOG
+    liquibase-schema: public
     enabled: true
-    contexts: ${spring.profiles.active}
+    contexts: local
 
-  sql:
-    init:
-      mode: never
+  # REDIS (Local)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: "" 
 
-  # KAFKA 
+  # KAFKA (Local)
   kafka:
-    bootstrap-servers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: fleet-management-group
       auto-offset-reset: earliest
@@ -44,19 +54,25 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-# CUSTOM CONFIG 
+  # DOCKER COMPOSE (Désactivé car géré manuellement)
+  docker:
+    compose:
+      enabled: false
+
+# CONFIG METIER
 application:
   external:
-    stock-service-url: http://${EXTERNAL_HOST:localhost}:8081
+    stock-service-url: http://localhost:8081
     vehicle-service-url: https://vehicule-service.pynfi.com
   auth:
-    mode: remote
+    mode: remote 
     url: https://auth-service.pynfi.com
 
   kafka:
     topics:
       product-events: test-topic
 
+# MONITORING
 management:
   endpoints:
     web:
@@ -79,40 +95,16 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 5s
         slidingWindowSize: 5
-
----
-# ==========================================
-# LOCAL CONFIGURATION (Docker Local)
-# ==========================================
-spring:
-  config:
-    activate:
-      on-profile: local
+# # ==========================================
+# # REMOTE CONFIGURATION (Server)
+# # ==========================================
+# spring:
+#   config:
+#     activate:
+#       on-profile: remote
   
-  # R2DBC (Application Runtime) -> Pointe vers yowyob_db
-  r2dbc:
-    url: r2dbc:postgresql://localhost:5432/yowyob_db
-    username: fleet_admin
-    password: fleet_password
-
-  # JDBC (Liquibase Migration) -> Pointe vers yowyob_db 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/yowyob_db
-    username: fleet_admin
-    password: fleet_password
-    driver-class-name: org.postgresql.Driver
-
----
-# ==========================================
-# REMOTE CONFIGURATION (Server)
-# ==========================================
-spring:
-  config:
-    activate:
-      on-profile: remote
-  
-  # En remote, on suppose que les vars d'environnement pilotent tout
-  # On désactive l'init SQL destructif par sécurité
-  sql:
-    init:
-      mode: never
+#   # En remote, on suppose que les vars d'environnement pilotent tout
+#   # On désactive l'init SQL destructif par sécurité
+#   sql:
+#     init:
+#       mode: never
