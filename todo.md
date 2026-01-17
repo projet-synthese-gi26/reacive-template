@@ -1,49 +1,67 @@
-### 📋 Roadmap Macro : API Fleet & Geofence
+# 📋 Roadmap Globale : API Fleet & Geofence
 
-#### Jalon 1 : Initialisation, Structure & Persistence (Fondations)`Gabriel`
-- [x] **Tâche 1.1 :** Nettoyage et Refactoring du template (Renommage packages, suppression de la logique "Product").
-- [x] **Tâche 1.2 :** Implémentation du Schéma de données (Traduction du contrat v1.0 en SQL pour PostgreSQL).
-- [x] **Tâche 1.3 :** Mise en place du mécanisme de **Seeding** (Génération automatique de données de test au démarrage).
-- [x] **Tâche 1.4 :** **Validation swagger** : Vérification de l'état de la base de données via un endpoint de santé (Health Check).
-- [x] **Tâche 1.5:** *Guide*: Elaboration d'un guide pour que les collaborateurs puissent initialiser la bd sans probleme et la seed en mode local.(le plus facilement possible) 
-- [x] **Tâche 1.6:** Intégration de **Liquibase** (Multi-schémas `fleet`/`public`, migration JDBC au boot, compatibilité R2DBC).
+## 🏗️ PHASE 1 : FONDATIONS & INFRASTRUCTURE (Terminé)
 
-#### Jalon 2 : Authentification & Accès (CU1)`Hassana`
+#### Jalon 1 : Initialisation & Persistence `Gabriel`
+- [x] **Tâche 1.1 :** Nettoyage et Refactoring du template (Renommage packages, suppression de la logique "Product" initiale).
+- [x] **Tâche 1.2 :** Implémentation du Schéma de données (Traduction du contrat v1.0 en SQL).
+- [x] **Tâche 1.3 :** Mécanisme de Seeding (Données de test).
+- [x] **Tâche 1.4 :** Validation Swagger & Health Check.
+- [x] **Tâche 1.5 :** Guide d'installation DB locale.
+- [x] **Tâche 1.6 :** Intégration **Liquibase** (Multi-schémas `fleet`/`public`, migration JDBC au boot).
+- [x] **Tâche 1.7 :** Infrastructure **Docker Locale Complète** (Postgres + Redis + Kafka KRaft).
+- [x] **Tâche 1.8 :** Scripts d'automatisation Cross-Platform (`run_local.sh`, `run_local.bat`).
+
+#### Jalon 2 : Authentification & Accès (Base) `Hassana`
 - [x] **Tâche 2.1 :** Configuration de la Sécurité Réactive (Spring Security).
 - [x] **Tâche 2.2 :** Intégration du Service d'Authentification externe (Adaptateur WebClient).
 - [x] **Tâche 2.3 :** Implémentation du **Mode Dégradé (Fake Auth)** pour le développement local.
-- [x] **Tâche 2.4 :** **Validation Postman** : Tests de login, génération de token et accès restreint par rôles (RBAC).
-- [x] **Tâche 2.5 :** Intégration des routes "mot de passe oublié" et autres via l'API d'authentification externe.
+- [x] **Tâche 2.4 :** Validation Postman basique (Login/Token).
 
-#### Jalon 3 : Exploitation (Flottes & Véhicules)`Gabriel`
-- [x] **Tâche 3.1 :** Infrastructure technique de communication (Adaptateur WebClient).
-- [x] **Tâche 3.2 :** CRUD **Flottes** (Fleets) - Persistance locale & Service.
-- [x] **Tâche 3.3 :** Persistance locale des **Véhicules** (Tables `vehicles`, `financial_params`, `maintenance_params`).
-- [x] **Tâche 3.4 :** Service d'**Agrégation** (Fusionner données locales + données externes du collaborateur).
-- [x] **Tâche 3.5 :** API REST **VehicleController** (Endpoints section 4.2 du contrat).
-- [x] **Tâche 3.6 :** **Validation Swagger** : Scénario "Ajouter un véhicule existant à une flotte et définir ses frais d'assurance".
+---
 
+## 🛠️ PHASE 2 : REFACTORING & CONSOLIDATION (En cours) `Gabriel`
 
-#### Jalon 4 : Gestion des Chauffeurs & Assignations (CU21, CU24) `Hassana`
-- [x] **Tâche 4.1 :** Use-Case : Créer / Gérer un profil Driver (lié à l'utilisateur distant).
-- [x] **Tâche 4.2 :** Use-Case : Assigner / Libérer un véhicule à un chauffeur.
-- [x] **Tâche 4.3 :** **Validation Postman** : Scénario complet d'enregistrement et d'affectation d'un chauffeur.
+*Cette phase vise à stabiliser le socle technique, nettoyer le code inutile, et aligner parfaitement notre DB et nos Services avec (1) l'API d'Auth distante et (2) les besoins métier réels.*
 
-#### Jalon 5 : Gestion des Trajets & Temps Réel (CU4, CU5, CU2, CU14)`Gabriel`
-- [ ] **Tâche 5.1 :** Use-Case : Démarrer un trajet (Start Trip).
-- [ ] **Tâche 5.2 :** Use-Case : Terminer un trajet (End Trip) et calcul des statistiques de fin de trajet.
-- [ ] **Tâche 5.3 :** Mise à jour des paramètres opérationnels (Positions GPS, vitesse, fuel) en flux continu.
-- [ ] **Tâche 5.4 :** **Validation Postman** : Simulation d'un trajet complet et vérification des logs.
+#### Jalon 3 : Grand Nettoyage (Clean Code) `Gabriel`
+- [ ] **Tâche 3.1 :** Supprimer tout le code lié à "Product" (Controller, Service, Entity, Mapper, Repository). C'est du code exemple qui pollue.
+- [ ] **Tâche 3.2 :** Nettoyer les imports inutilisés et les dépendances mortes dans le `pom.xml`.
 
-#### Jalon 6 : Moteur de Geofencing & Alertes (CU10, CU11, CU12, CU13)`Hassana`
-- [ ] **Tâche 6.1 :** Use-Case : Définir et gérer les zones (Geofence Zones).
-- [ ] **Tâche 6.2 :** Moteur de détection réactif (Intersection position / zone).
-- [ ] **Tâche 6.3 :** Publication des alertes dans Kafka.
-- [ ] **Tâche 6.4 :** **Validation Postman** : Déclenchement manuel d'une alerte en injectant une position GPS hors zone.
+#### Jalon 4 : Analyse & Conformité DB `Gabriel`
+- [ ] **Tâche 4.1 :** Comparer le schéma Liquibase actuel (`fleet.*`) avec les sepcifications et la modelisation initiale et verifier les contracts d'api du frontend
+- [ ] **Tâche 4.2 :** Mettre à jour les scripts Liquibase (`003-adjust-schema.sql`) pour combler les manques.
 
-#### Jalon 7 : Intégrations Services Périphériques (Fare, Payment, Medias, Notification)`Gabriel`
-- [ ] **Tâche 7.1 :** Adaptateurs pour Fare Calculator & Payment (avec mode Fake data).
-- [ ] **Tâche 7.2 :** Adaptateur pour l'API Media (Gestion des images).
-- [ ] **Tâche 7.3 :** Intégration finale du service de Notification.
-- [ ] **Tâche 7.4 :** **Validation Postman** : Tests de bout en bout incluant les services externes.
+#### Jalon 5 : Auth & User Management Avancé (Proxy Auth) `Gabriel`
+*Objectif : Le microservice Fleet doit exposer les fonctionnalités de l'Auth Service de manière transparente.*
+- [ ] **Tâche 5.1 :** Refactoring `AuthApiClient` : Supporter le `MultipartFile` pour l'upload de photo de profil au `register`.
+- [ ] **Tâche 5.2 :** Logique "Auto-Role" : Vérifier/Créer les rôles (`FLEET_MANAGER`, `DRIVER`) sur l'Auth Service avant inscription.
+- [ ] **Tâche 5.3 :** Fixer le `register` : Synchro création Auth Service -> Création données locales (`fleet.drivers`).
+- [ ] **Tâche 5.4 :** Endpoint `User` : Créer un `UserController` local (Proxy vers Auth Service : Profil, Password).
 
+#### Jalon 6 : Gestion des Acteurs (Managers & Drivers) `Gabriel`
+- [ ] **Tâche 6.1 :** Implémenter la gestion des **Fleet Managers**.
+- [ ] **Tâche 6.2 :** Refondre la gestion des **Drivers** (User Auth + Permis Local + Assignation Véhicule).
+
+#### Jalon 7 : Flottes & Véhicules (Le Cœur) `Gabriel`
+- [ ] **Tâche 7.1 :** CRUD **Flottes** (Lien avec le Fleet Manager connecté).
+- [ ] **Tâche 7.2 :** CRUD **Véhicules** (Agrégation Données Locales + API Véhicule Distante).
+
+#### Jalon 8 : Gestion des Trajets (Trips) `Gabriel`
+- [ ] **Tâche 8.1 :** Start Trip / End Trip.
+
+---
+
+## 🚀 PHASE 3 : FONCTIONNALITÉS AVANCÉES (À venir)
+
+#### Jalon 9 : Moteur de Geofencing & Alertes (CU10-CU13) `Hassana`
+- [ ] **Tâche 9.1 :** Use-Case : Définir et gérer les zones (Geofence Zones).
+- [ ] **Tâche 9.2 :** Moteur de détection réactif (Intersection position / zone).
+- [ ] **Tâche 9.3 :** Publication des alertes dans Kafka.
+- [ ] **Tâche 9.4 :** Validation Postman : Alertes géographiques.
+
+#### Jalon 10 : Intégrations Services Périphériques `Gabriel`
+- [ ] **Tâche 10.1 :** Adaptateurs pour Fare Calculator & Payment (avec mode Fake data).
+- [ ] **Tâche 10.2 :** Adaptateur pour l'API Media (Gestion des images).
+- [ ] **Tâche 10.3 :** Intégration finale du service de Notification.
+- [ ] **Tâche 10.4 :** Tests de bout en bout (E2E).
