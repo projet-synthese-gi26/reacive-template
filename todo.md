@@ -25,12 +25,12 @@
 *Cette phase vise à stabiliser le socle technique, nettoyer le code inutile, et aligner parfaitement notre DB et nos Services avec (1) l'API d'Auth distante et (2) les besoins métier réels.*
 
 #### Jalon 3 : Grand Nettoyage (Clean Code) `Gabriel`
-- [ ] **Tâche 3.1 :** Supprimer tout le code lié à "Product" (Controller, Service, Entity, Mapper, Repository). C'est du code exemple qui pollue.
-- [ ] **Tâche 3.2 :** Nettoyer les imports inutilisés et les dépendances mortes dans le `pom.xml`.
+- [x]**Tâche 3.1 :** Supprimer tout le code lié à "Product" (Controller, Service, Entity, Mapper, Repository). C'est du code exemple qui pollue.
+- [x] **Tâche 3.2 :** Nettoyer les imports inutilisés et les dépendances mortes dans le `pom.xml`.
 
 #### Jalon 4 : Analyse & Conformité DB `Gabriel`
-- [ ] **Tâche 4.1 :** Comparer le schéma Liquibase actuel (`fleet.*`) avec les sepcifications et la modelisation initiale et verifier les contracts d'api du frontend
-- [ ] **Tâche 4.2 :** Mettre à jour les scripts Liquibase (`003-adjust-schema.sql`) pour combler les manques.
+- [x] **Tâche 4.1 :** Comparer le schéma Liquibase actuel (`fleet.*`) avec les sepcifications et la modelisation initiale et verifier les contracts d'api du frontend
+- [x] **Tâche 4.2 :** Mettre à jour les scripts Liquibase  pour combler les manques.
 
 #### Jalon 5 : Auth & User Management Avancé (Proxy Auth) `Gabriel`
 *Objectif : Le microservice Fleet doit exposer les fonctionnalités de l'Auth Service de manière transparente.*

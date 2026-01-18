@@ -8,7 +8,7 @@ spring:
   profiles:
     active: local
 
-  # R2DBC (Application Runtime - Non bloquant)
+  # R2DBC (Application Runtime)
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/yowyob_db
     username: fleet_admin
@@ -18,7 +18,7 @@ spring:
       initial-size: 2
       max-size: 10
 
-  # JDBC (Liquibase Migration - Bloquant au démarrage)
+  # JDBC (Liquibase Migration)
   datasource:
     url: jdbc:postgresql://localhost:5432/yowyob_db
     username: fleet_admin
@@ -33,14 +33,14 @@ spring:
     enabled: true
     contexts: local
 
-  # REDIS (Local)
+  # REDIS
   data:
     redis:
       host: localhost
       port: 6379
       password: "" 
 
-  # KAFKA (Local)
+  # KAFKA
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -54,7 +54,6 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-  # DOCKER COMPOSE (Désactivé car géré manuellement)
   docker:
     compose:
       enabled: false
@@ -62,15 +61,16 @@ spring:
 # CONFIG METIER
 application:
   external:
-    stock-service-url: http://localhost:8081
     vehicle-service-url: https://vehicule-service.pynfi.com
   auth:
     mode: remote 
     url: https://auth-service.pynfi.com
 
+  # Kafka topics
   kafka:
     topics:
-      product-events: test-topic
+      # product-events removed
+      geofence-alerts: geofence-alerts-topic # Anticipation pour le futur
 
 # MONITORING
 management:
@@ -88,23 +88,7 @@ management:
       prometheus:
         enabled: true
 
+# Resilience4j nettoyé (plus de stock-service)
 resilience4j:
   circuitbreaker:
-    instances:
-      stock-service:
-        failureRateThreshold: 50
-        waitDurationInOpenState: 5s
-        slidingWindowSize: 5
-# # ==========================================
-# # REMOTE CONFIGURATION (Server)
-# # ==========================================
-# spring:
-#   config:
-#     activate:
-#       on-profile: remote
-  
-#   # En remote, on suppose que les vars d'environnement pilotent tout
-#   # On désactive l'init SQL destructif par sécurité
-#   sql:
-#     init:
-#       mode: never
+    instances: {}

@@ -3,46 +3,59 @@ server:
 
 spring:
   application:
-    name: reactive-hexagonal
+    name: fleet-management
     
   docker:
     compose:
       enabled: false
 
-  # POSTGRESQL (R2DBC)
+  # 1. R2DBC (Runtime - Réactif)
   r2dbc:
-    url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yowyob}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:password}
+    url: r2dbc:postgresql://${DB_HOST:168.119.122.86}:${DB_PORT:5432}/${DB_NAME:yowyob}
+    username: ${DB_USERNAME:master}
+    password: ${DB_PASSWORD:Azerty1234*}
     pool:
       enabled: true
-      initial-size: 1
-      max-size: 5
-      max-idle-time: 30m
-      max-life-time: 10m
-      acquire-retry: 3
-      max-acquire-time: 30s
+      initial-size: 5
+      max-size: 20
       validation-query: SELECT 1
+
+  # 2. JDBC (Migration - Bloquant pour Liquibase)
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:168.119.122.86}:${DB_PORT:5432}/${DB_NAME:yowyob}
+    username: ${DB_USERNAME:master}
+    password: ${DB_PASSWORD:Azerty1234*}
+    driver-class-name: org.postgresql.Driver
+
+  # 3. LIQUIBASE
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: fleet
+    liquibase-schema: public
+    enabled: true
+    contexts: prod # Important : empêche le chargement du mock public
+
+  # Désactivation de l'ancien init SQL
   sql:
     init:
-      mode: always
+      mode: never
 
-  # REDIS CLUSTER 
+  # REDIS CLUSTER (Spécifique Prod)
   data:
     redis:
-      password: ${REDIS_PASSWORD:password}
+      password: ${REDIS_PASSWORD:Azerty1234*}
       cluster:
         nodes:
-          - ${REDIS_HOST:localhost}:7001
-          - ${REDIS_HOST:localhost}:7002
-          - ${REDIS_HOST:localhost}:7003
-          - ${REDIS_HOST:localhost}:7004
-          - ${REDIS_HOST:localhost}:7005
-          - ${REDIS_HOST:localhost}:7006
+          - ${REDIS_HOST:168.119.122.86}:7001
+          - ${REDIS_HOST:168.119.122.86}:7002
+          - ${REDIS_HOST:168.119.122.86}:7003
+          - ${REDIS_HOST:168.119.122.86}:7004
+          - ${REDIS_HOST:168.119.122.86}:7005
+          - ${REDIS_HOST:168.119.122.86}:7006
 
   # KAFKA 
   kafka:
-    bootstrap-servers:  ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    bootstrap-servers: ${KAFKA_HOST:168.119.122.86}:${KAFKA_PORT:9092}
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -53,19 +66,19 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-# CUSTOM CONFIG 
+# CONFIG METIER
 application:
   external:
-    stock-service-url: http://${EXTERNAL_HOST:localhost}:8081
     vehicle-service-url: https://fare-calculator-service.pynfi.com
   auth:
-    mode: remote # Mettez 'remote' pour tester le vrai service TraMaSys et 'fake' pour la fausse authentification en test
+    mode: remote 
     url: https://auth-service.pynfi.com
 
   kafka:
     topics:
-      product-events: test-topic
+      geofence-alerts: geofence-alerts-topic
 
+# MONITORING & RESILIENCE
 management:
   endpoints:
     web:
@@ -81,7 +94,6 @@ management:
       prometheus:
         enabled: true
 
-# RESILIENCE4J 
 resilience4j:
   circuitbreaker:
     instances:

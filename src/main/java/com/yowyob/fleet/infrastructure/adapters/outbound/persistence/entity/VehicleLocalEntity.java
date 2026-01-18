@@ -17,16 +17,26 @@ public class VehicleLocalEntity {
     @Column("fleet_id")
     private UUID fleetId;
 
-    @Column("driver_id")
-    private UUID driverId;
+    @Column("current_driver_id")
+    private UUID currentDriverId;
 
-    @Column("zone_id")
-    private UUID zoneId;
+    @Column("vehicle_type_id")
+    private UUID vehicleTypeId;
 
     @Column("license_plate")
     private String licensePlate;
     
-    // Les autres champs (brand, model) sont gérés via l'API externe VehicleService
-    // ou ajoutés ici si on décide de les cacher localement.
-    // Pour l'instant, on garde la structure pivot minimale.
+    // Ces champs DOIVENT être présents pour que le mapper fonctionne
+    private String brand;
+    private String model;
+    
+    @Column("manufacturing_year")
+    private Integer manufacturingYear;
+    
+    private String color;
+    
+    private String status; 
+
+    @Column("photo_url")
+    private String photoUrl;
 }

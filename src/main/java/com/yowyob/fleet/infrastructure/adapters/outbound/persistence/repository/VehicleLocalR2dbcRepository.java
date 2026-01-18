@@ -16,6 +16,7 @@ public interface VehicleLocalR2dbcRepository extends ReactiveCrudRepository<Vehi
 
     /**
      * Finds all vehicles assigned to a specific driver.
+     * CORRECTION : Renommé de findByDriverId à findByCurrentDriverId
      */
-    Flux<VehicleLocalEntity> findByDriverId(UUID driverId);
+    Flux<VehicleLocalEntity> findByCurrentDriverId(UUID currentDriverId);
 }

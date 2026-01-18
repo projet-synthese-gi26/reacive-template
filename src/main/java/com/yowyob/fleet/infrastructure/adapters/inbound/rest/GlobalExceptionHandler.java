@@ -6,20 +6,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import com.yowyob.fleet.domain.exception.StockFullException;
 
 import java.net.URI;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(StockFullException.class)
-    public ProblemDetail handleStockException(StockFullException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-        problem.setTitle("Stock Overflow");
-        problem.setType(URI.create("errors/stock-full"));
-        return problem;
-    }
+ 
 
     @ExceptionHandler(org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized.class)
     public ProblemDetail handleUnauthorized(org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized ex) {
