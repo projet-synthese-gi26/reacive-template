@@ -1,5 +1,5 @@
 # Contexte du Projet : Fleet & Geofence API
-Généré le : Sun 18 Jan 2026 02:08:41 PM WAT
+Généré le : Wed 21 Jan 2026 10:06:46 AM WAT
 Framework : Spring Boot WebFlux (Reactive)
 
 ## 1. Arborescence du Projet
@@ -60,10 +60,10 @@ Framework : Spring Boot WebFlux (Reactive)
 │   │   │               │       ├── FleetService.java
 │   │   │               │       └── VehicleService.java
 │   │   │               ├── domain
-│   │   │               │   ├── exception
 │   │   │               │   ├── model
 │   │   │               │   │   ├── Driver.java
 │   │   │               │   │   ├── Fleet.java
+│   │   │               │   │   ├── FleetManager.java
 │   │   │               │   │   ├── Vehicle.java
 │   │   │               │   │   └── VehicleParameters.java
 │   │   │               │   └── ports
@@ -76,29 +76,33 @@ Framework : Spring Boot WebFlux (Reactive)
 │   │   │               │           ├── AuthPort.java
 │   │   │               │           ├── DriverPersistencePort.java
 │   │   │               │           ├── ExternalVehiclePort.java
+│   │   │               │           ├── FleetManagerPersistencePort.java
 │   │   │               │           ├── FleetRepositoryPort.java
 │   │   │               │           └── VehiclePersistencePort.java
 │   │   │               ├── FleetManagementApplication.java
 │   │   │               └── infrastructure
 │   │   │                   ├── adapters
 │   │   │                   │   ├── inbound
-│   │   │                   │   │   ├── kafka
 │   │   │                   │   │   └── rest
+│   │   │                   │   │       ├── AccountController.java
 │   │   │                   │   │       ├── AuthController.java
 │   │   │                   │   │       ├── DriverController.java
 │   │   │                   │   │       ├── dto
+│   │   │                   │   │       │   ├── ChangePasswordRequest.java
 │   │   │                   │   │       │   ├── DriverRegistrationRequest.java
 │   │   │                   │   │       │   ├── FinancialUpdateRequest.java
 │   │   │                   │   │       │   ├── FleetRequest.java
 │   │   │                   │   │       │   ├── FleetResponse.java
+│   │   │                   │   │       │   ├── LoginRequest.java
 │   │   │                   │   │       │   ├── MaintenanceUpdateRequest.java
+│   │   │                   │   │       │   ├── RegisterRequest.java
+│   │   │                   │   │       │   ├── UpdateProfileRequest.java
 │   │   │                   │   │       │   └── VehicleRegistrationRequest.java
 │   │   │                   │   │       ├── FleetController.java
 │   │   │                   │   │       ├── GlobalExceptionHandler.java
 │   │   │                   │   │       ├── HealthCheckController.java
 │   │   │                   │   │       └── VehicleController.java
 │   │   │                   │   └── outbound
-│   │   │                   │       ├── cache
 │   │   │                   │       ├── external
 │   │   │                   │       │   ├── client
 │   │   │                   │       │   │   ├── AuthApiClient.java
@@ -108,24 +112,25 @@ Framework : Spring Boot WebFlux (Reactive)
 │   │   │                   │       │   ├── FakeAuthAdapter.java
 │   │   │                   │       │   ├── RemoteAuthAdapter.java
 │   │   │                   │       │   └── VehicleApiAdapter.java
-│   │   │                   │       ├── messaging
 │   │   │                   │       └── persistence
 │   │   │                   │           ├── DriverPersistenceAdapter.java
 │   │   │                   │           ├── entity
 │   │   │                   │           │   ├── DriverEntity.java
 │   │   │                   │           │   ├── FinancialParameterEntity.java
 │   │   │                   │           │   ├── FleetEntity.java
+│   │   │                   │           │   ├── FleetManagerEntity.java
 │   │   │                   │           │   ├── MaintenanceParameterEntity.java
 │   │   │                   │           │   ├── OperationalParameterEntity.java
 │   │   │                   │           │   └── VehicleLocalEntity.java
+│   │   │                   │           ├── FleetManagerPersistenceAdapter.java
 │   │   │                   │           ├── FleetPersistenceAdapter.java
 │   │   │                   │           ├── repository
 │   │   │                   │           │   ├── DriverR2dbcRepository.java
 │   │   │                   │           │   ├── FinancialParameterR2dbcRepository.java
+│   │   │                   │           │   ├── FleetManagerR2dbcRepository.java
 │   │   │                   │           │   ├── FleetR2dbcRepository.java
 │   │   │                   │           │   ├── MaintenanceParameterR2dbcRepository.java
 │   │   │                   │           │   └── VehicleLocalR2dbcRepository.java
-│   │   │                   │           ├── VehicleLocalMapper.java
 │   │   │                   │           └── VehiclePersistenceAdapter.java
 │   │   │                   ├── config
 │   │   │                   │   ├── AuthConfig.java
@@ -160,7 +165,7 @@ Framework : Spring Boot WebFlux (Reactive)
 ├── sync_auth.sh
 └── todo.md
 
-49 directories, 105 files
+45 directories, 114 files
 ```
 ## 2. Contenu des Fichiers
 
@@ -7888,18 +7893,20 @@ Nous développons l'API **Fleet Management et Geofencing** (Projet TraEnSys).
 Pour chaque tâche demandée, tu dois obligatoirement suivre ces étapes :
 
 **Étape 1 : Conception fonctionnelle**
-- Analyse du besoin, user stories et ajustement du modèle de données.
+- Analyse du besoin, user stories et ajustement du modèle de données.Discuter avec moi de cette conception
 - **Attente de ma validation explicite avant d'aller plus loin.**
 
 **Étape 2 : Explication du Concept Réactif**
-- Avant de coder, explique brièvement comment le flux réactif (`Mono`/`Flux`) sera géré pour cette tâche.
+- Avant de coder, explique brièvement comment l'architechture sera gérée pour cette tâche.ne pas hesiter a dire les fichiers qui entrent en jeu,leur role et ce qu'on y ferra
+- **Attente de ma validation explicite avant d'aller plus loin.**
 
 **Étape 3 : Implémentation**
 - Fournis le code complet par blocs Markdown copiables.
 - Respecte l'architecture hexagonale du projet.
+-respecte egalemngt mes consignes
 
 **Étape 4 : Tests & Validation**
-- Instructions pour tester via Postman ou logs.
+- Instructions pour tester via swagger .
 
 ### 🚫 Tes Règles de Conduite
 1. **Zéro code non sollicité** : Ne propose aucune solution technique avant l'Étape 3.
@@ -7910,7 +7917,10 @@ Pour chaque tâche demandée, tu dois obligatoirement suivre ces étapes :
 ### 📂 Contexte
 Le code source complet est disponible dans le fichier `project_context.txt`.
 La roadmap est suivie dans `todo.md`.
-```
+
+
+### Premiere mission
+je suisi actuelleemnt en train de vouloir tester le module auth que je viens de refactorer,mais je rencontre des buggs,ta missions era de m'aider a comprendre le soucis ,puis de m'aider a le corriger```
 
 ---
 ### Fichier : `./docs/database_setup.md`
@@ -8020,10 +8030,10 @@ Once the log shows `🚀 LOCAL DATABASE READY!`, open your browser:
 
 #### Jalon 5 : Auth & User Management Avancé (Proxy Auth) `Gabriel`
 *Objectif : Le microservice Fleet doit exposer les fonctionnalités de l'Auth Service de manière transparente.*
-- [ ] **Tâche 5.1 :** Refactoring `AuthApiClient` : Supporter le `MultipartFile` pour l'upload de photo de profil au `register`.
-- [ ] **Tâche 5.2 :** Logique "Auto-Role" : Vérifier/Créer les rôles (`FLEET_MANAGER`, `DRIVER`) sur l'Auth Service avant inscription.
-- [ ] **Tâche 5.3 :** Fixer le `register` : Synchro création Auth Service -> Création données locales (`fleet.drivers`).
-- [ ] **Tâche 5.4 :** Endpoint `User` : Créer un `UserController` local (Proxy vers Auth Service : Profil, Password).
+- [x] **Tâche 5.1 :** Refactoring `AuthApiClient` : Supporter le `MultipartFile` pour l'upload de photo de profil au `register`.
+- [x] **Tâche 5.2 :** Logique "Auto-Role" : Vérifier/Créer les rôles (`FLEET_MANAGER`, `DRIVER`) sur l'Auth Service avant inscription.
+- [x] **Tâche 5.3 :** Fixer le `register` : Synchro création Auth Service -> Création données locales (`fleet.drivers`).
+- [x] **Tâche 5.4 :** Endpoint `User` : Créer un `UserController` local (Proxy vers Auth Service : Profil, Password).
 
 #### Jalon 6 : Gestion des Acteurs (Managers & Drivers) `Gabriel`
 - [ ] **Tâche 6.1 :** Implémenter la gestion des **Fleet Managers**.
@@ -8428,46 +8438,59 @@ server:
 
 spring:
   application:
-    name: reactive-hexagonal
+    name: fleet-management
     
   docker:
     compose:
       enabled: false
 
-  # POSTGRESQL (R2DBC)
+  # 1. R2DBC (Runtime - Réactif)
   r2dbc:
-    url: r2dbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:yowyob}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:password}
+    url: r2dbc:postgresql://${DB_HOST:168.119.122.86}:${DB_PORT:5432}/${DB_NAME:yowyob}
+    username: ${DB_USERNAME:master}
+    password: ${DB_PASSWORD:Azerty1234*}
     pool:
       enabled: true
-      initial-size: 1
-      max-size: 5
-      max-idle-time: 30m
-      max-life-time: 10m
-      acquire-retry: 3
-      max-acquire-time: 30s
+      initial-size: 5
+      max-size: 20
       validation-query: SELECT 1
+
+  # 2. JDBC (Migration - Bloquant pour Liquibase)
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:168.119.122.86}:${DB_PORT:5432}/${DB_NAME:yowyob}
+    username: ${DB_USERNAME:master}
+    password: ${DB_PASSWORD:Azerty1234*}
+    driver-class-name: org.postgresql.Driver
+
+  # 3. LIQUIBASE
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: fleet
+    liquibase-schema: public
+    enabled: true
+    contexts: prod # Important : empêche le chargement du mock public
+
+  # Désactivation de l'ancien init SQL
   sql:
     init:
-      mode: always
+      mode: never
 
-  # REDIS CLUSTER 
+  # REDIS CLUSTER (Spécifique Prod)
   data:
     redis:
-      password: ${REDIS_PASSWORD:password}
+      password: ${REDIS_PASSWORD:Azerty1234*}
       cluster:
         nodes:
-          - ${REDIS_HOST:localhost}:7001
-          - ${REDIS_HOST:localhost}:7002
-          - ${REDIS_HOST:localhost}:7003
-          - ${REDIS_HOST:localhost}:7004
-          - ${REDIS_HOST:localhost}:7005
-          - ${REDIS_HOST:localhost}:7006
+          - ${REDIS_HOST:168.119.122.86}:7001
+          - ${REDIS_HOST:168.119.122.86}:7002
+          - ${REDIS_HOST:168.119.122.86}:7003
+          - ${REDIS_HOST:168.119.122.86}:7004
+          - ${REDIS_HOST:168.119.122.86}:7005
+          - ${REDIS_HOST:168.119.122.86}:7006
 
   # KAFKA 
   kafka:
-    bootstrap-servers:  ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+    bootstrap-servers: ${KAFKA_HOST:168.119.122.86}:${KAFKA_PORT:9092}
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -8478,19 +8501,19 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-# CUSTOM CONFIG 
+# CONFIG METIER
 application:
   external:
-    stock-service-url: http://${EXTERNAL_HOST:localhost}:8081
     vehicle-service-url: https://fare-calculator-service.pynfi.com
   auth:
-    mode: remote # Mettez 'remote' pour tester le vrai service TraMaSys et 'fake' pour la fausse authentification en test
+    mode: remote 
     url: https://auth-service.pynfi.com
 
   kafka:
     topics:
-      product-events: test-topic
+      geofence-alerts: geofence-alerts-topic
 
+# MONITORING & RESILIENCE
 management:
   endpoints:
     web:
@@ -8506,15 +8529,13 @@ management:
       prometheus:
         enabled: true
 
-# RESILIENCE4J 
 resilience4j:
   circuitbreaker:
     instances:
       stock-service:
         failureRateThreshold: 50
         waitDurationInOpenState: 5s
-        slidingWindowSize: 5
-```
+        slidingWindowSize: 5```
 
 ---
 ### Fichier : `./src/main/java/com/yowyob/fleet/FleetManagementApplication.java`
@@ -8598,11 +8619,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface VehicleLocalMapper {
+public abstract class VehicleLocalMapper {
 
     // --- Vers ENTITY ---
 
-    // Champs directs
     @Mapping(target = "id", source = "id")
     @Mapping(target = "fleetId", source = "fleetId")
     @Mapping(target = "licensePlate", source = "licensePlate")
@@ -8610,90 +8630,79 @@ public interface VehicleLocalMapper {
     @Mapping(target = "model", source = "model")
     @Mapping(target = "manufacturingYear", source = "manufacturingYear")
     @Mapping(target = "color", source = "color")
-    
-    // Champs complexes gérés par le Service (pas le mapper)
-    @Mapping(target = "currentDriverId", ignore = true) 
-    @Mapping(target = "vehicleTypeId", ignore = true)   
-    @Mapping(target = "status", ignore = true)          
-    @Mapping(target = "photoUrl", ignore = true)        
-    VehicleLocalEntity toVehicleEntity(Vehicle domain);
+    @Mapping(target = "currentDriverId", ignore = true)
+    @Mapping(target = "vehicleTypeId", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "photoUrl", ignore = true)
+    public abstract VehicleLocalEntity toVehicleEntity(Vehicle domain);
 
     // --- Vers ENTITY (Paramètres) ---
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "vehicleId", ignore = true)
-    @Mapping(target = "insuranceNumber", source = "insuranceNumber")
-    @Mapping(target = "insuranceExpiredAt", source = "insuranceExpiryDate")
-    @Mapping(target = "registeredAt", source = "registrationDate")
-    @Mapping(target = "purchasedAt", source = "purchaseDate")
-    @Mapping(target = "depreciationRate", source = "depreciationRate")
-    @Mapping(target = "costPerKm", source = "costPerKm")
-    FinancialParameterEntity toFinancialEntity(VehicleParameters.Financial financial);
-    
-    default FinancialParameterEntity toFinancialEntityFromVehicle(Vehicle domain) {
-        if (domain == null || domain.financialParameters() == null) {
-            return null;
-        }
-        FinancialParameterEntity entity = toFinancialEntity(domain.financialParameters());
-        entity.setVehicleId(domain.id());
-        return entity;
-    }
+    @Mapping(target = "vehicleId", source = "id")
+    @Mapping(target = "insuranceNumber", source = "financialParameters.insuranceNumber")
+    @Mapping(target = "insuranceExpiredAt", source = "financialParameters.insuranceExpiryDate")
+    @Mapping(target = "registeredAt", source = "financialParameters.registrationDate")
+    @Mapping(target = "purchasedAt", source = "financialParameters.purchaseDate")
+    @Mapping(target = "depreciationRate", source = "financialParameters.depreciationRate")
+    @Mapping(target = "costPerKm", source = "financialParameters.costPerKm")
+    public abstract FinancialParameterEntity toFinancialEntity(Vehicle domain);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "vehicleId", ignore = true)
-    @Mapping(target = "lastMaintenanceAt", source = "lastMaintenanceDate")
-    @Mapping(target = "nextMaintenanceAt", source = "nextMaintenanceDue")
-    @Mapping(target = "engineStatus", source = "engineStatus")
-    @Mapping(target = "batteryHealth", ignore = true)
-    @Mapping(target = "maintenanceStatus", source = "maintenanceStatus")
-    MaintenanceParameterEntity toMaintenanceEntity(VehicleParameters.Maintenance maintenance);
-    
-    default MaintenanceParameterEntity toMaintenanceEntityFromVehicle(Vehicle domain) {
-        if (domain == null || domain.maintenanceParameters() == null) {
-            return null;
+    @Mapping(target = "vehicleId", source = "id")
+    @Mapping(target = "lastMaintenanceAt", source = "maintenanceParameters.lastMaintenanceDate")
+    @Mapping(target = "nextMaintenanceAt", source = "maintenanceParameters.nextMaintenanceDue")
+    @Mapping(target = "engineStatus", source = "maintenanceParameters.engineStatus")
+    @Mapping(target = "batteryHealth", expression = "java(mapBatteryHealth(domain))")
+    @Mapping(target = "maintenanceStatus", source = "maintenanceParameters.maintenanceStatus")
+    public abstract MaintenanceParameterEntity toMaintenanceEntity(Vehicle domain);
+
+    // Helper pour éviter les expressions complexes dans l'annotation
+    protected String mapBatteryHealth(Vehicle domain) {
+        if (domain.maintenanceParameters() != null && domain.maintenanceParameters().batteryHealth() != null) {
+            return String.valueOf(domain.maintenanceParameters().batteryHealth());
         }
-        MaintenanceParameterEntity entity = toMaintenanceEntity(domain.maintenanceParameters());
-        entity.setVehicleId(domain.id());
-        return entity;
+        return null;
     }
 
-    default MaintenanceParameterEntity toMaintenanceEntityWithBattery(Vehicle domain) {
-        MaintenanceParameterEntity entity = toMaintenanceEntity(domain);
-        if (domain != null && domain.maintenanceParameters() != null && domain.maintenanceParameters().batteryHealth() != null) {
-            entity.setBatteryHealth(String.valueOf(domain.maintenanceParameters().batteryHealth()));
-        }
-        return entity;
-    }
+    // --- Vers DOMAINE (Méthode manuelle) ---
 
-    // --- Vers DOMAINE ---
-
-    default Vehicle toDomain(VehicleLocalEntity v, FinancialParameterEntity f, MaintenanceParameterEntity m) {
+    public Vehicle toDomain(VehicleLocalEntity v, FinancialParameterEntity f, MaintenanceParameterEntity m) {
         if (v == null) return null;
-        
+
         return new Vehicle(
             v.getId(),
             v.getFleetId(),
             v.getLicensePlate(),
-            v.getBrand(),            // Maintenant stocké localement
-            v.getModel(),            // Maintenant stocké localement
-            v.getManufacturingYear(),// Maintenant stocké localement
-            null,                    // 'type' (String) est null car l'entité a un ID. Le Service devra l'enrichir.
-            v.getColor(),            // Maintenant stocké localement
-            
-            // Reconstitution des paramètres
-            f == null ? null : new VehicleParameters.Financial(
-                f.getInsuranceNumber(), f.getInsuranceExpiredAt(), f.getRegisteredAt(), f.getPurchasedAt(), f.getDepreciationRate(), f.getCostPerKm()
-            ),
-            m == null ? null : new VehicleParameters.Maintenance(
-                m.getLastMaintenanceAt(), m.getNextMaintenanceAt(), m.getEngineStatus(), 
-                m.getBatteryHealth() != null ? tryParseInt(m.getBatteryHealth()) : null, 
-                m.getMaintenanceStatus()
-            ),
-            null // Operational (Pas chargé ici pour le moment)
+            v.getBrand(),
+            v.getModel(),
+            v.getManufacturingYear(),
+            null, // 'type' est null car géré dynamiquement via ID
+            v.getColor(),
+            mapFinancial(f),
+            mapMaintenance(m),
+            null // Operational
         );
     }
 
-    default Integer tryParseInt(String value) {
+    protected VehicleParameters.Financial mapFinancial(FinancialParameterEntity f) {
+        if (f == null) return null;
+        return new VehicleParameters.Financial(
+            f.getInsuranceNumber(), f.getInsuranceExpiredAt(), f.getRegisteredAt(), 
+            f.getPurchasedAt(), f.getDepreciationRate(), f.getCostPerKm()
+        );
+    }
+
+    protected VehicleParameters.Maintenance mapMaintenance(MaintenanceParameterEntity m) {
+        if (m == null) return null;
+        return new VehicleParameters.Maintenance(
+            m.getLastMaintenanceAt(), m.getNextMaintenanceAt(), m.getEngineStatus(),
+            tryParseInt(m.getBatteryHealth()),
+            m.getMaintenanceStatus()
+        );
+    }
+
+    protected Integer tryParseInt(String value) {
         try {
             return value != null ? Integer.parseInt(value) : null;
         } catch (NumberFormatException e) {
@@ -8722,6 +8731,7 @@ public interface DriverMapper {
 ```java
 package com.yowyob.fleet.infrastructure.adapters.outbound.external;
 
+import com.yowyob.fleet.domain.ports.in.AuthUseCase;
 import com.yowyob.fleet.domain.ports.out.AuthPort;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -8739,18 +8749,25 @@ public class FakeAuthAdapter implements AuthPort {
     }
 
     @Override
-    public Mono<AuthResponse> register(String username, String password, String email, String phone, String firstName, String lastName, List<String> roles) {
-        log.info("🛠 MODE FAKE AUTH : Inscription pour {}", username);
+    public Mono<AuthResponse> registerInRemote(AuthUseCase.RegisterCommand command) {
+        log.info("🛠 MODE FAKE AUTH : Inscription pour {}", command.username());
         UserDetail newUser = new UserDetail(
-            UUID.fromString("8a1f5e2c-3d4b-4c6a-9f8e-123456789abc"), username, email, phone, 
-            firstName, lastName, "FLEET_MANAGEMENT", 
-            roles, List.of("*")
+            UUID.randomUUID(), 
+            command.username(), 
+            command.email(), 
+            command.phone(), 
+            command.firstName(), 
+            command.lastName(), 
+            "FLEET_MANAGEMENT", 
+            command.roles(), 
+            List.of("*"),
+            null, null, null, null // Champs enrichis nuls par défaut
         );
         return Mono.just(new AuthResponse("fake-access-token", "fake-refresh-token", newUser));
     }
 
     @Override
-    public Mono<UserDetail> me(String accessToken) {
+    public Mono<UserDetail> getUserProfile(String token) {
         log.info("🛠 MODE FAKE AUTH : Récupération du profil (me)");
         return Mono.just(createFakeUser("fake_admin", "admin@yowyob.com"));
     }
@@ -8763,20 +8780,39 @@ public class FakeAuthAdapter implements AuthPort {
     }
 
     @Override
-    public Mono<Void> logout(UUID userId, String accessToken) {
-        log.info("🛠 MODE FAKE AUTH : Logout effectué pour le token {}", userId);
-        return Mono.empty();
+    public Mono<Boolean> roleExists(String roleName) {
+        return Mono.just(true);
     }
 
     @Override
-    public Mono<Void> forgotPassword(String email) {
-        log.info("🛠 MODE FAKE AUTH : Demande de réinitialisation pour {}", email);
+    public Mono<Void> createRole(String roleName) {
         return Mono.empty();
     }
 
-    /**
-     * Helper pour créer un utilisateur de domaine factice cohérent.
-     */
+    @Override 
+    public Mono<UserDetail> updateUserProfile(UUID userId, String token, AuthUseCase.UpdateProfileCommand command) { 
+        log.info("🛠 MODE FAKE AUTH : Update profil pour {}", userId);
+        return Mono.just(createFakeUser("fake_admin", command.email()));
+    }
+    
+    @Override 
+    public Mono<Void> changePassword(UUID userId, String token, String currentPwd, String newPwd) { 
+        log.info("🛠 MODE FAKE AUTH : Changement mot de passe pour {}", userId);
+        return Mono.empty(); 
+    }
+    
+    @Override 
+    public Mono<Void> deleteRemoteAccount(UUID userId, String token) { 
+        log.info("🛠 MODE FAKE AUTH : Suppression compte pour {}", userId);
+        return Mono.empty(); 
+    }
+
+    @Override
+    public Mono<Void> updateProfilePicture(UUID userId, String token, AuthUseCase.FileContent file) {
+        log.info("🛠 MODE FAKE AUTH : Upload photo pour {} (Fichier: {})", userId, file.filename());
+        return Mono.empty();
+    }
+
     private UserDetail createFakeUser(String username, String email) {
         return new UserDetail(
             UUID.fromString("8a1f5e2c-3d4b-4c6a-9f8e-123456789abc"),
@@ -8786,8 +8822,9 @@ public class FakeAuthAdapter implements AuthPort {
             "Fake",
             "User",
             "FLEET_MANAGEMENT",
-            List.of("ADMIN", "FLEET_MANAGER"),
-            List.of("fleet:read", "fleet:write", "vehicle:all")
+            List.of("FLEET_MANAGER"),
+            List.of("fleet:read", "fleet:write"),
+            null, null, null, null
         );
     }
 }```
@@ -8817,24 +8854,30 @@ public record VehicleExternalResponse(
 ```java
 package com.yowyob.fleet.infrastructure.adapters.outbound.external;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.yowyob.fleet.domain.ports.in.AuthUseCase;
 import com.yowyob.fleet.domain.ports.out.AuthPort;
 import com.yowyob.fleet.infrastructure.adapters.outbound.external.client.AuthApiClient;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @Slf4j
+@RequiredArgsConstructor
 public class RemoteAuthAdapter implements AuthPort {
 
     private final AuthApiClient authApiClient;
+    private final WebClient.Builder webClientBuilder;
     
-    private static final String SERVICE_NAME = "FLEET_MANAGEMENT";
+    @Value("${application.auth.url}")
+    private String authServiceUrl;
 
-    public RemoteAuthAdapter(AuthApiClient authApiClient) {
-        this.authApiClient = authApiClient;
-    }
+    private static final String SERVICE_NAME = "FLEET_MANAGEMENT";
 
     @Override
     public Mono<AuthResponse> login(String identifier, String password) {
@@ -8843,23 +8886,95 @@ public class RemoteAuthAdapter implements AuthPort {
     }
 
     @Override
-    public Mono<AuthResponse> register(String username, String password, String email, String phone, 
-                                     String firstName, String lastName, List<String> roles) {
-
-        List<String> rolesToSend = (roles == null || roles.isEmpty()) ? List.of("USER") : roles;
+    public Mono<AuthResponse> registerInRemote(AuthUseCase.RegisterCommand command) {
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
         
-        AuthApiClient.RegisterRequest request = new AuthApiClient.RegisterRequest(
-            username, password, email, phone, firstName, lastName, SERVICE_NAME, rolesToSend
-        );  
-    return authApiClient.register(request)
+        AuthApiClient.RegisterRequest registerRequest = new AuthApiClient.RegisterRequest(
+            command.username(), command.password(), command.email(), 
+            command.phone(), command.firstName(), command.lastName(), 
+            SERVICE_NAME, command.roles()
+        );
+        
+        // CORRECTION ICI : "user" -> "data" pour matcher le Swagger distant
+        builder.part("data", registerRequest);
+
+        if (command.photo() != null && command.photo().data() != null) {
+            builder.part("file", command.photo().data())
+                   .filename(command.photo().filename())
+                   .header("Content-Type", command.photo().contentType());
+        }
+
+        return webClientBuilder.build()
+                .post()
+                .uri(authServiceUrl + "/api/auth/register")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .bodyValue(builder.build())
+                .retrieve()
+                .bodyToMono(AuthApiClient.TraMaSysResponse.class)
                 .map(this::mapToAuthResponse)
-                .doOnError(e -> log.error("Erreur Register: {}", e.getMessage()));
+                .doOnError(e -> log.error("Erreur Register Distant : {}", e.getMessage()));
     }
 
     @Override
-    public Mono<UserDetail> me(String accessToken) {
-        return authApiClient.getCurrentUser(ensureBearer(accessToken))
+    public Mono<UserDetail> getUserProfile(String token) {
+        return authApiClient.getCurrentUser(ensureBearer(token))
                 .map(this::mapToDomainUserDetail);
+    }
+
+    @Override
+    public Mono<UserDetail> updateUserProfile(UUID userId, String token, AuthUseCase.UpdateProfileCommand command) {
+        AuthApiClient.UpdateUserRequest req = new AuthApiClient.UpdateUserRequest(
+            command.firstName(), command.lastName(), command.phone(), command.email()
+        );
+        
+        return webClientBuilder.build()
+                .put()
+                .uri(authServiceUrl + "/api/users/" + userId)
+                .header("Authorization", ensureBearer(token))
+                .bodyValue(req)
+                .retrieve()
+                .bodyToMono(AuthApiClient.UserDetailResponse.class)
+                .map(this::mapToDomainUserDetail);
+    }
+
+    @Override
+    public Mono<Void> changePassword(UUID userId, String token, String currentPwd, String newPwd) {
+        AuthApiClient.ChangePasswordRequest req = new AuthApiClient.ChangePasswordRequest(currentPwd, newPwd);
+        
+        return webClientBuilder.build()
+                .put()
+                .uri(authServiceUrl + "/api/users/" + userId + "/password")
+                .header("Authorization", ensureBearer(token))
+                .bodyValue(req)
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
+
+    @Override
+    public Mono<Void> updateProfilePicture(UUID userId, String token, AuthUseCase.FileContent file) {
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("file", file.data())
+               .filename(file.filename())
+               .header("Content-Type", file.contentType());
+
+        return webClientBuilder.build()
+                .post()
+                .uri(authServiceUrl + "/api/users/" + userId + "/picture")
+                .header("Authorization", ensureBearer(token))
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .bodyValue(builder.build())
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
+
+    @Override
+    public Mono<Void> deleteRemoteAccount(UUID userId, String token) {
+        return webClientBuilder.build()
+                .delete()
+                .uri(authServiceUrl + "/api/users/" + userId)
+                .header("Authorization", ensureBearer(token))
+                .retrieve()
+                .bodyToMono(Void.class);
     }
 
     @Override
@@ -8869,42 +8984,35 @@ public class RemoteAuthAdapter implements AuthPort {
     }
 
     @Override
-    public Mono<Void> logout(UUID userId, String accessToken) {
-        log.info("Tentative de logout pour l'utilisateur {}", userId);
-        return authApiClient.logout(userId, ensureBearer(accessToken));
+    public Mono<Boolean> roleExists(String roleName) {
+        return Mono.just(true); 
     }
 
+    @Override
+    public Mono<Void> createRole(String roleName) {
+        return Mono.empty();
+    }
+
+    // Mappers
     private String ensureBearer(String token) {
         if (token == null) return "";
         return token.startsWith("Bearer ") ? token : "Bearer " + token;
     }
 
     private AuthResponse mapToAuthResponse(AuthApiClient.TraMaSysResponse res) {
-        // res.user() est maintenant de type AuthApiClient.UserDetailResponse
-        return new AuthResponse(
-            res.accessToken(), 
-            res.refreshToken(), 
-            mapToDomainUserDetail(res.user()) 
-        );
+        return new AuthResponse(res.accessToken(), res.refreshToken(), mapToDomainUserDetail(res.user()));
     }
 
     private UserDetail mapToDomainUserDetail(AuthApiClient.UserDetailResponse res) {
         if (res == null) return null;
         return new UserDetail(
-            res.id(), 
-            res.username(), 
-            res.email(), 
-            res.phone(),
-            res.firstName(), 
-            res.lastName(), 
-            res.service(),
-            res.roles(), 
-            res.permissions()
+            res.id(), res.username(), res.email(), res.phone(),
+            res.firstName(), res.lastName(), res.service(),
+            res.roles(), res.permissions(), 
+            null, 
+            null, null, null
         );
     }
-
-    @Override
-    public Mono<Void> forgotPassword(String email) { return Mono.empty(); }
 }```
 
 ---
@@ -8912,65 +9020,72 @@ public class RemoteAuthAdapter implements AuthPort {
 ```java
 package com.yowyob.fleet.infrastructure.adapters.outbound.external.client;
 
-import org.springframework.web.service.annotation.GetExchange;
-import org.springframework.web.service.annotation.HttpExchange;
-import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.service.annotation.DeleteExchange;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
 import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 
-@HttpExchange("/api/auth")
+@HttpExchange("/api") // Base path changé pour inclure /auth et /users
 public interface AuthApiClient {
     
-    @PostExchange("/login")
+    // --- AUTH ---
+    @PostExchange("/auth/login")
     Mono<TraMaSysResponse> authenticate(@RequestBody LoginRequest request);
 
-    @PostExchange("/register")
+    @PostExchange("/auth/register")
     Mono<TraMaSysResponse> register(@RequestBody RegisterRequest request);
-
     
-    @GetExchange("/me")
+    @GetExchange("/auth/me")
     Mono<UserDetailResponse> getCurrentUser(@RequestHeader("Authorization") String bearerToken);
 
-    @PostExchange("/refresh")
+    @PostExchange("/auth/refresh")
     Mono<TraMaSysResponse> refreshToken(@RequestBody RefreshRequest request);
 
-    @PostExchange("/logout")
-    Mono<Void> logout(
-        @PathVariable("userId") UUID userId, 
-        @RequestHeader("Authorization") String bearerToken
-    );
+    // --- USERS ---
+    @PutExchange("/users/{id}")
+    Mono<UserDetailResponse> updateUser(@PathVariable UUID id, @RequestBody UpdateUserRequest request);
 
+    @PutExchange("/users/{id}/password")
+    Mono<Void> changePassword(@PathVariable UUID id, @RequestBody ChangePasswordRequest request);
+
+    // Le delete n'était pas clair sur le screen, j'assume standard REST sur /users/{id}
+    // ou logout/{id} comme vu précédemment, mais pour un "delete account", c'est souvent différent.
+    // Je mets le standard REST, on ajustera si erreur 404.
+    @DeleteExchange("/users/{id}") 
+    Mono<Void> deleteUser(@PathVariable UUID id);
+
+
+    // DTOs
     record LoginRequest(String identifier, String password) {}
-
     record RefreshRequest(String refreshToken) {}
     
     record RegisterRequest(
-        String username,
-        String password,
-        String email,
-        String phone,
-        String firstName,
-        String lastName,
-        String service, // Sera "FLEET_MANAGEMENT"
-        List<String> roles
+        String username, String password, String email, String phone,
+        String firstName, String lastName, String service, List<String> roles
+    ) {}
+
+    record UpdateUserRequest(
+        String firstName, String lastName, String phone, String email
+    ) {}
+
+    record ChangePasswordRequest(
+        String currentPassword, String newPassword
     ) {}
 
     record TraMaSysResponse(String accessToken, String refreshToken, UserDetailResponse user) {}
+    
     record UserDetailResponse(
-        UUID id, 
-        String username, 
-        String email, 
-        String phone,
-        String firstName,
-        String lastName,
-        String service,
-        List<String> roles, 
-        List<String> permissions
+        UUID id, String username, String email, String phone,
+        String firstName, String lastName, String service,
+        List<String> roles, List<String> permissions
     ) {}    
 }```
 
@@ -9296,6 +9411,34 @@ public class FleetEntity {
 }```
 
 ---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/outbound/persistence/entity/FleetManagerEntity.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.UUID;
+
+@Table(name = "fleet_managers", schema = "fleet")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class FleetManagerEntity {
+    
+    @Id
+    @Column("user_id")
+    private UUID userId;
+
+    @Column("company_name")
+    private String companyName;
+}```
+
+---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/outbound/persistence/entity/OperationalParameterEntity.java`
 ```java
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity;
@@ -9410,8 +9553,9 @@ public interface VehicleLocalR2dbcRepository extends ReactiveCrudRepository<Vehi
 
     /**
      * Finds all vehicles assigned to a specific driver.
+     * CORRECTION : Renommé de findByDriverId à findByCurrentDriverId
      */
-    Flux<VehicleLocalEntity> findByDriverId(UUID driverId);
+    Flux<VehicleLocalEntity> findByCurrentDriverId(UUID currentDriverId);
 }```
 
 ---
@@ -9464,6 +9608,21 @@ public interface FleetR2dbcRepository extends ReactiveCrudRepository<FleetEntity
 }```
 
 ---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/outbound/persistence/repository/FleetManagerR2dbcRepository.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
+
+import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity.FleetManagerEntity;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface FleetManagerR2dbcRepository extends ReactiveCrudRepository<FleetManagerEntity, UUID> {
+}```
+
+---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/outbound/persistence/repository/FinancialParameterR2dbcRepository.java`
 ```java
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository;
@@ -9484,18 +9643,13 @@ public interface FinancialParameterR2dbcRepository extends ReactiveCrudRepositor
 }```
 
 ---
-### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/outbound/persistence/VehicleLocalMapper.java`
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/outbound/persistence/FleetManagerPersistenceAdapter.java`
 ```java
 package com.yowyob.fleet.infrastructure.adapters.outbound.persistence;
 
-import com.yowyob.fleet.domain.model.Vehicle;
-import com.yowyob.fleet.domain.ports.out.VehiclePersistencePort;
-import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity.FinancialParameterEntity;
-import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity.MaintenanceParameterEntity;
-import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository.FinancialParameterR2dbcRepository;
-import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository.MaintenanceParameterR2dbcRepository;
-import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository.VehicleLocalR2dbcRepository;
-import com.yowyob.fleet.infrastructure.mappers.VehicleLocalMapper;
+import com.yowyob.fleet.domain.ports.out.FleetManagerPersistencePort;
+import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.entity.FleetManagerEntity;
+import com.yowyob.fleet.infrastructure.adapters.outbound.persistence.repository.FleetManagerR2dbcRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -9504,50 +9658,34 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class VehiclePersistenceAdapter implements VehiclePersistencePort {
+public class FleetManagerPersistenceAdapter implements FleetManagerPersistencePort {
 
-    private final VehicleLocalR2dbcRepository vehicleRepo;
-    private final FinancialParameterR2dbcRepository financialRepo;
-    private final MaintenanceParameterR2dbcRepository maintenanceRepo;
-    private final VehicleLocalMapper mapper;
+    private final FleetManagerR2dbcRepository repository;
 
     @Override
-    public Mono<Vehicle> saveLocalData(Vehicle vehicle) {
-        // 1. Save the main vehicle pivot first
-        return vehicleRepo.save(mapper.toVehicleEntity(vehicle))
-                .flatMap(savedVehicle -> {
-                    // 2. Map parameters to entities
-                    var financialEntity = mapper.toFinancialEntity(vehicle);
-                    var maintenanceEntity = mapper.toMaintenanceEntity(vehicle);
-                    
-                    // Ensure the foreign key is set
-                    financialEntity.setVehicleId(savedVehicle.getId());
-                    maintenanceEntity.setVehicleId(savedVehicle.getId());
+    public Mono<Void> createProfile(UUID userId, String companyName) {
+        // Création avec "FREE" par défaut comme défini dans le script SQL
+        FleetManagerEntity entity = new FleetManagerEntity(
+            userId, 
+            companyName
+        );
+        return repository.save(entity).then();
+    }
 
-                    // 3. Save parameters in parallel using zip
-                    return Mono.zip(
-                            financialRepo.save(financialEntity),
-                            maintenanceRepo.save(maintenanceEntity)
-                    ).thenReturn(savedVehicle);
+    @Override
+    public Mono<Void> updateCompany(UUID userId, String companyName) {
+        return repository.findById(userId)
+                .flatMap(entity -> {
+                    entity.setCompanyName(companyName);
+                    return repository.save(entity);
                 })
-                // 4. Return the domain object (we can fetch again or map directly)
-                .map(v -> mapper.toDomain(v, null, null));
+                .then();
     }
 
     @Override
-    public Mono<Vehicle> getLocalDataById(UUID id) {
-        // Zip: fetch all 3 local tables in parallel
-        return Mono.zip(
-                vehicleRepo.findById(id),
-                financialRepo.findByVehicleId(id).defaultIfEmpty(new FinancialParameterEntity()),
-                maintenanceRepo.findByVehicleId(id).defaultIfEmpty(new MaintenanceParameterEntity())
-        ).map(tuple -> mapper.toDomain(tuple.getT1(), tuple.getT2(), tuple.getT3()));
-    }
-
-    @Override
-    public Mono<Void> deleteLocalData(UUID id) {
-        // Delete pivot - the CASCADE in SQL will handle the parameters
-        return vehicleRepo.deleteById(id);
+    public Mono<String> getCompanyName(UUID userId) {
+        return repository.findById(userId)
+                .map(entity -> entity.getCompanyName() != null ? entity.getCompanyName() : "");
     }
 }```
 
@@ -9607,6 +9745,106 @@ public class DriverPersistenceAdapter implements DriverPersistencePort {
 }```
 
 ---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/AccountController.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
+
+import com.yowyob.fleet.domain.ports.in.AuthUseCase;
+import com.yowyob.fleet.domain.ports.out.AuthPort;
+import com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto.ChangePasswordRequest;
+import com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto.UpdateProfileRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping("/api/v1/account")
+@RequiredArgsConstructor
+@Tag(name = "03. Account", description = "Gestion du profil personnel")
+@SecurityRequirement(name = "bearerAuth")
+public class AccountController {
+
+    private final AuthUseCase authUseCase;
+
+    @GetMapping
+    @Operation(summary = "Voir mon profil", description = "Récupère les infos Auth + Données métier (Manager/Driver).")
+    public Mono<AuthPort.UserDetail> getMyProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return authUseCase.me(token);
+    }
+
+    @PutMapping
+    @Operation(summary = "Mettre à jour mon profil", description = "Modifie nom, prénom, téléphone et infos métier.")
+    public Mono<AuthPort.UserDetail> updateProfile(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @Valid @RequestBody UpdateProfileRequest request
+    ) {
+        // On récupère d'abord l'ID via /me car le token est la seule preuve d'identité
+        return authUseCase.me(token)
+                .flatMap(user -> {
+                    AuthUseCase.UpdateProfileCommand cmd = new AuthUseCase.UpdateProfileCommand(
+                            request.firstName(), request.lastName(), request.phone(), request.email(),
+                            request.companyName(), request.licenceNumber()
+                    );
+                    return authUseCase.updateProfile(user.id(), token, cmd);
+                });
+    }
+
+    @PutMapping("/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Changer mon mot de passe")
+    public Mono<Void> changePassword(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @Valid @RequestBody ChangePasswordRequest request
+    ) {
+        return authUseCase.me(token)
+                .flatMap(user -> authUseCase.changePassword(
+                        user.id(), token, request.currentPassword(), request.newPassword()
+                ));
+    }
+
+    @PostMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Changer ma photo de profil")
+    public Mono<Void> updatePicture(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+            @RequestPart("file") FilePart filePart
+    ) {
+        return authUseCase.me(token)
+                .flatMap(user -> 
+                    DataBufferUtils.join(filePart.content())
+                        .map(dataBuffer -> {
+                            byte[] bytes = new byte[dataBuffer.readableByteCount()];
+                            dataBuffer.read(bytes);
+                            DataBufferUtils.release(dataBuffer);
+                            return new AuthUseCase.FileContent(
+                                    filePart.filename(),
+                                    filePart.headers().getContentType() != null ? filePart.headers().getContentType().toString() : "image/jpeg",
+                                    bytes
+                            );
+                        })
+                        .flatMap(fileContent -> authUseCase.updateProfilePicture(user.id(), token, fileContent))
+                );
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Supprimer mon compte", description = "Supprime le compte Auth et les données locales associées.")
+    public Mono<Void> deleteAccount(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        return authUseCase.me(token)
+                .flatMap(user -> authUseCase.deleteAccount(user.id(), token));
+    }
+}```
+
+---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/FleetController.java`
 ```java
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
@@ -9630,7 +9868,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/fleets")
 @RequiredArgsConstructor
-@Tag(name = "Fleets", description = "Fleet Management Operations")
+@Tag(name = "07. Fleets", description = "Gestion des flottes")
 public class FleetController {
 
     private final ManageFleetUseCase fleetUseCase;
@@ -9753,34 +9991,38 @@ public class VehicleController {
 ```java
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-
 import java.net.URI;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
- 
+    @ExceptionHandler(WebClientResponseException.class)
+    public ProblemDetail handleWebClientException(WebClientResponseException ex) {
+        // On récupère le corps de la réponse d'erreur distante
+        String remoteResponseBody = ex.getResponseBodyAsString();
+        
+        log.error("Erreur API Distante ({}): {}", ex.getStatusCode(), remoteResponseBody);
 
-    @ExceptionHandler(org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized.class)
-    public ProblemDetail handleUnauthorized(org.springframework.web.reactive.function.client.WebClientResponseException.Unauthorized ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Identifiants TraMaSys invalides");
-        problem.setTitle("Échec d'authentification");
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(ex.getStatusCode(), remoteResponseBody);
+        problem.setTitle("Erreur du service distant (" + ex.getStatusText() + ")");
+        problem.setType(URI.create("about:blank"));
+        
+        // On peut ajouter des propriétés custom pour le debug
+        problem.setProperty("remote_status", ex.getStatusCode().value());
+        
         return problem;
     }
 
-    @ExceptionHandler(org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest.class)
-    public ProblemDetail handleBadRequest(org.springframework.web.reactive.function.client.WebClientResponseException.BadRequest ex) {
-        String remoteMessage = ex.getResponseBodyAsString();
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, remoteMessage);
-        problem.setTitle("Erreur de validation distante");
-        return problem;
-    }
+    // Garde les autres handlers si tu veux des traitements spécifiques, 
+    // mais celui ci-dessus est générique et couvrira tout (400, 401, 500...)
 }```
 
 ---
@@ -9790,22 +10032,25 @@ package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
 import com.yowyob.fleet.domain.ports.in.AuthUseCase;
 import com.yowyob.fleet.domain.ports.out.AuthPort;
+import com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto.RegisterRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.http.HttpHeaders; // IMPORT AJOUTÉ
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@Tag(name = "Authentication")
+@Tag(name = "02. Auth", description = "Endpoints publics (Login, Register)")
 public class AuthController {
 
     private final AuthUseCase authUseCase;
@@ -9815,55 +10060,50 @@ public class AuthController {
         return authUseCase.login(request.identifier(), request.password());
     }
 
-    @PostMapping("/register")
-    @Operation(summary = "Inscription Fleet Management")
-    public Mono<AuthPort.AuthResponse> register(@RequestBody RegisterDto dto) {
-        return authUseCase.register(
-            dto.username(), dto.password(), dto.email(), 
-            dto.phone(), dto.firstName(), dto.lastName(), dto.roles()
-        );
-    }
-
-    @GetMapping("/me")
-    @Operation(summary = "Get current user profile (No visible params)")
-    public Mono<AuthPort.UserDetail> getCurrentUser(
-        @Parameter(hidden = true) @RequestHeader(HttpHeaders.AUTHORIZATION) String token
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Inscription Utilisateur", description = "Création de compte avec rôle (MANAGER ou DRIVER) et photo optionnelle.")
+    public Mono<AuthPort.AuthResponse> register(
+            @RequestPart("user") RegisterRequest dto,
+            @RequestPart(value = "file", required = false) FilePart filePart
     ) {
-        return authUseCase.me(token);
+        // Transformation FilePart (Web) -> FileContent (Domaine)
+        Mono<AuthUseCase.FileContent> photoMono = Mono.justOrEmpty(filePart)
+                .flatMap(fp -> DataBufferUtils.join(fp.content())
+                        .map(dataBuffer -> {
+                            byte[] bytes = new byte[dataBuffer.readableByteCount()];
+                            dataBuffer.read(bytes);
+                            DataBufferUtils.release(dataBuffer);
+                            return new AuthUseCase.FileContent(
+                                    fp.filename(),
+                                    fp.headers().getContentType() != null ? fp.headers().getContentType().toString() : "image/jpeg",
+                                    bytes
+                            );
+                        }));
+
+        return photoMono
+                .map(photo -> new AuthUseCase.RegisterCommand(
+                        dto.username(), dto.password(), dto.email(), dto.phone(),
+                        dto.firstName(), dto.lastName(), dto.roles(), photo
+                ))
+                .switchIfEmpty(Mono.just(new AuthUseCase.RegisterCommand(
+                        dto.username(), dto.password(), dto.email(), dto.phone(),
+                        dto.firstName(), dto.lastName(), dto.roles(), null
+                )))
+                .flatMap(authUseCase::register);
     }
 
     @PostMapping("/refresh")
-    @Operation(summary = "Refresh access token using refresh token")
+    @Operation(summary = "Refresh access token")
     public Mono<AuthPort.AuthResponse> refresh(@RequestBody TokenRefreshRequest request) {
         return authUseCase.refreshToken(request.refreshToken());
     }
+    
+    // NOTE : /me, /logout sont déplacés dans AccountController (Jalon suivant)
+    // On garde juste login/register/refresh ici pour respecter la séparation
 
-    @PostMapping("/logout/{userId}")
-    @Operation(summary = "Logout specific user (Only userId visible)")
-    public Mono<Void> logout(
-        @Parameter(name = "userId", description = "The ID of the user to logout", required = true) 
-        @PathVariable UUID userId, 
-        
-        @Parameter(hidden = true) 
-        @RequestHeader(HttpHeaders.AUTHORIZATION) String token
-    ) {
-        return authUseCase.logout(userId, token);
-    }
-
-
+    // DTOs internes (si non déplacés dans des fichiers séparés)
     public record LoginRequest(String identifier, String password) {}
-    
-    public record RegisterDto(
-        String username, 
-        String password, 
-        String email, 
-        String phone, 
-        String firstName, 
-        String lastName,
-        List<String> roles
-    ) {}
     public record TokenRefreshRequest(String refreshToken) {}
-    
 }```
 
 ---
@@ -9890,7 +10130,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/drivers")
 @RequiredArgsConstructor
-@Tag(name = "Drivers", description = "Operations for Driver Management")
+@Tag(name = "05. Drivers", description = "Gestion des chauffeurs")
 public class DriverController {
 
     private final ManageDriverUseCase driverUseCase;
@@ -9978,6 +10218,25 @@ public record DriverRegistrationRequest(
 ) {}```
 
 ---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/dto/UpdateProfileRequest.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
+
+import jakarta.validation.constraints.Email;
+
+public record UpdateProfileRequest(
+    // Infos Identité (Propagées vers Auth Service)
+    String firstName,
+    String lastName,
+    String phone,
+    @Email String email,
+    
+    // Infos Métier (Stockées localement)
+    String companyName,    // Uniquement pour FLEET_MANAGER
+    String licenceNumber   // Uniquement pour FLEET_DRIVER
+) {}```
+
+---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/dto/FinancialUpdateRequest.java`
 ```java
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
@@ -9994,6 +10253,18 @@ public record FinancialUpdateRequest(
 ) {}```
 
 ---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/dto/ChangePasswordRequest.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record ChangePasswordRequest(
+    @NotBlank String currentPassword,
+    @NotBlank String newPassword
+) {}```
+
+---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/dto/FleetResponse.java`
 ```java
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
@@ -10007,6 +10278,37 @@ public record FleetResponse(
     LocalDate creationDate,
     UUID managerUserId,
     Integer vehicleCount
+) {}```
+
+---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/dto/RegisterRequest.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.util.List;
+
+public record RegisterRequest(
+    @NotBlank(message = "Le nom d'utilisateur est obligatoire")
+    String username,
+    
+    @NotBlank(message = "Le mot de passe est obligatoire")
+    String password,
+    
+    @Email(message = "Format d'email invalide")
+    @NotBlank(message = "L'email est obligatoire")
+    String email,
+    
+    @NotBlank(message = "Le téléphone est obligatoire")
+    String phone,
+    
+    String firstName,
+    String lastName,
+    
+    @NotNull(message = "Le rôle est obligatoire (ex: FLEET_MANAGER, FLEET_DRIVER)")
+    List<String> roles
 ) {}```
 
 ---
@@ -10039,40 +10341,152 @@ public record FleetRequest(
 ) {}```
 
 ---
+### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/dto/LoginRequest.java`
+```java
+package com.yowyob.fleet.infrastructure.adapters.inbound.rest.dto;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(
+    @NotBlank(message = "L'identifiant (email) est obligatoire") 
+    String identifier,
+    
+    @NotBlank(message = "Le mot de passe est obligatoire") 
+    String password
+) {}```
+
+---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/adapters/inbound/rest/HealthCheckController.java`
 ```java
 package com.yowyob.fleet.infrastructure.adapters.inbound.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/health")
 @RequiredArgsConstructor
+@Tag(name = "01. Monitoring", description = "Diagnostic complet de l'infrastructure")
 public class HealthCheckController {
 
     private final DatabaseClient databaseClient;
+    private final ReactiveRedisConnectionFactory redisConnectionFactory;
+    
+    // On injecte le template pour vérifier si Kafka est configuré
+    // Note: Pour un vrai check de santé Kafka, il faudrait AdminClient, mais c'est complexe en réactif pur sans dépendance lourde.
+    // Ici on vérifie juste que le bean est up et on tente une opération non intrusive si possible.
+    private final ReactiveKafkaProducerTemplate<String, Object> kafkaTemplate;
 
-    /**
-     * Checks the number of users in the local database to validate seeding.
-     */
-    @GetMapping("/users-count")
-    public Mono<Map<String, Object>> getUserCount() {
-        return databaseClient.sql("SELECT COUNT(*) FROM users")
-                .map((row, metadata) -> row.get(0, Long.class))
-                .first()
-                .map(count -> Map.of(
-                        "status", "UP",
-                        "database", "CONNECTED",
-                        "users_in_db", count
-                ));
+    @Value("${application.auth.url}")
+    private String authUrl;
+
+    @Value("${application.external.vehicle-service-url}")
+    private String vehicleUrl;
+
+    private final WebClient.Builder webClientBuilder;
+
+    @GetMapping("/diagnostic")
+    @Operation(summary = "Diagnostic Système complet", description = "Vérifie DB, Redis, Kafka et les APIs distantes.")
+    public Mono<SystemHealth> getDiagnostic() {
+        // Lancement parallèle des checks
+        return Mono.zip(
+            checkDatabase(),
+            checkRedis(),
+            checkKafka(),
+            checkRemoteService("Auth Service", authUrl),
+            checkRemoteService("Vehicle Service", vehicleUrl)
+        ).map(tuple -> {
+            Map<String, ServiceStatus> dependencies = new HashMap<>();
+            dependencies.put("database", tuple.getT1());
+            dependencies.put("redis", tuple.getT2());
+            dependencies.put("kafka", tuple.getT3());
+            dependencies.put("auth_service", tuple.getT4());
+            dependencies.put("vehicle_service", tuple.getT5());
+
+            // Si l'un des services critiques (DB, Redis) est DOWN, le global est DOWN
+            boolean isGlobalUp = tuple.getT1().status().equals("UP") 
+                              && tuple.getT2().status().equals("UP");
+
+            return new SystemHealth(
+                isGlobalUp ? "UP" : "DEGRADED",
+                Instant.now(),
+                dependencies
+            );
+        });
     }
+
+    // --- CHECKS INDIVIDUELS ---
+
+    private Mono<ServiceStatus> checkDatabase() {
+        return databaseClient.sql("SELECT 1")
+                .fetch()
+                .first()
+                .map(r -> new ServiceStatus("UP", "PostgreSQL R2DBC Connected"))
+                .timeout(Duration.ofSeconds(2))
+                .onErrorResume(e -> Mono.just(new ServiceStatus("DOWN", e.getMessage())));
+    }
+
+    private Mono<ServiceStatus> checkRedis() {
+        return redisConnectionFactory.getReactiveConnection()
+                .ping()
+                .map(resp -> new ServiceStatus("UP", "Redis PONG received"))
+                .timeout(Duration.ofSeconds(2))
+                .onErrorResume(e -> Mono.just(new ServiceStatus("DOWN", e.getMessage())));
+    }
+
+    private Mono<ServiceStatus> checkKafka() {
+        // Check simple : est-ce que le contexte Kafka est chargé ?
+        // Pour aller plus loin, il faudrait envoyer un message test, ce qui est intrusif.
+        if (kafkaTemplate != null) {
+            return Mono.just(new ServiceStatus("UP", "Kafka Producer Configured"));
+        }
+        return Mono.just(new ServiceStatus("UNKNOWN", "Kafka template not available"));
+    }
+
+    private Mono<ServiceStatus> checkRemoteService(String name, String url) {
+        if (url == null || url.isBlank()) {
+            return Mono.just(new ServiceStatus("DISABLED", "No URL configured"));
+        }
+        
+        // On suppose que les services ont un endpoint /actuator/health ou répondent sur la racine
+        // Pour être générique, on ping la racine ou une route connue.
+        // Ici on tente simplement d'atteindre l'URL.
+        return webClientBuilder.build()
+                .get()
+                .uri(url) // Attention: si l'URL est juste le domaine, il faut peut-être ajouter un path
+                .retrieve()
+                .toBodilessEntity()
+                .map(response -> new ServiceStatus("UP", "HTTP " + response.getStatusCode()))
+                .timeout(Duration.ofSeconds(3))
+                .onErrorResume(e -> {
+                    String msg = e.getMessage();
+                    if (msg != null && msg.contains("Connection refused")) {
+                        msg = "Unreachable";
+                    }
+                    return Mono.just(new ServiceStatus("DOWN", msg));
+                });
+    }
+
+    // --- DTOs ---
+    public record SystemHealth(String status, Instant timestamp, Map<String, ServiceStatus> dependencies) {}
+    public record ServiceStatus(String status, String details) {}
 }```
 
 ---
@@ -10087,6 +10501,7 @@ import com.yowyob.fleet.infrastructure.adapters.outbound.external.client.AuthApi
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class AuthConfig {
@@ -10099,16 +10514,52 @@ public class AuthConfig {
 
     @Bean
     @ConditionalOnProperty(name = "application.auth.mode", havingValue = "remote", matchIfMissing = true)
-    public AuthPort remoteAuthPort(AuthApiClient authApiClient, com.fasterxml.jackson.databind.ObjectMapper objectMapper) {
-        // Maintenant, le constructeur de RemoteAuthAdapter accepte bien l'interface
-        return new RemoteAuthAdapter(authApiClient);
+    public AuthPort remoteAuthPort(AuthApiClient authApiClient, WebClient.Builder webClientBuilder) {
+        // Correction : On passe le builder nécessaire pour le Multipart
+        return new RemoteAuthAdapter(authApiClient, webClientBuilder);
     }
 }```
 
 ---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/config/WebClientConfig.java`
 ```java
-```
+package com.yowyob.fleet.infrastructure.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.support.WebClientAdapter;
+import org.springframework.web.service.invoker.HttpServiceProxyFactory;
+
+import com.yowyob.fleet.infrastructure.adapters.outbound.external.client.AuthApiClient;
+import com.yowyob.fleet.infrastructure.adapters.outbound.external.client.VehicleApiClient;
+
+@Configuration
+public class WebClientConfig {
+
+    @Bean
+    public VehicleApiClient vehicleApiClient(WebClient.Builder builder, 
+                                             @Value("${application.external.vehicle-service-url}") String url) {
+                                            
+        WebClient webClient = builder.baseUrl(url).build();
+        WebClientAdapter adapter = WebClientAdapter.create(webClient);
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(adapter).build();
+        
+        return factory.createClient(VehicleApiClient.class);
+    }
+
+    @Bean
+    public AuthApiClient authApiClient(WebClient.Builder builder, 
+                                       @Value("${application.auth.url}") String url) {
+        
+        WebClient webClient = builder.baseUrl(url).build();
+        WebClientAdapter adapter = WebClientAdapter.create(webClient);
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(adapter).build();
+        
+        return factory.createClient(AuthApiClient.class);
+    }
+}```
 
 ---
 ### Fichier : `./src/main/java/com/yowyob/fleet/infrastructure/config/SecurityConfig.java`
@@ -10267,36 +10718,61 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-
+import io.swagger.v3.oas.models.tags.Tag;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configuration
 public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-
         final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
                 .info(new Info()
-                        .title("YowYob Microservice Fleet Management & Geofencing API")
+                        .title("YowYob Microservice Fleet Management")
                         .version("1.0.0")
-                        .description("Documentation de l'API de gestion de flotte Réactive Hexagonale.")
-                        .contact(new Contact()
-                                .name("Équipe Backend")
-                                .email("dev@yowyob.com"))
-                        .license(new License()
-                                .name("Apache 2.0")
-                                .url("http://springdoc.org")))
-                        .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-                        .components(new Components()
+                        .description("API Réactive pour la gestion de flottes et le géorepérage.")
+                        .contact(new Contact().name("Équipe Backend").email("dev@yowyob.com")))
+                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(new Components()
                         .addSecuritySchemes(securitySchemeName,
                                 new SecurityScheme()
                                         .name(securitySchemeName)
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")));
+    }
+
+    @Bean
+    public OpenApiCustomizer sortTagsAlphabetically() {
+        return openApi -> {
+            // Définition de l'ordre exact souhaité
+            List<String> order = List.of(
+                "01. Monitoring",
+                "02. Auth",
+                "03. Account",
+                "04. Fleet Managers",
+                "05. Drivers",
+                "06. Vehicles",
+                "07. Fleets"
+            );
+
+            if (openApi.getTags() != null) {
+                openApi.setTags(openApi.getTags().stream()
+                        .sorted(Comparator.comparingInt(tag -> {
+                            int index = order.indexOf(tag.getName());
+                            return index == -1 ? 999 : index; // Les inconnus à la fin
+                        }))
+                        .collect(Collectors.toList()));
+            }
+        };
     }
 }```
 
@@ -10340,6 +10816,19 @@ public class VehicleParameters {
 
     public record Location(Double latitude, Double longitude) {}
 }```
+
+---
+### Fichier : `./src/main/java/com/yowyob/fleet/domain/model/FleetManager.java`
+```java
+package com.yowyob.fleet.domain.model;
+
+import java.util.UUID;
+
+public record FleetManager(
+    UUID userId,
+    String companyName,
+    String subscriptionLevel
+) {}```
 
 ---
 ### Fichier : `./src/main/java/com/yowyob/fleet/domain/model/Vehicle.java`
@@ -10397,32 +10886,34 @@ public record Fleet(
 ```java
 package com.yowyob.fleet.domain.ports.in;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.yowyob.fleet.domain.ports.out.AuthPort;
 import reactor.core.publisher.Mono;
+import java.util.UUID;
+import java.util.List;
 
 public interface AuthUseCase {
     Mono<AuthPort.AuthResponse> login(String identifier, String password);
-    
-    Mono<Void> resetPassword(String email);
-
-    Mono<AuthPort.AuthResponse> register(
-        String username, 
-        String password, 
-        String email, 
-        String phone, 
-        String firstName, 
-        String lastName,
-        List<String> roles
-    );
-
-    Mono<AuthPort.UserDetail> me(String token);
-
+    Mono<AuthPort.AuthResponse> register(RegisterCommand command);
     Mono<AuthPort.AuthResponse> refreshToken(String refreshToken);
 
-    Mono<Void> logout(UUID userId, String accessToken);
+    Mono<AuthPort.UserDetail> me(String token);
+    Mono<AuthPort.UserDetail> updateProfile(UUID userId, String token, UpdateProfileCommand command);
+    Mono<Void> changePassword(UUID userId, String token, String currentPwd, String newPwd);
+    Mono<Void> deleteAccount(UUID userId, String token);
+    Mono<Void> updateProfilePicture(UUID userId, String token, FileContent file);
+
+    record RegisterCommand(
+        String username, String password, String email, String phone,
+        String firstName, String lastName, List<String> roles,
+        FileContent photo 
+    ) {}
+
+    record UpdateProfileCommand(
+        String firstName, String lastName, String phone, String email,
+        String companyName, String licenceNumber
+    ) {}
+
+    record FileContent(String filename, String contentType, byte[] data) {}
 }```
 
 ---
@@ -10490,6 +10981,21 @@ public interface ManageVehicleUseCase {
     Mono<Void> updateFinancialParameters(UUID vehicleId, VehicleParameters.Financial params);
     Mono<Void> updateMaintenanceParameters(UUID vehicleId, VehicleParameters.Maintenance params);
     Mono<Void> removeVehicleFromFleet(UUID vehicleId);
+}```
+
+---
+### Fichier : `./src/main/java/com/yowyob/fleet/domain/ports/out/FleetManagerPersistencePort.java`
+```java
+package com.yowyob.fleet.domain.ports.out;
+
+import com.yowyob.fleet.domain.model.FleetManager; // Sera créé implicitement ou on utilise DTO interne
+import reactor.core.publisher.Mono;
+import java.util.UUID;
+
+public interface FleetManagerPersistencePort {
+    Mono<Void> createProfile(UUID userId, String companyName);
+    Mono<Void> updateCompany(UUID userId, String companyName);
+    Mono<String> getCompanyName(UUID userId);
 }```
 
 ---
@@ -10576,41 +11082,30 @@ public interface ExternalVehiclePort {
 ```java
 package com.yowyob.fleet.domain.ports.out;
 
+import com.yowyob.fleet.domain.ports.in.AuthUseCase;
 import reactor.core.publisher.Mono;
-
 import java.util.List;
 import java.util.UUID;
 
-// import com.yowyob.fleet.infrastructure.adapters.outbound.external.client.AuthApiClient.UserDetailResponse;
-
 public interface AuthPort {
-    Mono<AuthResponse> login(String email, String password);
-    
-    Mono<Void> forgotPassword(String email);
-
-    Mono<AuthResponse> register(
-        String username, 
-        String password, 
-        String email, 
-        String phone, 
-        String firstName, 
-        String lastName,
-        List<String> roles);
-
-     // Nouvelles méthodes
-    Mono<UserDetail> me(String accessToken);
-
+    // Auth pure
+    Mono<AuthResponse> login(String identifier, String password);
     Mono<AuthResponse> refresh(String refreshToken);
 
-    Mono<Void> logout(UUID userId, String accessToken);
+    // Gestion Utilisateur Distant
+    Mono<AuthResponse> registerInRemote(AuthUseCase.RegisterCommand command);
+    Mono<UserDetail> getUserProfile(String token);
+    Mono<UserDetail> updateUserProfile(UUID userId, String token, AuthUseCase.UpdateProfileCommand command);
+    Mono<Void> changePassword(UUID userId, String token, String currentPwd, String newPwd);
+    Mono<Void> deleteRemoteAccount(UUID userId, String token);
+    Mono<Void> updateProfilePicture(UUID userId, String token, AuthUseCase.FileContent file); // NEW
     
-    record AuthResponse(
-        String accessToken, 
-        String refreshToken, 
-        UserDetail user
-    ) {}
+    // Gestion Rôles Distants
+    Mono<Boolean> roleExists(String roleName);
+    Mono<Void> createRole(String roleName);
 
-
+    // Objets de réponse (Outputs)
+    record AuthResponse(String accessToken, String refreshToken, UserDetail user) {}
 
     record UserDetail(
         UUID id, 
@@ -10621,9 +11116,13 @@ public interface AuthPort {
         String lastName,
         String service,
         List<String> roles, 
-        List<String> permissions
+        List<String> permissions,
+        String photoUrl,
+        String companyName,
+        String licenceNumber,
+        String vehicleId
     ) {}
-}   ```
+}```
 
 ---
 ### Fichier : `./src/main/java/com/yowyob/fleet/application/service/AuthService.java`
@@ -10632,38 +11131,38 @@ package com.yowyob.fleet.application.service;
 
 import com.yowyob.fleet.domain.ports.in.AuthUseCase;
 import com.yowyob.fleet.domain.ports.out.AuthPort;
+import com.yowyob.fleet.domain.ports.out.DriverPersistencePort;
+import com.yowyob.fleet.domain.ports.out.FleetManagerPersistencePort;
+import com.yowyob.fleet.domain.model.Driver;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-import java.util.UUID;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+import java.util.List;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService implements AuthUseCase {
 
     private final AuthPort authPort;
+    private final DriverPersistencePort driverPort;
+    private final FleetManagerPersistencePort managerPort;
 
     @Override
     public Mono<AuthPort.AuthResponse> login(String identifier, String password) {
-        return authPort.login(identifier, password);
+        return authPort.login(identifier, password)
+                .flatMap(response -> syncLocalProfile(response.user()).thenReturn(response));
     }
 
     @Override
-    public Mono<AuthPort.AuthResponse> register(String username, String password, String email, String phone, String firstName, String lastName, List<String> roles) {
-        return authPort.register(username, password, email, phone, firstName, lastName, roles);
-    }
-
-    @Override
-    public Mono<Void> resetPassword(String email) {
-        return authPort.forgotPassword(email);
-    }
-
-    @Override
-    public Mono<AuthPort.UserDetail> me(String token) {
-        return authPort.me(token);
+    public Mono<AuthPort.AuthResponse> register(RegisterCommand command) {
+        return ensureRolesExist(command.roles())
+                .then(authPort.registerInRemote(command))
+                .flatMap(response -> createLocalProfile(response.user()).thenReturn(response));
     }
 
     @Override
@@ -10672,8 +11171,92 @@ public class AuthService implements AuthUseCase {
     }
 
     @Override
-    public Mono<Void> logout(UUID userId, String accessToken) {
-        return authPort.logout(userId, accessToken);
+    public Mono<AuthPort.UserDetail> me(String token) {
+        return authPort.getUserProfile(token)
+                .flatMap(this::enrichWithLocalData);
+    }
+
+    @Override
+    public Mono<AuthPort.UserDetail> updateProfile(UUID userId, String token, UpdateProfileCommand command) {
+        return authPort.updateUserProfile(userId, token, command)
+                .flatMap(updatedUser -> {
+                    Mono<Void> localUpdate = Mono.empty();
+                    if (updatedUser.roles().contains("FLEET_MANAGER") && command.companyName() != null) {
+                        localUpdate = managerPort.updateCompany(userId, command.companyName());
+                    } 
+                    // Pour le driver, on pourrait update le permis ici si nécessaire
+                    
+                    return localUpdate.then(enrichWithLocalData(updatedUser));
+                });
+    }
+
+    @Override
+    public Mono<Void> changePassword(UUID userId, String token, String currentPwd, String newPwd) {
+        return authPort.changePassword(userId, token, currentPwd, newPwd);
+    }
+
+    @Override
+    public Mono<Void> updateProfilePicture(UUID userId, String token, FileContent file) {
+        return authPort.updateProfilePicture(userId, token, file);
+    }
+
+    @Override
+    public Mono<Void> deleteAccount(UUID userId, String token) {
+        // 1. Supprimer côté Auth distant
+        return authPort.deleteRemoteAccount(userId, token)
+            .then(Mono.defer(() -> {
+                // 2. Supprimer localement (Cascade DB fera le reste si FK configurées, 
+                // mais on peut expliciter pour plus de sûreté ou pour les fichiers liés)
+                // Ici on assume que le ON DELETE CASCADE de la DB fait le job sur drivers/fleet_managers
+                return Mono.empty();
+            }));
+    }
+
+    // --- LOGIQUE INTERNE ---
+    
+    private Mono<Void> ensureRolesExist(List<String> roles) {
+        return Flux.fromIterable(roles)
+                .flatMap(role -> authPort.roleExists(role)
+                        .flatMap(exists -> !Boolean.TRUE.equals(exists) ? authPort.createRole(role) : Mono.empty())
+                ).then();
+    }
+
+    private Mono<Void> createLocalProfile(AuthPort.UserDetail user) {
+        if (user.roles().contains("FLEET_MANAGER")) {
+            return managerPort.createProfile(user.id(), null);
+        } else if (user.roles().contains("FLEET_DRIVER")) {
+            String tempPermit = "PENDING-" + user.id().toString().substring(0, 8);
+            Driver driver = new Driver(user.id(), tempPermit, true, null);
+            return driverPort.save(driver).then();
+        }
+        return Mono.empty();
+    }
+
+    private Mono<Void> syncLocalProfile(AuthPort.UserDetail user) {
+        return createLocalProfile(user).onErrorResume(e -> Mono.empty());
+    }
+
+    private Mono<AuthPort.UserDetail> enrichWithLocalData(AuthPort.UserDetail remoteUser) {
+        if (remoteUser.roles().contains("FLEET_MANAGER")) {
+            return managerPort.getCompanyName(remoteUser.id())
+                    .map(company -> new AuthPort.UserDetail(
+                            remoteUser.id(), remoteUser.username(), remoteUser.email(), remoteUser.phone(),
+                            remoteUser.firstName(), remoteUser.lastName(), remoteUser.service(),
+                            remoteUser.roles(), remoteUser.permissions(), remoteUser.photoUrl(),
+                            company, null, null
+                    ))
+                    .defaultIfEmpty(remoteUser);
+        } else if (remoteUser.roles().contains("FLEET_DRIVER")) {
+            return driverPort.findById(remoteUser.id())
+                    .map(driver -> new AuthPort.UserDetail(
+                            remoteUser.id(), remoteUser.username(), remoteUser.email(), remoteUser.phone(),
+                            remoteUser.firstName(), remoteUser.lastName(), remoteUser.service(),
+                            remoteUser.roles(), remoteUser.permissions(), remoteUser.photoUrl(),
+                            null, driver.licenceNumber(), driver.assignedVehicleId() != null ? driver.assignedVehicleId().toString() : null
+                    ))
+                    .defaultIfEmpty(remoteUser);
+        }
+        return Mono.just(remoteUser);
     }
 }```
 
@@ -10851,6 +11434,7 @@ public class FleetService implements ManageFleetUseCase {
 package com.yowyob.fleet.application.service;
 
 import com.yowyob.fleet.domain.model.Driver;
+import com.yowyob.fleet.domain.ports.in.AuthUseCase;
 import com.yowyob.fleet.domain.ports.in.ManageDriverUseCase;
 import com.yowyob.fleet.domain.ports.out.AuthPort;
 import com.yowyob.fleet.domain.ports.out.DriverPersistencePort;
@@ -10860,6 +11444,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -10875,25 +11460,34 @@ public class DriverService implements ManageDriverUseCase {
     public Mono<Driver> registerDriver(DriverRegistrationRequest request) {
         log.info("Étape 1 : Création du compte utilisateur distant pour {}", request.username());
         
-        // 1. Appel au service d'authentification distant
-        return authPort.register(
-            request.username(), request.password(), request.email(),
-            request.phone(), request.firstName(), request.lastName(),
-            List.of("DRIVER") // On impose le rôle DRIVER
-        ).flatMap(authRes -> {
-            log.info("Étape 2 : Création du profil chauffeur local pour UUID {}", authRes.user().id());
-            
-            // 2. Création du modèle de domaine Driver avec l'UUID reçu
-            Driver localDriver = new Driver(
-                authRes.user().id(), // UUID TraMaSys
-                request.licenceNumber(),
-                true, // Actif par défaut
-                null  // Aucun véhicule au départ
-            );
-            
-            // 3. Sauvegarde en base de données locale
-            return driverPersistencePort.save(localDriver);
-        });
+        // 1. Préparation de la commande avec le rôle spécifique
+        AuthUseCase.RegisterCommand command = new AuthUseCase.RegisterCommand(
+            request.username(),
+            request.password(),
+            request.email(),
+            request.phone(),
+            request.firstName(),
+            request.lastName(),
+            List.of("FLEET_DRIVER"), // On utilise le rôle standardisé
+            null // Pas de photo via cet endpoint spécifique
+        );
+
+        // 2. Appel au service d'authentification distant
+        return authPort.registerInRemote(command)
+            .flatMap(authRes -> {
+                log.info("Étape 2 : Création du profil chauffeur local pour UUID {}", authRes.user().id());
+                
+                // 3. Création du modèle de domaine Driver
+                Driver localDriver = new Driver(
+                    authRes.user().id(), // UUID TraMaSys
+                    request.licenceNumber(),
+                    true, // Actif par défaut
+                    null  // Aucun véhicule au départ
+                );
+                
+                // 4. Sauvegarde en base de données locale
+                return driverPersistencePort.save(localDriver);
+            });
     }
 
     @Override public Mono<Driver> getDriverById(UUID userId) { return driverPersistencePort.findById(userId); }

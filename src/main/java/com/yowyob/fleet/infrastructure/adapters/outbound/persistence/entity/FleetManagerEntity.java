@@ -11,33 +11,27 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Table(name = "drivers", schema = "fleet")
+@Table(name = "fleet_managers", schema = "fleet")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DriverEntity implements Persistable<UUID> {
+public class FleetManagerEntity implements Persistable<UUID> {
+    
     @Id
     @Column("user_id")
     private UUID userId;
-    
-    @Column("licence_number")
-    private String licenceNumber;
-    
-    private Boolean status;
-    
-    @Column("assigned_vehicle_id")
-    private UUID assignedVehicleId;
 
-    @Transient
+    @Column("company_name")
+    private String companyName;
+
+    @Transient // Ce champ n'est pas en base, il sert à la logique R2DBC
     private boolean isNew = false;
 
-    // Constructeur pour création
-    public DriverEntity(UUID userId, String licenceNumber, Boolean status, UUID assignedVehicleId) {
+    // Constructeur utilitaire pour la création
+    public FleetManagerEntity(UUID userId, String companyName) {
         this.userId = userId;
-        this.licenceNumber = licenceNumber;
-        this.status = status;
-        this.assignedVehicleId = assignedVehicleId;
-        this.isNew = true;
+        this.companyName = companyName;
+        this.isNew = true; // On marque l'objet comme nouveau à la création
     }
 
     @Override
@@ -47,6 +41,6 @@ public class DriverEntity implements Persistable<UUID> {
 
     @Override
     public boolean isNew() {
-        return isNew || userId == null;
+        return isNew || userId == null; // Sécurité si userId est null
     }
 }
